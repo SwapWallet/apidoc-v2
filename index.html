@@ -75,12 +75,7 @@
         await Scalar.createApiReference('#app', userConfig);
 
         const observer = new MutationObserver(() => {
-            document.querySelectorAll('.sidebar-heading-link-title span').forEach(el => {
-                if (el.textContent.trim() === 'Introduction') {
-                    el.textContent = 'معرفی';
-                }
-            });
-            document.querySelectorAll('.references-mobile-breadcrumbs').forEach(el => {
+            document.querySelectorAll('.sidebar-heading-link-title span, .references-mobile-breadcrumbs').forEach(el => {
                 if (el.textContent.trim() === 'Introduction') {
                     el.textContent = 'معرفی';
                 }
@@ -105,6 +100,5 @@
         flex-direction: row-reverse;
       }
     </style>
-
   </body>
 </html>
