@@ -1,28 +1,122 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  tags:
-    - معرفی
-  summary: سلام
-  title: درگاه پرداخت کریپتویی
   version: 2.0.0
-  description: "مستندات API‌های درگاه پرداخت کریپتویی سواپ‌ولت"
+  title: مستندات API سواپ‌ولت
+  description: |
+    این مستند برای آشنایی شما با API [سواپ‌ولت](https://t.me/SwapWalletBot) تهیه شده است تا بتوانید بیشترین بهره را از حساب کاربری خود ببرید.
+
+    با استفاده از API سواپ‌ولت، می‌توانید کارهایی مانند موارد زیر را انجام دهید:
+    - مدیریت کیف پول و تراکنش‌ها  
+    - دریافت و ارسال پرداخت‌ها  
+    - مشاهده وضعیت تراکنش‌ها  
+    - اتصال سرویس‌های خودکار به حساب سواپ‌ولت  
+
+    ---
+
+    ## پیش‌نیازها و قوانین
+
+    پیش از استفاده از APIها، لطفاً  [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید
+    همچنین برای دریافت اطلاعیه‌های رسمی و تغییرات نسخه‌ها، در [گروه اطلاع‌رسانی سواپ‌ولت](https://t.me/SwapWalletGroup) عضو شوید.
+
+    ---
+
+    ## راهنمای شروع
+
+    اگر برای اولین بار از API استفاده می‌کنید، پیشنهاد می‌شود ابتدا بخش **راهنمای شروع به کار با API** را مطالعه کنید تا با نحوه‌ی احراز هویت و ساخت درخواست‌ها آشنا شوید.
+
+    ---
+
+    ## دریافت توکن دسترسی (API Token)
+
+    برای استفاده از API لازم است **توکن شخصی خود را از طریق [بات تلگرامی سواپ‌ولت](https://t.me/SwapWalletBot)** دریافت کنید.
+
+    مراحل دریافت:
+    1. ورود به بات  
+    2. رفتن به مسیر **تنظیمات ← توسعه‌دهندگان ← ایجاد کلید توسعه**  
+    3. دریافت توکن از پیام ارسال‌شده در بات  
+
+    سپس توکن خود را در هدر درخواست‌ها به‌صورت زیر ارسال کنید:
+
+    ```http
+    Authorization: <YourToken>
+    ```
+
+    > [!note]
+    > در حال حاضر امکان دریافت توکن فقط از طریق بات تلگرام فراهم است.
+    > اگر پیام مربوط به توکن را نمی‌بینید، دستور `start/` را در بات ارسال کنید و بر روی دکمه **توسعه‌دهندگان** کلیک کنید.
+
+    ---
+
+    ## منقضی کردن توکن
+
+    برای غیرفعال‌سازی توکن فعلی و ایجاد توکن جدید:
+
+    **تنظیمات ← توسعه‌دهندگان ← منقضی کردن توکن**
+
+    پس از انجام این کار، توکن قبلی از کار می‌افتد و یک توکن جدید برای شما ارسال می‌شود.
+
+    ---
+
+    ## نکات امنیتی
+
+    > [!caution] **هشدار امنیتی**  
+    > توکن خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید.  
+    > در صورت لو رفتن یا شک به دسترسی غیرمجاز، فوراً از طریق بات، توکن خود را منقضی کرده و توکن جدید دریافت کنید.
+
+    در صورت نیاز به استفاده از توکن در کد، مطمئن شوید که با روش‌های امن نگهداری داده‌های حساس آشنا هستید (مانند متغیرهای محیطی و رمزنگاری فایل‌های پیکربندی).
+
+    ---
+
+    ✨ با رعایت این نکات، می‌توانید به‌صورت ایمن و مؤثر از API سواپ‌ولت در پروژه‌های خود استفاده کنید.
+
 
 servers:
-  - url: https://swapwallet.app/api
-    description: سرور پروداکشن
+  - url: "https://swapwallet.app/api"
+    description: |
+      سرور پروداکشن
 
 security:
   - ApiKeyAuth: []
 
 tags:
-  - name: معرفی
-    description: توضیحات کلی درباره‌ی درگاه کریپتویی سواپ‌ولت
+  - name: توکن
+    description: API های مرتبط با توکن
   - name: فاکتور
     description: APIهای مربوط به فاکتور
   - name: فروشگاه
     description: APIهای مربوط به فروشگاه
+    x-scalar-ignore: true
+
+x-tagGroups:
+  - name: عمومی
+    tags:
+      - توکن
+  - name: "درگاه پرداخت کریپتویی"
+    tags:
+      - فاکتور
+      - فروشگاه
 
 paths:
+  /v1/utils/authentication/check:
+    get:
+      tags:
+        - توکن
+      summary: بررسی توکن
+      description: |
+        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمنان حاصل پیدا کنید.
+      operationId: checkAuthentication
+      responses:
+        '200':
+          description: احراز با موفقیت انجام شد
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        '401':
+          description: عدم احراز هویت
+      security:
+        - ApiKeyAuth: []
+
   /v1/payment/invoice/{invoiceId}/pay:
     post:
       tags:
@@ -51,6 +145,257 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فاکتور یافت نشد
+      security:
+        - ApiKeyAuth: []
+      x-scalar-ignore: true
+
+  /v2/payment/{username}/invoices/temporary-wallet:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور با کیف پول موقت
+      description: ایجاد فاکتور با کیف پول موقت برای پرداخت مستقیم
+      operationId: createApplicationInvoiceWithTemporaryWalletV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
+      responses:
+        '200':
+          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/invoice/allowed-tokens:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت توکن‌های مجاز
+      description: دریافت لیست شبکه‌های توکن مجاز برای پرداخت‌ها
+      operationId: getAllowedTokens
+      responses:
+        '200':
+          description: توکن‌های مجاز با موفقیت دریافت شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenNetworkListResponse'
+
+  /v2/payment/{username}/invoices:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور فروشگاه
+      description: ایجاد فاکتور جدید برای فروشگاه با قابلیت‌های پیشرفته
+      operationId: createApplicationInvoiceV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceRequestV2'
+      responses:
+        '200':
+          description: فاکتور با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+      x-badges:
+        - name: 'آزمایشی'
+          position: after
+          color: '#FFA7A7'
+      x-scalar-ignore: true
+        
+
+    get:
+      tags:
+        - فاکتور
+      summary: لیست فاکتورهای فروشگاه
+      description: دریافت لیست فاکتورهای یک فروشگاه با صفحه‌بندی
+      operationId: getApplicationInvoicesV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: شماره صفحه (پیش‌فرض 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          description: تعداد آیتم در هر صفحه (پیش‌فرض 20، حداکثر 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: لیست فاکتورها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2PaginationResponse'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/{invoiceId}/invoice-token:
+    patch:
+      tags:
+        - فاکتور
+      summary: بروزرسانی توکن فاکتور
+      description: بروزرسانی توکن و شبکه پرداخت برای فاکتور
+      operationId: updateApplicationInvoiceTokenV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه UUID فاکتور
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceTokenRequest'
+      responses:
+        '200':
+          description: توکن فاکتور با موفقیت بروزرسانی شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+      x-scalar-ignore: true
+
+  /v2/payment/{username}/invoices/{externalId}:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت فاکتور با شناسه خارجی
+      description: دریافت اطلاعات فاکتور با استفاده از شناسه خارجی
+      operationId: getApplicationInvoiceByExternalIdV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: externalId
+          in: path
+          required: true
+          description: شناسه خارجی فاکتور
+          schema:
+            type: string
+      responses:
+        '200':
+          description: فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2ResponseWrapper'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/{invoiceId}/info:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت اطلاعات کامل فاکتور
+      description: دریافت اطلاعات کامل فاکتور شامل کیف پول و اطلاعات فروشگاه
+      operationId: getApplicationInvoiceInformationV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه UUID فاکتور
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: اطلاعات فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceInformationV2ResponseWrapper'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
       security:
         - ApiKeyAuth: []
 
@@ -227,257 +572,14 @@ paths:
       security:
         - ApiKeyAuth: []
 
-  /v1/payment/invoice/allowed-tokens:
-    get:
-      tags:
-        - فاکتور
-      summary: دریافت توکن‌های مجاز
-      description: دریافت لیست شبکه‌های توکن مجاز برای پرداخت‌ها
-      operationId: getAllowedTokens
-      responses:
-        '200':
-          description: توکن‌های مجاز با موفقیت دریافت شدند
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenNetworkListResponse'
-
-  /v2/payment/{username}/invoices:
-    post:
-      tags:
-        - فاکتور
-      summary: ایجاد فاکتور فروشگاه
-      description: ایجاد فاکتور جدید برای فروشگاه با قابلیت‌های پیشرفته
-      operationId: createApplicationInvoiceV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateApplicationInvoiceRequestV2'
-      responses:
-        '200':
-          description: فاکتور با موفقیت ایجاد شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
-    get:
-      tags:
-        - فاکتور
-      summary: لیست فاکتورهای فروشگاه
-      description: دریافت لیست فاکتورهای یک فروشگاه با صفحه‌بندی
-      operationId: getApplicationInvoicesV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - name: page
-          in: query
-          required: false
-          description: شماره صفحه (پیش‌فرض 0)
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-        - name: limit
-          in: query
-          required: false
-          description: تعداد آیتم در هر صفحه (پیش‌فرض 20، حداکثر 100)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-      responses:
-        '200':
-          description: لیست فاکتورها با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationInvoiceV2PaginationResponse'
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
-  /v2/payment/{username}/invoices/temporary-wallet:
-    post:
-      tags:
-        - فاکتور
-      summary: ایجاد فاکتور با کیف پول موقت
-      description: ایجاد فاکتور با کیف پول موقت برای پرداخت مستقیم
-      operationId: createApplicationInvoiceWithTemporaryWalletV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
-      responses:
-        '200':
-          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
-  /v2/payment/{username}/invoices/{invoiceId}/invoice-token:
-    patch:
-      tags:
-        - فاکتور
-      summary: بروزرسانی توکن فاکتور
-      description: بروزرسانی توکن و شبکه پرداخت برای فاکتور
-      operationId: updateApplicationInvoiceTokenV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - name: invoiceId
-          in: path
-          required: true
-          description: شناسه UUID فاکتور
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateInvoiceTokenRequest'
-      responses:
-        '200':
-          description: توکن فاکتور با موفقیت بروزرسانی شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
-  /v2/payment/{username}/invoices/{externalId}:
-    get:
-      tags:
-        - فاکتور
-      summary: دریافت فاکتور با شناسه خارجی
-      description: دریافت اطلاعات فاکتور با استفاده از شناسه خارجی
-      operationId: getApplicationInvoiceByExternalIdV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - name: externalId
-          in: path
-          required: true
-          description: شناسه خارجی فاکتور
-          schema:
-            type: string
-      responses:
-        '200':
-          description: فاکتور با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationInvoiceV2ResponseWrapper'
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
-  /v2/payment/{username}/invoices/{invoiceId}/info:
-    get:
-      tags:
-        - فاکتور
-      summary: دریافت اطلاعات کامل فاکتور
-      description: دریافت اطلاعات کامل فاکتور شامل کیف پول و اطلاعات فروشگاه
-      operationId: getApplicationInvoiceInformationV2
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - name: invoiceId
-          in: path
-          required: true
-          description: شناسه UUID فاکتور
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: اطلاعات فاکتور با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationInvoiceInformationV2ResponseWrapper'
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
-
 components:
   securitySchemes:
-    ApiKeyAuth:
+     ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: >
-        توکن سواپ‌ولت فروشگاه خود را همراه درخواست‌ها به صورت Header ارسال نمائید: `Authorization: Apikey TOKEN`
+      description: |
+        توکن سواپ‌ولت فروشگاه خود را همراه درخواست‌ها ارسال نمائید: `<Authorization: <YourToken`
 
   schemas:
     InvoiceResponse:
