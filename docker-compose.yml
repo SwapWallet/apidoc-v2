@@ -1,0 +1,16 @@
+services:
+  scalar:
+    image: scalarapi/api-reference:latest
+    container_name: scalar_persian
+    ports:
+      - "3000:8080"
+    volumes:
+      - ./openapi.yaml:/docs/openapi.yaml
+      - ./index.html:/usr/share/caddy/index.html
+    environment:
+      API_REFERENCE_CONFIG: |
+        {
+          "specs": [
+            { "name": "مستندات فارسی", "url": "/docs/openapi.yaml" }
+          ]
+        }

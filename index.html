@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Scalar API Reference - Persian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Persian font -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+    <style>
+      .markdown, .section-header, .group\/summary, .sidebar-heading-link-method, .sidebar-heading-link-title, .endpoint-method {
+        direction: rtl;
+        text-align: right;
+      }
+
+      code, pre, .examples, .sticky-cards, .operation-details ul, .endpoints-card, #models {
+        direction: ltr;
+        text-align: left;
+      }
+
+      .section-header-wrapper {
+        display: flex !important; /* overrides grid temporarily */
+        flex-wrap: wrap; /* keep wrapping if needed */
+        flex-direction: row-reverse;
+      }
+
+      .group\/heading, .section-columns, .sidebar-heading-link {
+        display: inline-flex;
+        flex-direction: row-reverse;
+      }
+
+      .sidebar-heading-chevron {
+        transform: scaleX(-1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script src="{{env "CDN_URL"}}"></script>
+    <script>
+      async function init() {
+        const yamlSpec = "/openapi/openapi.yaml?v=" + Date.now();
+
+        // Merge mountedDocuments with environment config
+        let userConfig = {
+          theme: "default",
+          baseServerURL: "https://swapwallet.app/api",
+          url: yamlSpec,
+          expandAllResponses: true,
+          hideSearch: true,
+          hideModels: true,
+          hideClientButton: true,
+          expandAllModelSections: true,
+          title: "API V1",
+          slug: "api-v1",
+          showSidebar: true,
+          showToolbar: "never",
+          operationTitleSource: "summary",
+          persistAuth: false,
+          telemetry: false,
+          layout: "modern",
+          isEditable: false,
+          isLoading: false,
+          documentDownloadType: "none",
+          hideTestRequestButton: false,
+          showOperationId: false,
+          hideDarkModeToggle: false,
+          withDefaultFonts: true,
+          defaultOpenAllTags: false,
+          orderSchemaPropertiesBy: "alpha",
+          orderRequiredPropertiesFirst: true,
+          hideIntroduction: true
+        };
+
+        await Scalar.createApiReference('#app', userConfig);
+
+        const observer = new MutationObserver(() => {
+            document.querySelectorAll('.sidebar-heading-link-title span').forEach(el => {
+                if (el.textContent.trim() === 'Introduction') {
+                    el.textContent = 'معرفی';
+                }
+            });
+            document.querySelectorAll('.references-mobile-breadcrumbs').forEach(el => {
+                if (el.textContent.trim() === 'Introduction') {
+                    el.textContent = 'معرفی';
+                }
+            });
+        });
+
+        // Start observing the body for added nodes
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+
+      init();
+    </script>
+
+    <style>
+      * {
+        font-family: 'Vazirmatn', sans-serif !important;
+      }
+
+      .sidebar-heading {
+        padding-right: calc((var(--scalar-sidebar-level) * var(--scalar-sidebar-indent-base)) + 8px) !important;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+    </style>
+
+  </body>
+</html>

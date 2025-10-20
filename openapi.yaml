@@ -1,0 +1,1246 @@
+openapi: 3.0.3
+info:
+  tags:
+    - معرفی
+  summary: سلام
+  title: درگاه پرداخت کریپتویی
+  version: 2.0.0
+  description: "مستندات API‌های درگاه پرداخت کریپتویی سواپ‌ولت"
+
+servers:
+  - url: https://swapwallet.app/api
+    description: سرور پروداکشن
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: معرفی
+    description: توضیحات کلی درباره‌ی درگاه کریپتویی سواپ‌ولت
+  - name: فاکتور
+    description: APIهای مربوط به فاکتور
+  - name: فروشگاه
+    description: APIهای مربوط به فروشگاه
+
+paths:
+  /v1/payment/invoice/{invoiceId}/pay:
+    post:
+      tags:
+        - فاکتور
+      summary: پرداخت فاکتور
+      description: نهایی‌سازی پرداخت برای یک فاکتور مشخص
+      operationId: payInvoice
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه UUID فاکتور برای پرداخت
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: پرداخت فاکتور با موفقیت انجام شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/application/{username}:
+    patch:
+      tags:
+        - فروشگاه
+      summary: بروزرسانی فروشگاه
+      description: بروزرسانی تنظیمات فروشگاه برای یک نام کاربری مشخص
+      operationId: updateApplication
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاهی که باید بروزرسانی شود
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApplicationRequest'
+      responses:
+        '200':
+          description: فروشگاه با موفقیت بروزرسانی شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/application/{username}/balance:
+    get:
+      tags:
+        - فروشگاه
+      summary: دریافت موجودی فروشگاه
+      description: بازیابی مجموع موجودی برای یک فروشگاه خاص
+      operationId: getApplicationBalance
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      responses:
+        '200':
+          description: موجودی فروشگاه با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TotalBalanceResponse'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/application/{username}/settle-all:
+    post:
+      tags:
+        - فروشگاه
+      summary: تسویه تمام موجودی‌ها
+      description: تسویه تمام موجودی‌های یک فروشگاه خاص
+      operationId: settleAllBalances
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      responses:
+        '200':
+          description: تمام موجودی‌ها با موفقیت تسویه شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/application/{username}/settle:
+    post:
+      tags:
+        - فروشگاه
+      summary: تسویه موجودی مشخص
+      description: تسویه مقدار خاصی از موجودی فروشگاه
+      operationId: settleSpecificBalance
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementRequest'
+      responses:
+        '200':
+          description: موجودی با موفقیت تسویه شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/application:
+    post:
+      tags:
+        - فروشگاه
+      summary: ایجاد فروشگاه جدید
+      description: ایجاد یک فروشگاه پرداخت جدید
+      operationId: newApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationRequest'
+      responses:
+        '200':
+          description: فروشگاه با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+      security:
+        - ApiKeyAuth: []
+
+    get:
+      tags:
+        - فروشگاه
+      summary: لیست فروشگاه‌ها
+      description: لیست تمام فروشگاه‌های کاربر احراز هویت شده را برمی‌گرداند
+      operationId: listApplications
+      responses:
+        '200':
+          description: فروشگاه‌ها با موفقیت بازیابی شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationListResponse'
+        '401':
+          description: عدم احراز هویت
+      security:
+        - ApiKeyAuth: []
+
+  /v1/payment/invoice/allowed-tokens:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت توکن‌های مجاز
+      description: دریافت لیست شبکه‌های توکن مجاز برای پرداخت‌ها
+      operationId: getAllowedTokens
+      responses:
+        '200':
+          description: توکن‌های مجاز با موفقیت دریافت شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenNetworkListResponse'
+
+  /v2/payment/{username}/invoices:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور فروشگاه
+      description: ایجاد فاکتور جدید برای فروشگاه با قابلیت‌های پیشرفته
+      operationId: createApplicationInvoiceV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceRequestV2'
+      responses:
+        '200':
+          description: فاکتور با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+    get:
+      tags:
+        - فاکتور
+      summary: لیست فاکتورهای فروشگاه
+      description: دریافت لیست فاکتورهای یک فروشگاه با صفحه‌بندی
+      operationId: getApplicationInvoicesV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: شماره صفحه (پیش‌فرض 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          description: تعداد آیتم در هر صفحه (پیش‌فرض 20، حداکثر 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: لیست فاکتورها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2PaginationResponse'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/temporary-wallet:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور با کیف پول موقت
+      description: ایجاد فاکتور با کیف پول موقت برای پرداخت مستقیم
+      operationId: createApplicationInvoiceWithTemporaryWalletV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
+      responses:
+        '200':
+          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/{invoiceId}/invoice-token:
+    patch:
+      tags:
+        - فاکتور
+      summary: بروزرسانی توکن فاکتور
+      description: بروزرسانی توکن و شبکه پرداخت برای فاکتور
+      operationId: updateApplicationInvoiceTokenV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه UUID فاکتور
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceTokenRequest'
+      responses:
+        '200':
+          description: توکن فاکتور با موفقیت بروزرسانی شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/{externalId}:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت فاکتور با شناسه خارجی
+      description: دریافت اطلاعات فاکتور با استفاده از شناسه خارجی
+      operationId: getApplicationInvoiceByExternalIdV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: externalId
+          in: path
+          required: true
+          description: شناسه خارجی فاکتور
+          schema:
+            type: string
+      responses:
+        '200':
+          description: فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2ResponseWrapper'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+  /v2/payment/{username}/invoices/{invoiceId}/info:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت اطلاعات کامل فاکتور
+      description: دریافت اطلاعات کامل فاکتور شامل کیف پول و اطلاعات فروشگاه
+      operationId: getApplicationInvoiceInformationV2
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: نام کاربری فروشگاه
+          schema:
+            type: string
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه UUID فاکتور
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: اطلاعات فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceInformationV2ResponseWrapper'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: فاکتور یا فروشگاه یافت نشد
+      security:
+        - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >
+        توکن سواپ‌ولت فروشگاه خود را همراه درخواست‌ها به صورت Header ارسال نمائید: `Authorization: Apikey TOKEN`
+
+  schemas:
+    InvoiceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/InvoiceDto'
+
+    ApplicationResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationDto'
+
+    ApplicationListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationDto'
+
+    TotalBalanceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/TotalBalanceDto'
+
+    TokenNetworkListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenNetworkDto'
+
+    EmptyResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+
+    UpdateApplicationRequest:
+      type: object
+      properties:
+        logoFileId:
+          type: string
+          format: uuid
+          nullable: true
+          description: شناسه UUID فایل لوگو
+        name:
+          type: string
+          nullable: true
+          description: نام فروشگاه
+        description:
+          type: string
+          nullable: true
+          description: توضیحات فروشگاه
+        website:
+          type: string
+          nullable: true
+          description: نشانی وب فروشگاه
+        webhookUrl:
+          type: string
+          nullable: true
+          description: آدرس وبهوک برای اعلان‌ها
+
+    CreateApplicationRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: نام کاربری یکتا برای فروشگاه
+        logoFileId:
+          type: string
+          format: uuid
+          nullable: true
+          description: شناسه UUID فایل لوگو
+        name:
+          type: string
+          description: نام فروشگاه
+        description:
+          type: string
+          nullable: true
+          description: توضیحات فروشگاه
+        website:
+          type: string
+          nullable: true
+          description: نشانی وب فروشگاه
+        webhookUrl:
+          type: string
+          nullable: true
+          description: آدرس وبهوک برای اعلان‌ها
+      required:
+        - username
+        - name
+
+    SettlementRequest:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+      required:
+        - amount
+
+    InvoiceDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: شناسه فاکتور
+        supportCode:
+          type: string
+          description: کد پشتیبانی برای فاکتور
+        status:
+          $ref: '#/components/schemas/InvoiceStatusEnum'
+        title:
+          type: string
+          description: عنوان فاکتور
+        readableTitle:
+          type: string
+          nullable: true
+          description: عنوان خوانا برای انسان
+        type:
+          type: string
+          description: نوع فاکتور
+        amount:
+          $ref: '#/components/schemas/Money'
+        value:
+          $ref: '#/components/schemas/Money'
+        allowedPaymentTokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenEnum'
+        fee:
+          $ref: '#/components/schemas/Money'
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد فاکتور
+        expiredAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: زمان انقضای فاکتور
+        paidWith:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: زمان پرداخت
+
+    ApplicationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: شناسه فروشگاه
+        type:
+          $ref: '#/components/schemas/ApplicationTypeEnum'
+        ownerId:
+          type: integer
+          format: int64
+          description: شناسه کاربر مالک
+        supportCode:
+          type: string
+          description: کد پشتیبانی برای فروشگاه
+        status:
+          $ref: '#/components/schemas/ApplicationStatusEnum'
+        username:
+          type: string
+          description: نام کاربری فروشگاه
+        logo:
+          type: string
+          nullable: true
+          description: نشانی لوگو
+        name:
+          type: string
+          description: نام فروشگاه
+        description:
+          type: string
+          nullable: true
+          description: توضیحات فروشگاه
+        website:
+          type: string
+          nullable: true
+          description: نشانی وب فروشگاه
+        webhookUrl:
+          type: string
+          nullable: true
+          description: آدرس وبهوک برای اعلان‌ها
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+
+    TotalBalanceDto:
+      type: object
+      properties:
+        totalValue:
+          $ref: '#/components/schemas/TotalValueDto'
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokensBalanceDto'
+
+    TotalValueDto:
+      type: object
+      properties:
+        available:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+        onHold:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+      required:
+        - available
+        - onHold
+
+    TokensBalanceDto:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TokenEnum'
+        available:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        onHold:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        marketData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalMarketDataDto'
+
+    TokenAmountAndValueDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+
+    TokenNetworkDto:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+      required:
+        - token
+        - network
+
+    Money:
+      type: object
+      properties:
+        number:
+          type: string
+        unit:
+          $ref: '#/components/schemas/TokenEnum'
+      required:
+        - number
+        - unit
+      example:
+        number: "100.50"
+        unit: "USDT"
+
+    ExternalMarketDataDto:
+      type: object
+      properties:
+        latestPrice:
+          type: string
+          description: آخرین قیمت به‌صورت رشته
+        bestBuy:
+          type: string
+          description: بهترین قیمت خرید
+        bestSell:
+          type: string
+          description: بهترین قیمت فروش
+        dayChange:
+          type: string
+          description: درصد تغییر در طول روز
+        volume24h:
+          type: string
+          description: حجم معاملات در ۲۴ ساعت گذشته
+
+    ResponseStatusEnum:
+      type: string
+      enum:
+        - OK
+        - ERROR
+
+    InvoiceStatusEnum:
+      type: string
+      enum:
+        - PENDING
+        - CANCELED
+        - PAID
+        - DELIVERED
+
+    ApplicationStatusEnum:
+      type: string
+      enum:
+        - ACTIVE
+        - DEACTIVATE
+        - DELETED
+
+    FeePayerEnum:
+      type: string
+      enum:
+        - USER
+        - APPLICATION
+
+    TokenEnum:
+      type: string
+      enum:
+        - USDT
+        - TON
+        - TRX
+
+    NetworkEnum:
+      type: string
+      enum:
+        - TRON
+        - TON
+        - BSC
+
+    # V2 API Schemas
+    CreateApplicationInvoiceRequestV2:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        allowedTokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenNetworkDto'
+          description: لیست توکن‌ها و شبکه‌های مجاز برای پرداخت
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+          nullable: true
+          description: پرداخت‌کننده کارمزد
+        userLanguage:
+          $ref: '#/components/schemas/LanguageEnum'
+          nullable: true
+          description: زبان کاربر
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 21600
+          description: مدت زمان اعتبار فاکتور به ثانیه
+        underPaidCoveragePercent:
+          type: string
+          nullable: true
+          description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
+        returnUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: آدرس بازگشت پس از پرداخت
+        orderId:
+          type: string
+          maxLength: 255
+          nullable: true
+          description: شناسه سفارش خارجی
+        description:
+          type: string
+          maxLength: 255
+          nullable: true
+          description: توضیحات فاکتور
+        customData:
+          type: string
+          maxLength: 512
+          nullable: true
+          description: داده‌های سفارشی
+      required:
+        - amount
+        - allowedTokens
+        - ttl
+
+    CreateApplicationInvoiceWithTemporaryWalletRequest:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 21600
+          description: مدت زمان اعتبار فاکتور به ثانیه
+        underPaidCoveragePercent:
+          type: string
+          nullable: true
+          description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
+        orderId:
+          type: string
+          maxLength: 255
+          nullable: true
+          description: شناسه سفارش خارجی
+        customData:
+          type: string
+          maxLength: 512
+          nullable: true
+          description: داده‌های سفارشی
+      required:
+        - amount
+        - network
+        - ttl
+
+    UpdateInvoiceTokenRequest:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+      required:
+        - token
+        - network
+
+    ApplicationInvoiceWithPaymentLinksResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: شناسه UUID فاکتور
+        paymentLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicePaymentLinkDto'
+          description: لینک‌های پرداخت
+        expiredAt:
+          type: string
+          format: date-time
+          description: زمان انقضای فاکتور
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد فاکتور
+
+    CreateApplicationInvoiceWithTemporaryWalletResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: شناسه UUID فاکتور
+        walletAddress:
+          type: string
+          description: آدرس کیف پول موقت
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeepLinkDto'
+          description: لینک‌های عمیق کیف پول‌ها
+        amount:
+          $ref: '#/components/schemas/AmountAndValueDto'
+        expiredAt:
+          type: string
+          format: date-time
+          description: زمان انقضای فاکتور
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد فاکتور
+
+    ApplicationInvoiceV2Dto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: شناسه UUID فاکتور
+        supportCode:
+          type: string
+          description: کد پشتیبانی
+        status:
+          $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+        description:
+          type: string
+          nullable: true
+          description: توضیحات فاکتور
+        customData:
+          type: string
+          nullable: true
+          description: داده‌های سفارشی
+        userLanguage:
+          $ref: '#/components/schemas/LanguageEnum'
+          nullable: true
+          description: زبان کاربر
+        returnUrl:
+          type: string
+          nullable: true
+          description: آدرس بازگشت
+        externalId:
+          type: string
+          nullable: true
+          description: شناسه خارجی
+        amount:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: مبلغ فاکتور
+        value:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: ارزش فاکتور
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+        feeAmount:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: مبلغ کارمزد
+        paymentLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicePaymentLinkDto'
+          description: لینک‌های پرداخت
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: زمان پرداخت
+        expiredAt:
+          type: string
+          format: date-time
+          description: زمان انقضا
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد
+
+    ApplicationInvoiceInformationV2Dto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: شناسه UUID فاکتور
+        status:
+          $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+        wallet:
+          $ref: '#/components/schemas/ApplicationInvoiceWalletDto'
+          nullable: true
+          description: اطلاعات کیف پول
+        returnUrl:
+          type: string
+          nullable: true
+          description: آدرس بازگشت
+        amount:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: مبلغ فاکتور
+        value:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: ارزش فاکتور
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+        feeAmount:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: مبلغ کارمزد
+        applicationInformation:
+          $ref: '#/components/schemas/ApplicationInformationDto'
+        customData:
+          type: string
+          nullable: true
+          description: داده‌های سفارشی
+        paidAmount:
+          $ref: '#/components/schemas/Money'
+          nullable: true
+          description: مبلغ پرداخت شده
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: زمان پرداخت
+        expiredAt:
+          type: string
+          format: date-time
+          description: زمان انقضا
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد
+
+    InvoicePaymentLinkDto:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentLinkTypeEnum'
+        url:
+          type: string
+          description: آدرس لینک پرداخت
+
+    ApplicationInvoiceWalletDto:
+      type: object
+      properties:
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        address:
+          type: string
+          description: آدرس کیف پول
+        validUntil:
+          type: string
+          format: date-time
+          description: زمان اعتبار کیف پول
+        deepLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeepLinkDto'
+          description: لینک‌های عمیق کیف پول‌ها
+
+    ApplicationInformationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: نام فروشگاه
+        description:
+          type: string
+          nullable: true
+          description: توضیحات فروشگاه
+        logo:
+          type: string
+          nullable: true
+          description: آدرس لوگو فروشگاه
+        website:
+          type: string
+          nullable: true
+          description: وب‌سایت فروشگاه
+        verified:
+          type: boolean
+          description: وضعیت تأیید فروشگاه
+
+    AmountAndValueDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        usdValue:
+          $ref: '#/components/schemas/Money'
+        userCurrencyValue:
+          $ref: '#/components/schemas/Money'
+
+    DeepLinkDto:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/WalletProvidersEnum'
+        logo:
+          type: string
+          description: آدرس لوگو کیف پول
+        url:
+          type: string
+          nullable: true
+          description: لینک عمیق کیف پول
+
+    # V2 Response Wrappers
+    ApplicationInvoiceWithPaymentLinksResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponse'
+
+    CreateApplicationInvoiceWithTemporaryWalletResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponse'
+
+    ApplicationInvoiceV2ResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoiceV2Dto'
+
+    ApplicationInvoiceInformationV2ResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoiceInformationV2Dto'
+
+    ApplicationInvoiceV2PaginationResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationInvoiceV2Dto'
+        totalCount:
+          type: integer
+          format: int64
+          description: تعداد کل آیتم‌ها
+        totalPages:
+          type: integer
+          description: تعداد کل صفحات
+        currentPage:
+          type: integer
+          description: شماره صفحه فعلی
+        pageSize:
+          type: integer
+          description: تعداد آیتم در هر صفحه
+
+    PaymentLinkTypeEnum:
+      type: string
+      enum:
+        - TELEGRAM_BOT
+        - TELEGRAM_WEBAPP
+        - WEBSITE
+
+    ApplicationInvoiceStatusEnum:
+      type: string
+      enum:
+        - ACTIVE
+        - PAID
+        - EXPIRED
+        - CANCELED
+
+    LanguageEnum:
+      type: string
+      enum:
+        - EN
+        - FA
+
+    WalletProvidersEnum:
+      type: string
+      enum:
+        - SWAP_WALLET
+        - TRUST_WALLET
+        - METAMASK
+        - TON_KEEPER
+        - TONHUB
+        - MYTONWALLET
