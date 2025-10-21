@@ -91,6 +91,7 @@ x-tagGroups:
   - name: عمومی
     tags:
       - توکن
+      - بازار
   - name: "درگاه پرداخت کریپتویی"
     tags:
       - فاکتور
@@ -116,6 +117,32 @@ paths:
           description: عدم احراز هویت
       security:
         - ApiKeyAuth: []
+
+  /v1/market/prices:
+    get:
+      tags:
+        - بازار
+      summary: دریافت قیمت لحظه‌ای ارز‌ها
+      description: |
+        این API را می‌توانید جهت دریافت قیمت لحظه‌ای ارزها استفاده کنید.  
+        توکن و ارز مرجع توسط `/` از یکدیگر جدا شده‌اند و ارزهای مرجع تنها IRT (تومان) و USDT (تتر) می‌باشند.  
+      operationId: getAllMarketPrices
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                  format: string
+                example:
+                  "TON/USDT": "2.00"
+                  "TON/IRT": "235000"
+                  "TRX/USDT": "0.40"
+                  "TRX/IRT": "40000"
+                  "...": "..."
 
   /v1/payment/invoice/{invoiceId}/pay:
     post:
