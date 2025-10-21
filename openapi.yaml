@@ -143,6 +143,7 @@ paths:
                   "TRX/USDT": "0.40"
                   "TRX/IRT": "40000"
                   "...": "..."
+      security: []
 
   /v1/payment/invoice/{invoiceId}/pay:
     post:
@@ -226,6 +227,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenNetworkListResponse'
+      security: []
 
   /v2/payment/{username}/invoices:
     post:
