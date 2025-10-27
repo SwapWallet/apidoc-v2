@@ -1010,6 +1010,8 @@ components:
       properties:
         amount:
           $ref: '#/components/schemas/Money'
+        allowedToken:
+          $ref: '#/components/schemas/TokenEnum'
         network:
           $ref: '#/components/schemas/NetworkEnum'
         ttl:
