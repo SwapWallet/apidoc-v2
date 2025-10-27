@@ -1009,7 +1009,23 @@ components:
       type: object
       properties:
         amount:
-          $ref: '#/components/schemas/Money'
+          type: object
+          description: ارزش فاکتور که می‌خواهید معادل آن را دریافت کنید  
+          properties:
+            number:
+              type: string
+            unit:
+              type: string
+              enum:
+                - USDT
+                - IRT
+                - TON
+                - TRX
+                - ETH
+                - ...
+          required:
+            - number
+            - unit
         allowedToken:
           $ref: '#/components/schemas/TokenEnum'
         network:
