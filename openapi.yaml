@@ -150,7 +150,10 @@ paths:
       tags:
         - فاکتور
       summary: ایجاد فاکتور با کیف پول موقت
-      description: ایجاد فاکتور با کیف پول موقت برای پرداخت مستقیم
+      description: |
+        ایجاد فاکتور با کیف پول موقت برای پرداخت مستقیم  
+        اگر مقدار `webhookUrl` را به صورت null ارسال کنید، وبهوک پیش‌فرض فروشگاه استفاده خواهد شد.  
+        اگر مقدار `webhookUrl` مقداری منطقی داشته باشد هنگام تکمیل پرداخت از سوی کاربر، وبهوک مشخص شده به صورت `POST` کال خواهد شد.  
       operationId: createApplicationInvoiceWithTemporaryWalletV2
       parameters:
         - name: username
