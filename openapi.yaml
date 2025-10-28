@@ -75,9 +75,6 @@ servers:
     description: |
       سرور پروداکشن
 
-security:
-  - ApiKeyAuth: []
-
 tags:
   - name: توکن
     description: API های مرتبط با توکن
@@ -115,8 +112,8 @@ paths:
                 $ref: "#/components/schemas/EmptyResponse"
         '401':
           description: عدم احراز هویت
-      security:
-        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
 
   /v1/market/prices:
     get:
@@ -127,7 +124,6 @@ paths:
         این API را می‌توانید جهت دریافت قیمت لحظه‌ای ارزها استفاده کنید.  
         توکن و ارز مرجع توسط `/` از یکدیگر جدا شده‌اند و ارزهای مرجع تنها IRT (تومان) و USDT (تتر) می‌باشند.  
       operationId: getAllMarketPrices
-      security: []
       responses:
         '200':
           description: OK
@@ -162,6 +158,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
         required: true
         content:
@@ -181,8 +178,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/invoice/allowed-tokens:
     get:
@@ -198,7 +193,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenNetworkListResponse'
-      security: []
 
   /v2/payment/{username}/invoices:
     post:
@@ -214,6 +208,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
         required: true
         content:
@@ -233,8 +228,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
       x-badges:
         - name: 'آزمایشی'
           position: after
@@ -272,6 +265,7 @@ paths:
             minimum: 1
             maximum: 100
             default: 20
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: لیست فاکتورها با موفقیت دریافت شد
@@ -283,8 +277,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v2/payment/{username}/invoices/{invoiceId}/invoice-token:
     patch:
@@ -307,6 +299,7 @@ paths:
           schema:
             type: string
             format: uuid
+        - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
         required: true
         content:
@@ -326,8 +319,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
       x-scalar-ignore: true
 
   /v2/payment/{username}/invoices/with-order-id/{orderId}:
@@ -350,6 +341,7 @@ paths:
           description: شناسه خارجی فاکتور
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: فاکتور با موفقیت دریافت شد
@@ -361,8 +353,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v2/payment/{username}/invoices/{invoiceId}:
     get:
@@ -385,6 +375,7 @@ paths:
           schema:
             type: string
             format: uuid
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: اطلاعات فاکتور با موفقیت دریافت شد
@@ -396,8 +387,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فاکتور یا فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/application/{username}:
     patch:
@@ -413,6 +402,7 @@ paths:
           description: نام کاربری فروشگاهی که باید بروزرسانی شود
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
         required: true
         content:
@@ -432,8 +422,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/application/{username}/balance:
     get:
@@ -449,6 +437,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: موجودی فروشگاه با موفقیت دریافت شد
@@ -460,8 +449,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/application/{username}/settle-all:
     post:
@@ -477,6 +464,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: تمام موجودی‌ها با موفقیت تسویه شدند
@@ -488,8 +476,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/application/{username}/settle:
     post:
@@ -505,6 +491,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
+        - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
         required: true
         content:
@@ -524,8 +511,6 @@ paths:
           description: عدم احراز هویت
         '404':
           description: فروشگاه یافت نشد
-      security:
-        - ApiKeyAuth: []
 
   /v1/payment/application:
     post:
@@ -540,6 +525,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateApplicationRequest'
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: فروشگاه با موفقیت ایجاد شد
@@ -551,8 +538,6 @@ paths:
           description: درخواست نامعتبر
         '401':
           description: عدم احراز هویت
-      security:
-        - ApiKeyAuth: []
 
     get:
       tags:
@@ -560,6 +545,8 @@ paths:
       summary: لیست فروشگاه‌ها
       description: لیست تمام فروشگاه‌های کاربر احراز هویت شده را برمی‌گرداند
       operationId: listApplications
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
           description: فروشگاه‌ها با موفقیت بازیابی شدند
@@ -569,17 +556,18 @@ paths:
                 $ref: '#/components/schemas/ApplicationListResponse'
         '401':
           description: عدم احراز هویت
-      security:
-        - ApiKeyAuth: []
 
 components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
+  parameters:
+    AuthorizationHeader:
       name: Authorization
-      description: |
-        توکن سواپ‌ولت فروشگاه خود را همراه درخواست‌ها ارسال نمائید: `<Authorization: <YourToken`
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "YOUR-API-KEY"
+      description: >
+        هدر احراز هویت
 
   schemas:
     InvoiceResponse:
@@ -996,16 +984,19 @@ components:
         allowedToken:
           $ref: '#/components/schemas/TokenEnum'
         network:
-          $ref: '#/components/schemas/NetworkEnum'
+          allOf:
+            - $ref: '#/components/schemas/NetworkEnum'
+          example: "BSC"
         ttl:
           type: integer
           format: int64
           minimum: 300
           maximum: 21600
           description: مدت زمان اعتبار فاکتور به ثانیه
+          example: 3600
         underPaidCoveragePercent:
           type: [string, "null"]
-          description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
+          description: درصد پوشش پرداخت کمتر (0 تا 60 درصد)
         orderId:
           type: [string, "null"]
           maxLength: 255
