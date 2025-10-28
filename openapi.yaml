@@ -359,13 +359,13 @@ paths:
         - ApiKeyAuth: []
       x-scalar-ignore: true
 
-  /v2/payment/{username}/invoices/{externalId}:
+  /v2/payment/{username}/invoices/with-order-id/{orderId}:
     get:
       tags:
         - فاکتور
       summary: دریافت فاکتور با شناسه خارجی
       description: دریافت اطلاعات فاکتور با استفاده از شناسه خارجی
-      operationId: getApplicationInvoiceByExternalIdV2
+      operationId: getApplicationInvoiceByOrderIdV2
       parameters:
         - name: username
           in: path
@@ -373,7 +373,7 @@ paths:
           description: نام کاربری فروشگاه
           schema:
             type: string
-        - name: externalId
+        - name: orderId
           in: path
           required: true
           description: شناسه خارجی فاکتور
@@ -393,7 +393,7 @@ paths:
       security:
         - ApiKeyAuth: []
 
-  /v2/payment/{username}/invoices/{invoiceId}/info:
+  /v2/payment/{username}/invoices/{invoiceId}:
     get:
       tags:
         - فاکتور
@@ -980,11 +980,19 @@ components:
           type: string
           nullable: true
           description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
+          default: "10"
         returnUrl:
           type: string
           format: uri
+          maxLength: 255
           nullable: true
           description: آدرس بازگشت پس از پرداخت
+        webhookUrl:
+          type: string
+          format: uri
+          maxLength: 255
+          nullable: true
+          description: آدرس وب‌هوک برای اعلان‌ها
         orderId:
           type: string
           maxLength: 255
@@ -1045,6 +1053,12 @@ components:
           maxLength: 255
           nullable: true
           description: شناسه سفارش خارجی
+        webhookUrl:
+          type: string
+          format: uri
+          maxLength: 255
+          nullable: true
+          description: آدرس وب‌هوک برای اعلان‌ها
         customData:
           type: string
           maxLength: 512
@@ -1139,9 +1153,17 @@ components:
           description: زبان کاربر
         returnUrl:
           type: string
+          format: uri
           nullable: true
+          maxLength: 255
           description: آدرس بازگشت
-        externalId:
+        webhookUrl:
+          type: string
+          format: uri
+          maxLength: 255
+          nullable: true
+          description: آدرس وب‌هوک برای اعلان‌ها
+        orderId:
           type: string
           nullable: true
           description: شناسه خارجی
@@ -1195,6 +1217,12 @@ components:
           type: string
           nullable: true
           description: آدرس بازگشت
+        webhookUrl:
+          type: string
+          format: uri
+          maxLength: 255
+          nullable: true
+          description: آدرس وب‌هوک برای اعلان‌ها
         amount:
           $ref: '#/components/schemas/Money'
           nullable: true
