@@ -127,6 +127,7 @@ paths:
         این API را می‌توانید جهت دریافت قیمت لحظه‌ای ارزها استفاده کنید.  
         توکن و ارز مرجع توسط `/` از یکدیگر جدا شده‌اند و ارزهای مرجع تنها IRT (تومان) و USDT (تتر) می‌باشند.  
       operationId: getAllMarketPrices
+      security: []
       responses:
         '200':
           description: OK
@@ -143,7 +144,6 @@ paths:
                   "TRX/USDT": "0.40"
                   "TRX/IRT": "40000"
                   "...": "..."
-      security: []
 
   /v2/payment/{username}/invoices/temporary-wallet:
     post:
@@ -574,7 +574,7 @@ paths:
 
 components:
   securitySchemes:
-     ApiKeyAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
