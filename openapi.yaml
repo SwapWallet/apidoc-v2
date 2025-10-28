@@ -145,38 +145,6 @@ paths:
                   "...": "..."
       security: []
 
-  /v1/payment/invoice/{invoiceId}/pay:
-    post:
-      tags:
-        - فاکتور
-      summary: پرداخت فاکتور
-      description: نهایی‌سازی پرداخت برای یک فاکتور مشخص
-      operationId: payInvoice
-      parameters:
-        - name: invoiceId
-          in: path
-          required: true
-          description: شناسه UUID فاکتور برای پرداخت
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: پرداخت فاکتور با موفقیت انجام شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceResponse'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فاکتور یافت نشد
-      security:
-        - ApiKeyAuth: []
-      x-scalar-ignore: true
-
   /v2/payment/{username}/invoices/temporary-wallet:
     post:
       tags:
@@ -665,25 +633,20 @@ components:
       type: object
       properties:
         logoFileId:
-          type: string
+          type: [string, "null"]
           format: uuid
-          nullable: true
           description: شناسه UUID فایل لوگو
         name:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: نام فروشگاه
         description:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: توضیحات فروشگاه
         website:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: نشانی وب فروشگاه
         webhookUrl:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: آدرس وبهوک برای اعلان‌ها
 
     CreateApplicationRequest:
@@ -693,24 +656,20 @@ components:
           type: string
           description: نام کاربری یکتا برای فروشگاه
         logoFileId:
-          type: string
+          type: [string, "null"]
           format: uuid
-          nullable: true
           description: شناسه UUID فایل لوگو
         name:
           type: string
           description: نام فروشگاه
         description:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: توضیحات فروشگاه
         website:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: نشانی وب فروشگاه
         webhookUrl:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: آدرس وبهوک برای اعلان‌ها
       required:
         - username
@@ -740,8 +699,7 @@ components:
           type: string
           description: عنوان فاکتور
         readableTitle:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: عنوان خوانا برای انسان
         type:
           type: string
@@ -761,17 +719,18 @@ components:
           format: date-time
           description: زمان ایجاد فاکتور
         expiredAt:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
           description: زمان انقضای فاکتور
         paidWith:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
         paidAt:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
           description: زمان پرداخت
 
     ApplicationDto:
@@ -781,8 +740,6 @@ components:
           type: integer
           format: int64
           description: شناسه فروشگاه
-        type:
-          $ref: '#/components/schemas/ApplicationTypeEnum'
         ownerId:
           type: integer
           format: int64
@@ -796,23 +753,19 @@ components:
           type: string
           description: نام کاربری فروشگاه
         logo:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: نشانی لوگو
         name:
           type: string
           description: نام فروشگاه
         description:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: توضیحات فروشگاه
         website:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: نشانی وب فروشگاه
         webhookUrl:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: آدرس وبهوک برای اعلان‌ها
         feePayer:
           $ref: '#/components/schemas/FeePayerEnum'
@@ -963,12 +916,18 @@ components:
             $ref: '#/components/schemas/TokenNetworkDto'
           description: لیست توکن‌ها و شبکه‌های مجاز برای پرداخت
         feePayer:
-          $ref: '#/components/schemas/FeePayerEnum'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/FeePayerEnum'
+          type:
+            - string
+            - "null"
           description: پرداخت‌کننده کارمزد
         userLanguage:
-          $ref: '#/components/schemas/LanguageEnum'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+          type:
+            - string
+            - "null"
           description: زبان کاربر
         ttl:
           type: integer
@@ -977,36 +936,30 @@ components:
           maximum: 21600
           description: مدت زمان اعتبار فاکتور به ثانیه
         underPaidCoveragePercent:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
           default: "10"
         returnUrl:
-          type: string
+          type: [string, "null"]
           format: uri
           maxLength: 255
-          nullable: true
           description: آدرس بازگشت پس از پرداخت
         webhookUrl:
-          type: string
+          type: [string, "null"]
           format: uri
           maxLength: 255
-          nullable: true
           description: آدرس وب‌هوک برای اعلان‌ها
         orderId:
-          type: string
+          type: [string, "null"]
           maxLength: 255
-          nullable: true
           description: شناسه سفارش خارجی
         description:
-          type: string
+          type: [string, "null"]
           maxLength: 255
-          nullable: true
           description: توضیحات فاکتور
         customData:
-          type: string
+          type: [string, "null"]
           maxLength: 512
-          nullable: true
           description: داده‌های سفارشی
       required:
         - amount
@@ -1034,6 +987,9 @@ components:
           required:
             - number
             - unit
+          example:
+            number: "100000"
+            unit: "IRT"
         allowedToken:
           $ref: '#/components/schemas/TokenEnum'
         network:
@@ -1045,24 +1001,20 @@ components:
           maximum: 21600
           description: مدت زمان اعتبار فاکتور به ثانیه
         underPaidCoveragePercent:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
         orderId:
-          type: string
+          type: [string, "null"]
           maxLength: 255
-          nullable: true
           description: شناسه سفارش خارجی
         webhookUrl:
-          type: string
+          type: [string, "null"]
           format: uri
           maxLength: 255
-          nullable: true
           description: آدرس وب‌هوک برای اعلان‌ها
         customData:
-          type: string
+          type: [string, "null"]
           maxLength: 512
-          nullable: true
           description: داده‌های سفارشی
       required:
         - amount
@@ -1140,46 +1092,53 @@ components:
         status:
           $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
         description:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: توضیحات فاکتور
         customData:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: داده‌های سفارشی
         userLanguage:
-          $ref: '#/components/schemas/LanguageEnum'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+          type:
+            - string
+            - "null"
           description: زبان کاربر
         returnUrl:
-          type: string
+          type: [string, "null"]
           format: uri
-          nullable: true
           maxLength: 255
           description: آدرس بازگشت
         webhookUrl:
-          type: string
+          type: [string, "null"]
           format: uri
           maxLength: 255
-          nullable: true
           description: آدرس وب‌هوک برای اعلان‌ها
         orderId:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: شناسه خارجی
         amount:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: مبلغ فاکتور
         value:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: ارزش فاکتور
         feePayer:
           $ref: '#/components/schemas/FeePayerEnum'
         feeAmount:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: مبلغ کارمزد
         paymentLinks:
           type: array
@@ -1187,9 +1146,8 @@ components:
             $ref: '#/components/schemas/InvoicePaymentLinkDto'
           description: لینک‌های پرداخت
         paidAt:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
           description: زمان پرداخت
         expiredAt:
           type: string
@@ -1210,47 +1168,58 @@ components:
         status:
           $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
         wallet:
-          $ref: '#/components/schemas/ApplicationInvoiceWalletDto'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/ApplicationInvoiceWalletDto'
+          type:
+            - object
+            - "null"
           description: اطلاعات کیف پول
         returnUrl:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: آدرس بازگشت
         webhookUrl:
-          type: string
+          type: [string, "null"]
           format: uri
           maxLength: 255
-          nullable: true
           description: آدرس وب‌هوک برای اعلان‌ها
         amount:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: مبلغ فاکتور
         value:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: ارزش فاکتور
         feePayer:
           $ref: '#/components/schemas/FeePayerEnum'
         feeAmount:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: مبلغ کارمزد
         applicationInformation:
           $ref: '#/components/schemas/ApplicationInformationDto'
         customData:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: داده‌های سفارشی
         paidAmount:
-          $ref: '#/components/schemas/Money'
-          nullable: true
+          allOf:        
+            - $ref: '#/components/schemas/Money'
+          type:
+            - object
+            - "null"
           description: مبلغ پرداخت شده
         paidAt:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
           description: زمان پرداخت
         expiredAt:
           type: string
@@ -1297,16 +1266,13 @@ components:
           type: string
           description: نام فروشگاه
         description:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: توضیحات فروشگاه
         logo:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: آدرس لوگو فروشگاه
         website:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: وب‌سایت فروشگاه
         verified:
           type: boolean
@@ -1331,8 +1297,7 @@ components:
           type: string
           description: آدرس لوگو کیف پول
         url:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: لینک عمیق کیف پول
 
     # V2 Response Wrappers
