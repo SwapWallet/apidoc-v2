@@ -564,8 +564,8 @@ components:
       in: header
       required: true
       schema:
-        type: string
-        example: "YOUR-API-KEY"
+        type: bearer
+        example: Bearer "YOUR-API-KEY"
       description: >
         هدر احراز هویت
 
