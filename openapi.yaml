@@ -385,7 +385,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationInvoiceInformationV2ResponseWrapper'
+                $ref: '#/components/schemas/ApplicationInvoiceV2ResponseWrapper'
         '401':
           description: عدم احراز هویت
         '404':
@@ -1094,6 +1094,13 @@ components:
         customData:
           type: [string, "null"]
           description: داده‌های سفارشی
+        wallet:
+          allOf:
+            - $ref: "#/components/schemas/ApplicationInvoiceWalletDto"
+          type:
+            - object
+            - "null"
+
         userLanguage:
           allOf:
             - $ref: '#/components/schemas/LanguageEnum'
@@ -1142,78 +1149,6 @@ components:
           items:
             $ref: '#/components/schemas/InvoicePaymentLinkDto'
           description: لینک‌های پرداخت
-        paidAt:
-          type: [string, "null"]
-          format: date-time
-          description: زمان پرداخت
-        expiredAt:
-          type: string
-          format: date-time
-          description: زمان انقضا
-        createdAt:
-          type: string
-          format: date-time
-          description: زمان ایجاد
-
-    ApplicationInvoiceInformationV2Dto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: شناسه UUID فاکتور
-        status:
-          $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
-        wallet:
-          allOf:
-            - $ref: '#/components/schemas/ApplicationInvoiceWalletDto'
-          type:
-            - object
-            - "null"
-          description: اطلاعات کیف پول
-        returnUrl:
-          type: [string, "null"]
-          description: آدرس بازگشت
-        webhookUrl:
-          type: [string, "null"]
-          format: uri
-          maxLength: 255
-          description: آدرس وب‌هوک برای اعلان‌ها
-        amount:
-          allOf:
-            - $ref: '#/components/schemas/Money'
-          type:
-            - object
-            - "null"
-          description: مبلغ فاکتور
-        value:
-          allOf:
-            - $ref: '#/components/schemas/Money'
-          type:
-            - object
-            - "null"
-          description: ارزش فاکتور
-        feePayer:
-          $ref: '#/components/schemas/FeePayerEnum'
-        feeAmount:
-          allOf:
-            - $ref: '#/components/schemas/Money'
-          type:
-            - object
-            - "null"
-          description: مبلغ کارمزد
-        applicationInformation:
-          $ref: '#/components/schemas/ApplicationInformationDto'
-        customData:
-          type: [string, "null"]
-          description: داده‌های سفارشی
-        paidAmount:
-          allOf:        
-            - $ref: '#/components/schemas/Money'
-          type:
-            - object
-            - "null"
-          description: مبلغ پرداخت شده
         paidAt:
           type: [string, "null"]
           format: date-time
@@ -1321,14 +1256,6 @@ components:
           $ref: '#/components/schemas/ResponseStatusEnum'
         result:
           $ref: '#/components/schemas/ApplicationInvoiceV2Dto'
-
-    ApplicationInvoiceInformationV2ResponseWrapper:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          $ref: '#/components/schemas/ApplicationInvoiceInformationV2Dto'
 
     ApplicationInvoiceV2PaginationResponse:
       type: object
