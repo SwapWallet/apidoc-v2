@@ -90,9 +90,14 @@
                     el.textContent = 'معرفی';
                 }
             });
+
+            document.querySelectorAll('a').forEach(el => {
+              if (el.href.trim() === 'https://www.scalar.com/') {
+                el.remove();
+              }
+            });
         });
 
-        // Start observing the body for added nodes
         observer.observe(document.body, { childList: true, subtree: true });
       }
 
