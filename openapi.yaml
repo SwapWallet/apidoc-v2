@@ -954,6 +954,7 @@ components:
         userLanguage:
           allOf:
             - $ref: '#/components/schemas/LanguageEnum'
+          example: null
           type:
             - string
             - "null"
@@ -1139,6 +1140,7 @@ components:
         userLanguage:
           allOf:
             - $ref: '#/components/schemas/LanguageEnum'
+          example: null
           type:
             - string
             - "null"
@@ -1366,6 +1368,7 @@ components:
         userLanguage:
           allOf:
             - $ref: "#/components/schemas/LanguageEnum"
+          example: null
           type: [string, "null"]
           description: زبان کاربر
         webhookUrl:
