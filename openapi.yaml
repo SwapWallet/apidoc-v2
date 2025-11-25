@@ -78,11 +78,17 @@ servers:
 tags:
   - name: توکن
     description: API های مرتبط با توکن
+  - name: بازار
+    description: APIهای مربوط به بازار توکن‌های مختلف بر اساس تتر و تومان
   - name: فاکتور
     description: APIهای مربوط به فاکتور
   - name: فروشگاه
     description: APIهای مربوط به فروشگاه
     x-scalar-ignore: true
+  - name: رسید
+    description: |
+      APIهای مربوط به رسید با مقدار پرداختی ثابت  
+      مقدار دریافتی نهایی در لحظه‌ی پرداخت محاسبه و به تتر تبدیل می‌شود.
 
 x-tagGroups:
   - name: عمومی
@@ -93,6 +99,9 @@ x-tagGroups:
     tags:
       - فاکتور
       - فروشگاه
+  - name: "رسید پرداخت"
+    tags:
+      - رسید
 
 paths:
   /v1/utils/authentication/check:
@@ -101,7 +110,7 @@ paths:
         - توکن
       summary: بررسی توکن
       description: |
-        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمنان حاصل پیدا کنید.
+        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمینان حاصل پیدا کنید.
       operationId: checkAuthentication
       responses:
         '200':
@@ -560,6 +569,32 @@ paths:
         '401':
           description: عدم احراز هویت
 
+  /v1/payment/{username}/resid:
+    post:
+      summary: ایجاد رسید جدید
+      operationId: createNewResid
+      tags:
+        - رسید
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResidRequestV1"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApplicationInvoiceV2Dto"
+
 components:
   parameters:
     AuthorizationHeader:
@@ -567,8 +602,8 @@ components:
       in: header
       required: true
       schema:
-        type: bearer
-        example: Bearer "YOUR-API-KEY"
+        type: string
+        example: Bearer YOUR-API-KEY
       description: >
         هدر احراز هویت
 
@@ -1310,3 +1345,46 @@ components:
         - TON_KEEPER
         - TONHUB
         - MYTONWALLET
+
+    CreateResidRequestV1:
+      type: "object"
+      properties:
+        amount:
+          allOf:
+            - $ref: "#/components/schemas/Money"
+          description: مبلغ فاکتور
+          example:
+            number: 19000
+            unit: IRT
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 21600
+          description: مدت زمان اعتبار فاکتور به ثانیه
+          example: 3600
+        userLanguage:
+          allOf:
+            - $ref: "#/components/schemas/LanguageEnum"
+          type: [string, "null"]
+          description: زبان کاربر
+        webhookUrl:
+          type: [string, "null"]
+          format: uri
+          maxLength: 255
+          description: آدرس وب‌هوک برای اعلان‌ها
+        orderId:
+          type: [string, "null"]
+          maxLength: 255
+          description: شناسه سفارش خارجی
+        description:
+          type: [string, "null"]
+          maxLength: 512
+          description: توضیحات رسید
+        customData:
+          type: [string, "null"]
+          maxLength: 512
+          description: متادیتا
+      required:
+        - amount
+        - ttl
