@@ -991,6 +991,21 @@ components:
           type: [string, "null"]
           maxLength: 512
           description: داده‌های سفارشی
+        userId:
+          type: [string, "null"]
+          maxLength: 255
+          description: شناسه کاربر در سیستم شما
+        userEmail:
+          type: [string, "null"]
+          format: email
+          maxLength: 320
+          description: ایمیل کاربر
+        userPhoneNumber:
+          type: [string, "null"]
+          format: phone
+          maxLength: 16
+          description: شماره تلفن کاربر
+
       required:
         - amount
         - allowedTokens
@@ -1049,6 +1064,21 @@ components:
           type: [string, "null"]
           maxLength: 512
           description: داده‌های سفارشی
+        userId:
+          type: [string, "null"]
+          maxLength: 255
+          description: شناسه کاربر در سیستم شما
+        userEmail:
+          type: [string, "null"]
+          format: email
+          maxLength: 320
+          description: ایمیل کاربر
+        userPhoneNumber:
+          type: [string, "null"]
+          format: phone
+          maxLength: 16
+          description: شماره تلفن کاربر
+
       required:
         - amount
         - network
@@ -1388,6 +1418,21 @@ components:
           type: [string, "null"]
           maxLength: 512
           description: متادیتا
+        userId:
+          type: [string, "null"]
+          maxLength: 255
+          description: شناسه کاربر در سیستم شما
+        userEmail:
+          type: [string, "null"]
+          format: email
+          maxLength: 320
+          description: ایمیل کاربر
+        userPhoneNumber:
+          type: [string, "null"]
+          format: phone
+          maxLength: 16
+          description: شماره تلفن کاربر
+
       required:
         - amount
         - ttl
