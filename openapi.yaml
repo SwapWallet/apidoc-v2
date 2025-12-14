@@ -985,7 +985,7 @@ components:
           description: شناسه سفارش خارجی
         description:
           type: [string, "null"]
-          maxLength: 255
+          maxLength: 512
           description: توضیحات فاکتور
         customData:
           type: [string, "null"]
@@ -1064,6 +1064,10 @@ components:
           type: [string, "null"]
           maxLength: 512
           description: داده‌های سفارشی
+        description:
+          type: [string, "null"]
+          maxLength: 512
+          description: توضیحات فاکتور
         userId:
           type: [string, "null"]
           maxLength: 255
