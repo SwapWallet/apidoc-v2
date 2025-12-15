@@ -82,9 +82,6 @@ tags:
     description: APIهای مربوط به بازار توکن‌های مختلف بر اساس تتر و تومان
   - name: فاکتور
     description: APIهای مربوط به فاکتور
-  - name: فروشگاه
-    description: APIهای مربوط به فروشگاه
-    x-scalar-ignore: true
   - name: رسید
     description: |
       APIهای مربوط به رسید با مقدار پرداختی ثابت  
@@ -98,7 +95,6 @@ x-tagGroups:
   - name: "درگاه پرداخت کریپتویی"
     tags:
       - فاکتور
-      - فروشگاه
   - name: "رسید پرداخت"
     tags:
       - رسید
@@ -400,175 +396,6 @@ paths:
         '404':
           description: فاکتور یا فروشگاه یافت نشد
 
-  /v1/payment/application/{username}:
-    patch:
-      tags:
-        - فروشگاه
-      summary: بروزرسانی فروشگاه
-      description: بروزرسانی تنظیمات فروشگاه برای یک نام کاربری مشخص
-      operationId: updateApplication
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاهی که باید بروزرسانی شود
-          schema:
-            type: string
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateApplicationRequest'
-      responses:
-        '200':
-          description: فروشگاه با موفقیت بروزرسانی شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationResponse'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-
-  /v1/payment/application/{username}/balance:
-    get:
-      tags:
-        - فروشگاه
-      summary: دریافت موجودی فروشگاه
-      description: بازیابی مجموع موجودی برای یک فروشگاه خاص
-      operationId: getApplicationBalance
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: موجودی فروشگاه با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TotalBalanceResponse'
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-
-  /v1/payment/application/{username}/settle-all:
-    post:
-      tags:
-        - فروشگاه
-      summary: تسویه تمام موجودی‌ها
-      description: تسویه تمام موجودی‌های یک فروشگاه خاص
-      operationId: settleAllBalances
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: تمام موجودی‌ها با موفقیت تسویه شدند
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptyResponse'
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-
-  /v1/payment/application/{username}/settle:
-    post:
-      tags:
-        - فروشگاه
-      summary: تسویه موجودی مشخص
-      description: تسویه مقدار خاصی از موجودی فروشگاه
-      operationId: settleSpecificBalance
-      parameters:
-        - name: username
-          in: path
-          required: true
-          description: نام کاربری فروشگاه
-          schema:
-            type: string
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SettlementRequest'
-      responses:
-        '200':
-          description: موجودی با موفقیت تسویه شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptyResponse'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-        '404':
-          description: فروشگاه یافت نشد
-
-  /v1/payment/application:
-    post:
-      tags:
-        - فروشگاه
-      summary: ایجاد فروشگاه جدید
-      description: ایجاد یک فروشگاه پرداخت جدید
-      operationId: newApplication
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateApplicationRequest'
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: فروشگاه با موفقیت ایجاد شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationResponse'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-
-    get:
-      tags:
-        - فروشگاه
-      summary: لیست فروشگاه‌ها
-      description: لیست تمام فروشگاه‌های کاربر احراز هویت شده را برمی‌گرداند
-      operationId: listApplications
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: فروشگاه‌ها با موفقیت بازیابی شدند
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationListResponse'
-        '401':
-          description: عدم احراز هویت
-
   /v1/payment/{username}/resid:
     post:
       summary: ایجاد رسید جدید
@@ -608,40 +435,6 @@ components:
         هدر احراز هویت
 
   schemas:
-    InvoiceResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          $ref: '#/components/schemas/InvoiceDto'
-
-    ApplicationResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          $ref: '#/components/schemas/ApplicationDto'
-
-    ApplicationListResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplicationDto'
-
-    TotalBalanceResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          $ref: '#/components/schemas/TotalBalanceDto'
-
     TokenNetworkListResponse:
       type: object
       properties:
@@ -651,202 +444,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TokenNetworkDto'
+      example:
+        status: "OK"
+        result:
+          - token: "USDT"
+            network: "TRON"
+          - token: "TON"
+            network: "TON"
 
     EmptyResponse:
       type: object
       properties:
         status:
           $ref: '#/components/schemas/ResponseStatusEnum'
-
-    UpdateApplicationRequest:
-      type: object
-      properties:
-        logoFileId:
-          type: [string, "null"]
-          format: uuid
-          description: شناسه UUID فایل لوگو
-        name:
-          type: [string, "null"]
-          description: نام فروشگاه
-        description:
-          type: [string, "null"]
-          description: توضیحات فروشگاه
-        website:
-          type: [string, "null"]
-          description: نشانی وب فروشگاه
-        webhookUrl:
-          type: [string, "null"]
-          description: آدرس وبهوک برای اعلان‌ها
-
-    CreateApplicationRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          description: نام کاربری یکتا برای فروشگاه
-        logoFileId:
-          type: [string, "null"]
-          format: uuid
-          description: شناسه UUID فایل لوگو
-        name:
-          type: string
-          description: نام فروشگاه
-        description:
-          type: [string, "null"]
-          description: توضیحات فروشگاه
-        website:
-          type: [string, "null"]
-          description: نشانی وب فروشگاه
-        webhookUrl:
-          type: [string, "null"]
-          description: آدرس وبهوک برای اعلان‌ها
-      required:
-        - username
-        - name
-
-    SettlementRequest:
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Money'
-      required:
-        - amount
-
-    InvoiceDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: شناسه فاکتور
-        supportCode:
-          type: string
-          description: کد پشتیبانی برای فاکتور
-        status:
-          $ref: '#/components/schemas/InvoiceStatusEnum'
-        title:
-          type: string
-          description: عنوان فاکتور
-        readableTitle:
-          type: [string, "null"]
-          description: عنوان خوانا برای انسان
-        type:
-          type: string
-          description: نوع فاکتور
-        amount:
-          $ref: '#/components/schemas/Money'
-        value:
-          $ref: '#/components/schemas/Money'
-        allowedPaymentTokens:
-          type: array
-          items:
-            $ref: '#/components/schemas/TokenEnum'
-        fee:
-          $ref: '#/components/schemas/Money'
-        createdAt:
-          type: string
-          format: date-time
-          description: زمان ایجاد فاکتور
-        expiredAt:
-          type: [string, "null"]
-          format: date-time
-          description: زمان انقضای فاکتور
-        paidWith:
-          allOf:
-            - $ref: '#/components/schemas/Money'
-          type:
-            - object
-            - "null"
-        paidAt:
-          type: [string, "null"]
-          format: date-time
-          description: زمان پرداخت
-
-    ApplicationDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: شناسه فروشگاه
-        ownerId:
-          type: integer
-          format: int64
-          description: شناسه کاربر مالک
-        supportCode:
-          type: string
-          description: کد پشتیبانی برای فروشگاه
-        status:
-          $ref: '#/components/schemas/ApplicationStatusEnum'
-        username:
-          type: string
-          description: نام کاربری فروشگاه
-        logo:
-          type: [string, "null"]
-          description: نشانی لوگو
-        name:
-          type: string
-          description: نام فروشگاه
-        description:
-          type: [string, "null"]
-          description: توضیحات فروشگاه
-        website:
-          type: [string, "null"]
-          description: نشانی وب فروشگاه
-        webhookUrl:
-          type: [string, "null"]
-          description: آدرس وبهوک برای اعلان‌ها
-        feePayer:
-          $ref: '#/components/schemas/FeePayerEnum'
-
-    TotalBalanceDto:
-      type: object
-      properties:
-        totalValue:
-          $ref: '#/components/schemas/TotalValueDto'
-        tokens:
-          type: array
-          items:
-            $ref: '#/components/schemas/TokensBalanceDto'
-
-    TotalValueDto:
-      type: object
-      properties:
-        available:
-          type: array
-          items:
-            $ref: '#/components/schemas/Money'
-        onHold:
-          type: array
-          items:
-            $ref: '#/components/schemas/Money'
-      required:
-        - available
-        - onHold
-
-    TokensBalanceDto:
-      type: object
-      properties:
-        name:
-          $ref: '#/components/schemas/TokenEnum'
-        available:
-          $ref: '#/components/schemas/TokenAmountAndValueDto'
-        onHold:
-          $ref: '#/components/schemas/TokenAmountAndValueDto'
-        marketData:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalMarketDataDto'
-
-    TokenAmountAndValueDto:
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Money'
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/Money'
 
     TokenNetworkDto:
       type: object
@@ -858,6 +468,9 @@ components:
       required:
         - token
         - network
+      example:
+        token: "USDT"
+        network: "TRON"
 
     Money:
       type: object
@@ -873,45 +486,11 @@ components:
         number: "100.50"
         unit: "USDT"
 
-    ExternalMarketDataDto:
-      type: object
-      properties:
-        latestPrice:
-          type: string
-          description: آخرین قیمت به‌صورت رشته
-        bestBuy:
-          type: string
-          description: بهترین قیمت خرید
-        bestSell:
-          type: string
-          description: بهترین قیمت فروش
-        dayChange:
-          type: string
-          description: درصد تغییر در طول روز
-        volume24h:
-          type: string
-          description: حجم معاملات در ۲۴ ساعت گذشته
-
     ResponseStatusEnum:
       type: string
       enum:
         - OK
         - ERROR
-
-    InvoiceStatusEnum:
-      type: string
-      enum:
-        - PENDING
-        - CANCELED
-        - PAID
-        - DELIVERED
-
-    ApplicationStatusEnum:
-      type: string
-      enum:
-        - ACTIVE
-        - DEACTIVATE
-        - DELETED
 
     FeePayerEnum:
       type: string
@@ -925,6 +504,8 @@ components:
         - USDT
         - TON
         - TRX
+        - IRT
+        - ETH
 
     NetworkEnum:
       type: string
@@ -954,7 +535,7 @@ components:
         userLanguage:
           allOf:
             - $ref: '#/components/schemas/LanguageEnum'
-          example: null
+          example: "FA"
           type:
             - string
             - "null"
@@ -968,7 +549,7 @@ components:
         underPaidCoveragePercent:
           type: [string, "null"]
           description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
-          default: "10"
+          default: "0.5"
         returnUrl:
           type: [string, "null"]
           format: uri
@@ -1005,7 +586,27 @@ components:
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
-
+      example:
+        amount:
+          number: "150.00"
+          unit: "USDT"
+        allowedTokens:
+          - token: "USDT"
+            network: "TRON"
+          - token: "TON"
+            network: "TON"
+        feePayer: "APPLICATION"
+        userLanguage: "FA"
+        ttl: 1800
+        underPaidCoveragePercent: "0.5"
+        returnUrl: "https://webhook.site/return/demo-invoice"
+        webhookUrl: "https://webhook.site/payment-callback-demo"
+        orderId: "ORDER-7842"
+        description: "Invoice for monthly SaaS plan"
+        customData: "{\"plan\":\"pro\"}"
+        userId: "user-90210"
+        userEmail: "customer@example.com"
+        userPhoneNumber: "+989121234567"
       required:
         - amount
         - allowedTokens
@@ -1028,7 +629,6 @@ components:
                 - TON
                 - TRX
                 - ETH
-                - ...
           required:
             - number
             - unit
@@ -1082,7 +682,21 @@ components:
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
-
+      example:
+        amount:
+          number: "2500000"
+          unit: "IRT"
+        allowedToken: "USDT"
+        network: "TRON"
+        ttl: 3600
+        underPaidCoveragePercent: "0.5"
+        orderId: "ORDER-2399"
+        webhookUrl: "https://webhook.site/temporary-wallet-callback"
+        customData: "{\"cartId\":\"c-431\"}"
+        description: "Payment for order 2399"
+        userId: "user-2399"
+        userEmail: "buyer@example.com"
+        userPhoneNumber: "+989901234567"
       required:
         - amount
         - network
@@ -1095,6 +709,9 @@ components:
           $ref: '#/components/schemas/TokenEnum'
         network:
           $ref: '#/components/schemas/NetworkEnum'
+      example:
+        token: "TON"
+        network: "TON"
       required:
         - token
         - network
@@ -1119,6 +736,13 @@ components:
           type: string
           format: date-time
           description: زمان ایجاد فاکتور
+      example:
+        id: "8c5b5f83-1f6b-45b5-bb09-4b1b1db5ecb8"
+        paymentLinks:
+          - type: "TELEGRAM_WEBAPP"
+            url: "https://t.me/SwapWalletBot/app?startapp=xp-withdraw-1_05-USDT-325"
+        expiredAt: "2025-12-15T10:45:00Z"
+        createdAt: "2025-12-15T09:45:00Z"
 
     CreateApplicationInvoiceWithTemporaryWalletResponse:
       type: object
@@ -1145,6 +769,28 @@ components:
           type: string
           format: date-time
           description: زمان ایجاد فاکتور
+      example:
+        id: "b2b76e4b-167d-4ff9-a8c6-56b8434d3c44"
+        walletAddress: "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA"
+        links:
+          - name: "SWAP_WALLET"
+            logo: "https://swapwallet.app/assets/logo.png"
+            url: "https://t.me/SwapWalletBot/app?startapp=xp-withdraw-1_05-USDT-325"
+          - name: "TRUST_WALLET"
+            logo: "https://trustwallet.com/logo.png"
+            url: "https://link.trustwallet.com/send?address=TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA"
+        amount:
+          amount:
+            number: "2500000"
+            unit: "IRT"
+          usdValue:
+            number: "45.20"
+            unit: "USDT"
+          userCurrencyValue:
+            number: "2500000"
+            unit: "IRT"
+        expiredAt: "2025-12-15T10:45:00Z"
+        createdAt: "2025-12-15T09:45:00Z"
 
     ApplicationInvoiceV2Dto:
       type: object
@@ -1170,11 +816,27 @@ components:
           type:
             - object
             - "null"
-
+        userId:
+          type: [string, "null"]
+          maxLength: 255
+          description: شناسه کاربر در سیستم شما
+          example: "user-123456"
+        userEmail:
+          type: [string, "null"]
+          format: email
+          maxLength: 320
+          description: ایمیل کاربر
+          example: "user@example.com"
+        userPhoneNumber:
+          type: [string, "null"]
+          format: phone
+          maxLength: 16
+          description: شماره تلفن کاربر
+          example: "+989121234567"
         userLanguage:
           allOf:
             - $ref: '#/components/schemas/LanguageEnum'
-          example: null
+          example: "FA"
           type:
             - string
             - "null"
@@ -1232,6 +894,41 @@ components:
           type: string
           format: date-time
           description: زمان ایجاد
+      example:
+        id: "5f3f3b28-7c38-4b24-9f1d-6b9e5d9a9c77"
+        supportCode: "SW-482193"
+        status: "ACTIVE"
+        description: "Invoice for order 482193"
+        customData: "{\"cartId\":\"482193\"}"
+        wallet:
+          network: "TRON"
+          token: "USDT"
+          address: "TNm9Kx8ZxX4p4rXfsVqk1uNpjrA1jE7P7U"
+          validUntil: "2025-12-15T11:00:00Z"
+          deepLinks:
+            - name: "SWAP_WALLET"
+              logo: "https://swapwallet.app/assets/logo.png"
+              url: "https://t.me/SwapWalletBot/app?startapp=xp-withdraw-1_05-USDT-325"
+        userLanguage: "FA"
+        returnUrl: "https://webhook.site/return/order-482193"
+        webhookUrl: "https://webhook.site/payment/order-482193"
+        orderId: "ORDER-482193"
+        amount:
+          number: "95.00"
+          unit: "USDT"
+        value:
+          number: "95.00"
+          unit: "USDT"
+        feePayer: "APPLICATION"
+        feeAmount:
+          number: "0.95"
+          unit: "USDT"
+        paymentLinks:
+          - type: "TELEGRAM_BOT"
+            url: "https://t.me/SwapWalletBot/pay?invoice=5f3f3b28"
+        paidAt: null
+        expiredAt: "2025-12-15T11:00:00Z"
+        createdAt: "2025-12-15T09:00:00Z"
 
     InvoicePaymentLinkDto:
       type: object
@@ -1241,6 +938,9 @@ components:
         url:
           type: string
           description: آدرس لینک پرداخت
+      example:
+        type: "WEBSITE"
+        url: "https://swapwallet.app/pay/8c5b5f83"
 
     ApplicationInvoiceWalletDto:
       type: object
@@ -1261,25 +961,15 @@ components:
           items:
             $ref: '#/components/schemas/DeepLinkDto'
           description: لینک‌های عمیق کیف پول‌ها
-
-    ApplicationInformationDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: نام فروشگاه
-        description:
-          type: [string, "null"]
-          description: توضیحات فروشگاه
-        logo:
-          type: [string, "null"]
-          description: آدرس لوگو فروشگاه
-        website:
-          type: [string, "null"]
-          description: وب‌سایت فروشگاه
-        verified:
-          type: boolean
-          description: وضعیت تأیید فروشگاه
+      example:
+        network: "TRON"
+        token: "USDT"
+        address: "TP3u4JdW5m1pVa9oX2y9pQdF6xB3rP7q8s"
+        validUntil: "2025-12-15T11:00:00Z"
+        deepLinks:
+          - name: "TRUST_WALLET"
+            logo: "https://trustwallet.com/logo.png"
+            url: "trust://pay?address=TP3u4JdW5m1pVa9oX2y9pQdF6xB3rP7q8s"
 
     AmountAndValueDto:
       type: object
@@ -1290,6 +980,16 @@ components:
           $ref: '#/components/schemas/Money'
         userCurrencyValue:
           $ref: '#/components/schemas/Money'
+      example:
+        amount:
+          number: "2500000"
+          unit: "IRT"
+        usdValue:
+          number: "45.20"
+          unit: "USDT"
+        userCurrencyValue:
+          number: "2500000"
+          unit: "IRT"
 
     DeepLinkDto:
       type: object
@@ -1302,6 +1002,10 @@ components:
         url:
           type: [string, "null"]
           description: لینک عمیق کیف پول
+      example:
+        name: "TON_KEEPER"
+        logo: "https://tonkeeper.com/logo.png"
+        url: "tonkeeper://transfer?address=UQDLbY2mNw7w4KVs_0dGthQ"
 
     # V2 Response Wrappers
     ApplicationInvoiceWithPaymentLinksResponseWrapper:
@@ -1390,8 +1094,8 @@ components:
             - $ref: "#/components/schemas/Money"
           description: مبلغ فاکتور
           example:
-            number: 19000
-            unit: IRT
+            number: "19000"
+            unit: "IRT"
         ttl:
           type: integer
           format: int64
@@ -1402,7 +1106,7 @@ components:
         userLanguage:
           allOf:
             - $ref: "#/components/schemas/LanguageEnum"
-          example: null
+          example: "FA"
           type: [string, "null"]
           description: زبان کاربر
         webhookUrl:
@@ -1436,7 +1140,19 @@ components:
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
-
+      example:
+        amount:
+          number: "19000"
+          unit: "IRT"
+        ttl: 3600
+        userLanguage: "FA"
+        webhookUrl: "https://webhook.site/resid-callback"
+        orderId: "ORDER-19000"
+        description: "Receipt for order 19000"
+        customData: "{\"note\":\"express\"}"
+        userId: "user-19000"
+        userEmail: "payer@example.com"
+        userPhoneNumber: "+989121112233"
       required:
         - amount
         - ttl
