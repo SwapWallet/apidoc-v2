@@ -420,7 +420,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/ApplicationInvoiceV2Dto"
+                $ref: "#/components/schemas/CreateIrtResidResponseV1"
 
 components:
   parameters:
@@ -1156,3 +1156,31 @@ components:
       required:
         - amount
         - ttl
+
+    CreateIrtResidResponseV1:
+      type: "object"
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: شناسه UUID رسید
+        paymentLinks: 
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoicePaymentLinkDto"
+          description: لینک‌های پرداخت
+        expiredAt:
+          type: string
+          format: date-time
+          description: زمان انقضای رسید
+        createdAt:
+          type: string
+          format: date-time
+          description: زمان ایجاد رسید
+      example:
+        id: "d4e5f6a7-8b9c-4d0e-9f1a-2b3c4d5e6f78"
+        paymentLinks:
+          - type: "TELEGRAM_WEBAPP"
+            url: "https://t.me/SwapWalletBot/app?startapp=xp-resid-d4e5f6a7-8b9c-4d0e-9f1a-2b3c4d5e6f78"
+        expiredAt: "2025-12-15T10:45:00Z"
+        createdAt: "2025-12-15T09:45:00Z"
