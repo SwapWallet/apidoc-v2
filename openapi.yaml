@@ -1114,6 +1114,11 @@ components:
           format: uri
           maxLength: 255
           description: آدرس وب‌هوک برای اعلان‌ها
+        returnUrl:
+          type: [string, "null"]
+          format: uri
+          maxLength: 255
+          description: آدرس بازگشت کاربر پس از پرداخت
         orderId:
           type: [string, "null"]
           maxLength: 255
