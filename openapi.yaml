@@ -31,9 +31,10 @@ info:
     برای استفاده از API لازم است یک **کلید API** برای حساب خود ایجاد کنید.
 
     مراحل دریافت:
-    1. ورود به اپلیکیشن سواپ‌ولت
-    2. رفتن به بخش **پروفایل ← کلید API**
-    3. کلیک روی گزینه‌ی **ایجاد کلید جدید**
+    1. ورود به [پنل مدیریت فروشگاه](https://business.swapwallet.app)
+    2. ورود به فروشگاه مورد نظر
+    3. رفتن به بخش **تنظیمات ← کلید دسترسی (API Key)**
+    4. کلیک روی گزینه‌ی **دریافت کلید**
 
     سپس کلید خود را در هدر درخواست‌ها به‌صورت زیر ارسال کنید:
 
@@ -47,13 +48,16 @@ info:
     > [!note]
     > اگر به کلیدی با دسترسی‌های خاص (مانند محدودیت روی IP مشخص یا سطح دسترسی سفارشی) نیاز دارید، با پشتیبانی ما تماس بگیرید.
 
+    > [!note]
+    > هر فروشگاه کلید اختصاصی خود را دارد و برای فروشگاه‌های دیگر باید همین روند را برای فروشگاه مد نظر طی کنید.
+
     ---
 
     ## جایگزینی کلید API
 
     برای غیرفعال‌سازی کلید فعلی و صدور کلید جدید:
 
-    **پروفایل ← کلید API ← جایگزینی با کلید جدید**
+    **تنظیمات ← کلید دسترسی (API Key) ← بازنشانی کلید**
 
     پس از تأیید، کلید قبلی بلافاصله از کار می‌افتد و یک کلید جدید برای شما صادر می‌شود.
 
@@ -78,52 +82,52 @@ servers:
       سرور پروداکشن
 
 tags:
-  - name: توکن
-    description: |
-      برای استفاده از API سواپ‌ولت لازم است یک **کلید API** برای حساب خود ایجاد کنید.
-
-      ## دریافت کلید
-
-      1. ورود به اپلیکیشن سواپ‌ولت
-      2. رفتن به بخش **پروفایل ← کلید API**
-      3. کلیک روی گزینه‌ی **ایجاد کلید جدید**
-
-      سپس کلید خود را در هدر تمام درخواست‌ها به‌صورت زیر ارسال کنید:
-
-      ```http
-      Authorization: Bearer apikey-xxx
-      ```
-
-      > [!note]
-      > کلیدهای API برای استفاده‌ی برنامه‌نویسی بهینه‌سازی شده‌اند؛ محدودیت‌های دومرحله‌ای نظیر ایمیل، پیامک و Google Authenticator اعمال نمی‌شوند.
-
-      ## جایگزینی کلید
-
-      برای غیرفعال‌سازی کلید فعلی و صدور کلید جدید از مسیر زیر اقدام کنید:
-
-      **پروفایل ← کلید API ← جایگزینی با کلید جدید**
-
-      پس از تأیید، کلید قبلی بلافاصله از کار می‌افتد و یک کلید جدید صادر می‌شود.
-
-      ## بررسی کلید
-
-      پس از دریافت کلید، می‌توانید با استفاده از endpoint زیر از صحت و فعال بودن آن اطمینان حاصل کنید:
-
-      ```http
-      GET /api/v1/utils/authentication/check
-      Authorization: Bearer apikey-xxx
-      ```
-
-      پاسخ موفق:
-
-      ```json
-      { "status": "OK" }
-      ```
-
-      در غیر این صورت سرور پاسخ `401 Unauthorized` برمی‌گرداند.
-
-      > [!caution]
-      > کلید خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید. در صورت لو رفتن، فوراً آن را جایگزین کنید.
+  #  - name: توکن
+  #    description: |
+  #      برای استفاده از API سواپ‌ولت لازم است یک **کلید API** برای حساب خود ایجاد کنید.
+  #
+  #      ## دریافت کلید
+  #
+  #      1. ورود به اپلیکیشن سواپ‌ولت
+  #      2. رفتن به بخش **پروفایل ← کلید API**
+  #      3. کلیک روی گزینه‌ی **ایجاد کلید جدید**
+  #
+  #      سپس کلید خود را در هدر تمام درخواست‌ها به‌صورت زیر ارسال کنید:
+  #
+  #      ```http
+  #      Authorization: Bearer apikey-xxx
+  #      ```
+  #
+  #      > [!note]
+  #      > کلیدهای API برای استفاده‌ی برنامه‌نویسی بهینه‌سازی شده‌اند؛ محدودیت‌های دومرحله‌ای نظیر ایمیل، پیامک و Google Authenticator اعمال نمی‌شوند.
+  #
+  #      ## جایگزینی کلید
+  #
+  #      برای غیرفعال‌سازی کلید فعلی و صدور کلید جدید از مسیر زیر اقدام کنید:
+  #
+  #      **پروفایل ← کلید API ← جایگزینی با کلید جدید**
+  #
+  #      پس از تأیید، کلید قبلی بلافاصله از کار می‌افتد و یک کلید جدید صادر می‌شود.
+  #
+  #      ## بررسی کلید
+  #
+  #      پس از دریافت کلید، می‌توانید با استفاده از endpoint زیر از صحت و فعال بودن آن اطمینان حاصل کنید:
+  #
+  #      ```http
+  #      GET /api/v1/utils/authentication/check
+  #      Authorization: Bearer apikey-xxx
+  #      ```
+  #
+  #      پاسخ موفق:
+  #
+  #      ```json
+  #      { "status": "OK" }
+  #      ```
+  #
+  #      در غیر این صورت سرور پاسخ `401 Unauthorized` برمی‌گرداند.
+  #
+  #      > [!caution]
+  #      > کلید خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید. در صورت لو رفتن، فوراً آن را جایگزین کنید.
 
   - name: بازار
     description: |
@@ -253,26 +257,26 @@ x-tagGroups:
       - رسید
 
 paths:
-  /v1/utils/authentication/check:
-    get:
-      tags:
-        - توکن
-      summary: بررسی توکن
-      description: |
-        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمینان حاصل پیدا کنید.
-      operationId: checkAuthentication
-      x-scalar-ignore: true
-      responses:
-        '200':
-          description: احراز با موفقیت انجام شد
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/EmptyResponse"
-        '401':
-          description: عدم احراز هویت
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
+  #  /v1/utils/authentication/check:
+  #    get:
+  #      tags:
+  #        - توکن
+  #      summary: بررسی توکن
+  #      description: |
+  #        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمینان حاصل پیدا کنید.
+  #      operationId: checkAuthentication
+  #      x-scalar-ignore: true
+  #      responses:
+  #        '200':
+  #          description: احراز با موفقیت انجام شد
+  #          content:
+  #            'application/json':
+  #              schema:
+  #                $ref: "#/components/schemas/EmptyResponse"
+  #        '401':
+  #          description: عدم احراز هویت
+  #      parameters:
+  #        - $ref: '#/components/parameters/AuthorizationHeader'
 
   /v1/market/prices:
     get:
@@ -300,109 +304,108 @@ paths:
                   "TRX/IRT": "40000"
                   "...": "..."
 
-  /v1/market/otc/fast-swap:
-    post:
-      tags:
-        - بازار
-      summary: سواپ سریع
-      description: |
-        تبدیل فوری یک توکن به توکن دیگر با بهترین قیمت لحظه‌ای، بدون نیاز به تأیید قیمت.
+  #  /v1/market/otc/fast-swap:
+  #    post:
+  #      tags:
+  #        - بازار
+  #      summary: سواپ سریع
+  #      description: |
+  #        تبدیل فوری یک توکن به توکن دیگر با بهترین قیمت لحظه‌ای، بدون نیاز به تأیید قیمت.
+  #
+  #        یکی از دو فیلد `sourceAmount` یا `destinationAmount` را ارسال کنید:
+  #
+  #        | فیلد | رفتار |
+  #        |---:|---:|
+  #        | `sourceAmount` | مقدار مشخصی از توکن مبدأ فروخته می‌شود و توکن مقصد معادل آن دریافت می‌شود |
+  #        | `destinationAmount` | مقدار مشخصی از توکن مقصد دریافت می‌شود و توکن مبدأ به همان اندازه فروخته می‌شود |
+  #      operationId: fastSwap
+  #      parameters:
+  #        - $ref: '#/components/parameters/AuthorizationHeader'
+  #      requestBody:
+  #        required: true
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/OtcSwapRequest'
+  #      responses:
+  #        '200':
+  #          description: سواپ با موفقیت انجام شد
+  #          content:
+  #            application/json:
+  #              schema:
+  #                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
+  #        '400':
+  #          description: درخواست نامعتبر (توکن پشتیبانی‌نشده، مقدار خارج از محدوده، یا موجودی ناکافی)
+  #        '401':
+  #          description: عدم احراز هویت
+  #  /v1/market/otc/price:
+  #    post:
+  #      tags:
+  #        - بازار
+  #      summary: دریافت قیمت OTC
+  #      description: |
+  #        یک قیمت قفل‌شده برای سواپ دریافت کنید. قیمت به مدت **۱۰ ثانیه** معتبر است.
+  #
+  #        برای اجرای سواپ با این قیمت، باید `swapToken` دریافتی را در endpoint تأیید سواپ ارسال کنید.
+  #
+  #        > [!warning]
+  #        > در هر لحظه فقط یک `swapToken` فعال می‌تواند وجود داشته باشد. ایجاد قیمت جدید، توکن قبلی را باطل می‌کند.
+  #
+  #        > [!note]
+  #        > برای اجرای سریع بدون نیاز به تأیید قیمت، از endpoint **سواپ سریع** استفاده کنید.
+  #      operationId: getOtcPrice
+  #      parameters:
+  #        - $ref: '#/components/parameters/AuthorizationHeader'
+  #      requestBody:
+  #        required: true
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/OtcSwapRequest'
+  #      responses:
+  #        '200':
+  #          description: قیمت با موفقیت دریافت شد
+  #          content:
+  #            application/json:
+  #              schema:
+  #                $ref: '#/components/schemas/OtcPriceResponseWrapper'
+  #        '400':
+  #          description: درخواست نامعتبر
+  #        '401':
+  #          description: عدم احراز هویت
 
-        یکی از دو فیلد `sourceAmount` یا `destinationAmount` را ارسال کنید:
+  #  /v1/market/otc/order:
+  #    post:
+  #      tags:
+  #        - بازار
+  #      summary: تأیید و اجرای سواپ OTC
+  #      description: |
+  #        سواپ را با استفاده از `swapToken` دریافت‌شده از endpoint قیمت، تأیید و اجرا کنید.
+  #
+  #        > [!warning]
+  #        > `swapToken` تنها **۱۰ ثانیه** اعتبار دارد. در صورت انقضا باید قیمت جدیدی دریافت کنید.
+  #      operationId: executeOtcOrder
+  #      parameters:
+  #        - $ref: '#/components/parameters/AuthorizationHeader'
+  #      requestBody:
+  #        required: true
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/OtcOrderRequest'
+  #      responses:
+  #        '200':
+  #          description: سواپ با موفقیت اجرا شد
+  #          content:
+  #            application/json:
+  #              schema:
+  #                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
+  #        '400':
+  #          description: توکن منقضی‌شده یا نامعتبر
+  #        '401':
+  #          description: عدم احراز هویت
 
-        | فیلد | رفتار |
-        |---:|---:|
-        | `sourceAmount` | مقدار مشخصی از توکن مبدأ فروخته می‌شود و توکن مقصد معادل آن دریافت می‌شود |
-        | `destinationAmount` | مقدار مشخصی از توکن مقصد دریافت می‌شود و توکن مبدأ به همان اندازه فروخته می‌شود |
-      operationId: fastSwap
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OtcSwapRequest'
-      responses:
-        '200':
-          description: سواپ با موفقیت انجام شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
-        '400':
-          description: درخواست نامعتبر (توکن پشتیبانی‌نشده، مقدار خارج از محدوده، یا موجودی ناکافی)
-        '401':
-          description: عدم احراز هویت
-
-  /v1/market/otc/price:
-    post:
-      tags:
-        - بازار
-      summary: دریافت قیمت OTC
-      description: |
-        یک قیمت قفل‌شده برای سواپ دریافت کنید. قیمت به مدت **۱۰ ثانیه** معتبر است.
-
-        برای اجرای سواپ با این قیمت، باید `swapToken` دریافتی را در endpoint تأیید سواپ ارسال کنید.
-
-        > [!warning]
-        > در هر لحظه فقط یک `swapToken` فعال می‌تواند وجود داشته باشد. ایجاد قیمت جدید، توکن قبلی را باطل می‌کند.
-
-        > [!note]
-        > برای اجرای سریع بدون نیاز به تأیید قیمت، از endpoint **سواپ سریع** استفاده کنید.
-      operationId: getOtcPrice
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OtcSwapRequest'
-      responses:
-        '200':
-          description: قیمت با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OtcPriceResponseWrapper'
-        '400':
-          description: درخواست نامعتبر
-        '401':
-          description: عدم احراز هویت
-
-  /v1/market/otc/order:
-    post:
-      tags:
-        - بازار
-      summary: تأیید و اجرای سواپ OTC
-      description: |
-        سواپ را با استفاده از `swapToken` دریافت‌شده از endpoint قیمت، تأیید و اجرا کنید.
-
-        > [!warning]
-        > `swapToken` تنها **۱۰ ثانیه** اعتبار دارد. در صورت انقضا باید قیمت جدیدی دریافت کنید.
-      operationId: executeOtcOrder
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OtcOrderRequest'
-      responses:
-        '200':
-          description: سواپ با موفقیت اجرا شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
-        '400':
-          description: توکن منقضی‌شده یا نامعتبر
-        '401':
-          description: عدم احراز هویت
-
-  /v2/user/balance:
+  /v1/merchants/balance:
     get:
       tags:
         - موجودی
@@ -417,34 +420,97 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenBalanceListResponseWrapper'
+                $ref: '#/components/schemas/TotalBalanceDTO'
               example:
                 status: "OK"
                 result:
-                  - token: "ETH"
-                    amount:
-                      number: "0"
-                      unit: "ETH"
-                  - token: "BNB"
-                    amount:
-                      number: "0"
-                      unit: "BNB"
-                  - token: "TON"
-                    amount:
-                      number: "12.5"
-                      unit: "TON"
-                  - token: "TRX"
-                    amount:
-                      number: "340"
-                      unit: "TRX"
-                  - token: "USDT"
-                    amount:
-                      number: "999800"
-                      unit: "USDT"
-                  - token: "IRT"
-                    amount:
-                      number: "150000000"
-                      unit: "IRT"
+                  totalValue:
+                    available:
+                      - number: "100.50"
+                        unit: "USDT"
+                      - number: "200000"
+                        unit: "IRT"
+                    onHold:
+                      - number: "0"
+                        unit: "USDT"
+                      - number: "0"
+                        unit: "IRT"
+                  tokens:
+                    - name: "USDT"
+                      available:
+                        amount:
+                          number: "100.50"
+                          unit: "USDT"
+                        values:
+                          - number: "100.50"
+                            unit: "USDT"
+                          - number: "20100000"
+                            unit: "IRT"
+                      onHold:
+                        amount:
+                          number: "0"
+                          unit: "USDT"
+                        values:
+                          - number: "0"
+                            unit: "USDT"
+                          - number: "0"
+                            unit: "IRT"
+                      marketData:
+                        - source: "USDT"
+                          destination: "USDT"
+                          marketData:
+                            bestSell: "1.00"
+                            bestBuy: "1.00"
+                            latestPrice: "1.00"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+
+                        - source: "USDT"
+                          destination: "IRT"
+                          marketData:
+                            bestSell: "200000"
+                            bestBuy: "200000"
+                            latestPrice: "200000"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+
+                    - name: "IRT"
+                      available:
+                        amount:
+                          number: "200000"
+                          unit: "IRT"
+                        values:
+                          - number: "1.00"
+                            unit: "USDT"
+                          - number: "200000"
+                            unit: "IRT"
+                      onHold:
+                        amount:
+                          number: "0"
+                          unit: "IRT"
+                        values:
+                          - number: "0"
+                            unit: "USDT"
+                          - number: "0"
+                            unit: "IRT"
+                      marketData:
+                        - source: "IRT"
+                          destination: "USDT"
+                          marketData:
+                            bestSell: "0.000005"
+                            bestBuy: "0.000005"
+                            latestPrice: "0.000005"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+
+                        - source: "IRT"
+                          destination: "IRT"
+                          marketData:
+                            bestSell: "1"
+                            bestBuy: "1"
+                            latestPrice: "1"
+                            dayChange: "0"
+                            volume24h: "0"
         '401':
           description: عدم احراز هویت
 
@@ -772,7 +838,7 @@ paths:
                       value:
                         number: "2482320"
                         unit: "IRT"
-                      allowedPaymentTokens: ["USDT", "IRT", "TON"]
+                      allowedPaymentTokens: [ "USDT", "IRT", "TON" ]
                       fee:
                         number: "0"
                         unit: "USDT"
@@ -1268,7 +1334,7 @@ components:
             - "null"
           description: نحوه‌ی کسر کارمزد (پیش‌فرض `INTERNAL`)
         remark:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: یادداشت داخلی
       required:
         - amount
@@ -1388,10 +1454,10 @@ components:
           $ref: '#/components/schemas/TokenEnum'
           description: توکن مقصد
         sourceAmount:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: مقدار توکن مبدأ برای فروش (با `destinationAmount` نمی‌توان همزمان ارسال کرد)
         destinationAmount:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: مقدار توکن مقصد مورد نیاز (با `sourceAmount` نمی‌توان همزمان ارسال کرد)
       required:
         - sourceToken
@@ -1460,11 +1526,11 @@ components:
           description: جفت معاملاتی (مثلاً TRX/USDT)
         side:
           type: string
-          enum: [BUY, SELL]
+          enum: [ BUY, SELL ]
           description: جهت معامله از دیدگاه توکن مقصد
         type:
           type: string
-          enum: [OTC]
+          enum: [ OTC ]
           description: نوع معامله
         sourceAmount:
           $ref: '#/components/schemas/Money'
@@ -1527,11 +1593,11 @@ components:
           description: زمان ثبت تراکنش (Unix milliseconds)
         type:
           type: string
-          enum: [TRADE]
+          enum: [ TRADE ]
           description: نوع تراکنش
         status:
           type: string
-          enum: [SUCCEED, PENDING, FAILED]
+          enum: [ SUCCEED, PENDING, FAILED ]
           description: وضعیت تراکنش
         network:
           type: string
@@ -1618,7 +1684,7 @@ components:
           type: string
           description: نام نمایشی کاربر
         profileUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: آدرس تصویر پروفایل
       example:
         id: 1
@@ -1757,7 +1823,7 @@ components:
           description: نام کاربری تلگرام گیرنده (بدون @)
         count:
           type: integer
-          enum: [100, 250, 500, 1000, 5000]
+          enum: [ 100, 250, 500, 1000, 5000 ]
           description: تعداد استارز
       required:
         - username
@@ -1774,7 +1840,7 @@ components:
           description: نام کاربری تلگرام گیرنده (بدون @)
         month:
           type: string
-          enum: ["3m", "6m", "12m"]
+          enum: [ "3m", "6m", "12m" ]
           description: مدت اشتراک
       required:
         - username
@@ -1833,7 +1899,7 @@ components:
             - "null"
           description: توکن پرداخت‌شده
         paidAt:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: date-time
 
     ShopPaymentDetailDto:
@@ -1867,7 +1933,7 @@ components:
           description: زمان ثبت تراکنش (Unix milliseconds)
         type:
           type: string
-          enum: [PAYMENT]
+          enum: [ PAYMENT ]
         status:
           $ref: '#/components/schemas/TransactionStatusEnum'
         network:
@@ -1918,6 +1984,55 @@ components:
           items:
             $ref: '#/components/schemas/ShopProductDto'
 
+    TokenAmountAndValueDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+
+    MarketDataDTO:
+      type: object
+      properties:
+        bestSell:
+          type: String
+        bestBuy:
+          type: String
+        latestPrice:
+          type: String
+        dayChange:
+          type: String
+        volume24h:
+          type: String
+
+    ExternalMarketDataDTO:
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/TokenEnum'
+        destination:
+          $ref: '#/components/schemas/TokenEnum'
+        marketData:
+          $ref: '#/components/schemas/MarketDataDTO'
+
+
+    TokensBalanceDto:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TokenEnum'
+        available:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        onHold:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        marketData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalMarketDataDTO'
+
     TokenBalanceDto:
       type: object
       properties:
@@ -1931,34 +2046,122 @@ components:
           number: "999800"
           unit: "USDT"
 
-    TokenBalanceListResponseWrapper:
+    TotalValueDto:
+      type: object
+      properties:
+        available:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+        onHold:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+
+    TotalBalanceDTO:
       type: object
       properties:
         status:
           $ref: '#/components/schemas/ResponseStatusEnum'
         result:
-          type: array
-          items:
-            $ref: '#/components/schemas/TokenBalanceDto'
+          type: object
+          properties:
+            totalValue:
+              $ref: '#/components/schemas/TotalValueDto'
+            tokens:
+              type: array
+              items:
+                $ref: '#/components/schemas/TokensBalanceDto'
       example:
         status: "OK"
         result:
-          - token: "ETH"
-            amount:
-              number: "0"
-              unit: "ETH"
-          - token: "BNB"
-            amount:
-              number: "0"
-              unit: "BNB"
-          - token: "TON"
-            amount:
-              number: "0"
-              unit: "TON"
-          - token: "USDT"
-            amount:
-              number: "999800"
-              unit: "USDT"
+          totalValue:
+            available:
+              - number: "100.50"
+                unit: "USDT"
+              - number: "200000"
+                unit: "IRT"
+            onHold:
+              - number: "0"
+                unit: "USDT"
+              - number: "0"
+                unit: "IRT"
+          tokens:
+            - name: "USDT"
+              available:
+                amount:
+                  number: "100.50"
+                  unit: "USDT"
+                values:
+                  - number: "100.50"
+                    unit: "USDT"
+                  - number: "20100000"
+                    unit: "IRT"
+              onHold:
+                amount:
+                  number: "0"
+                  unit: "USDT"
+                values:
+                  - number: "0"
+                    unit: "USDT"
+                  - number: "0"
+                    unit: "IRT"
+              marketData:
+                - source: "USDT"
+                  destination: "USDT"
+                  marketData:
+                    bestSell: "1.00"
+                    bestBuy: "1.00"
+                    latestPrice: "1.00"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+                - source: "USDT"
+                  destination: "IRT"
+                  marketData:
+                    bestSell: "200000"
+                    bestBuy: "200000"
+                    latestPrice: "200000"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+            - name: "IRT"
+              available:
+                amount:
+                  number: "200000"
+                  unit: "IRT"
+                values:
+                  - number: "1.00"
+                    unit: "USDT"
+                  - number: "200000"
+                    unit: "IRT"
+              onHold:
+                amount:
+                  number: "0"
+                  unit: "IRT"
+                values:
+                  - number: "0"
+                    unit: "USDT"
+                  - number: "0"
+                    unit: "IRT"
+              marketData:
+                - source: "IRT"
+                  destination: "USDT"
+                  marketData:
+                    bestSell: "0.000005"
+                    bestBuy: "0.000005"
+                    latestPrice: "0.000005"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+                - source: "IRT"
+                  destination: "IRT"
+                  marketData:
+                    bestSell: "1"
+                    bestBuy: "1"
+                    latestPrice: "1"
+                    dayChange: "0"
+                    volume24h: "0"
 
     TokenBalanceSingleResponseWrapper:
       type: object
@@ -2087,10 +2290,10 @@ components:
             - "null"
           description: نحوه‌ی کسر کارمزد (پیش‌فرض `INTERNAL`)
         remark:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: یادداشت داخلی (برای استفاده‌ی شخصی، روی شبکه ارسال نمی‌شود)
         memo:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: |
             برچسب/memo شبکه (برای شبکه‌هایی مثل TON که از memo پشتیبانی می‌کنند).
             در شبکه‌هایی که پشتیبانی ندارند نادیده گرفته می‌شود.
@@ -2136,13 +2339,13 @@ components:
           type: string
           description: آدرس مقصد
         memo:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: memo ارسال‌شده روی شبکه
         remark:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: یادداشت داخلی
         txHash:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: هش تراکنش روی شبکه (پس از تأیید تکمیل می‌شود)
         createdAt:
           type: string
@@ -2224,42 +2427,42 @@ components:
           maximum: 21600
           description: مدت زمان اعتبار فاکتور به ثانیه
         underPaidCoveragePercent:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: درصد پوشش کم‌پرداختی (0 تا 60 درصد)
           default: "0.5"
         returnUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس بازگشت پس از پرداخت
         webhookUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس وب‌هوک برای اعلان‌ها
         orderId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه سفارش خارجی
         description:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: توضیحات فاکتور
         customData:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: داده‌های سفارشی
         userId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه کاربر در سیستم شما
         userEmail:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: email
           maxLength: 320
           description: ایمیل کاربر
         userPhoneNumber:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
@@ -2326,36 +2529,36 @@ components:
           description: مدت زمان اعتبار فاکتور به ثانیه
           example: 3600
         underPaidCoveragePercent:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: درصد پوشش پرداخت کمتر (0 تا 60 درصد)
         orderId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه سفارش خارجی
         webhookUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس وب‌هوک برای اعلان‌ها
         customData:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: داده‌های سفارشی
         description:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: توضیحات فاکتور
         userId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه کاربر در سیستم شما
         userEmail:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: email
           maxLength: 320
           description: ایمیل کاربر
         userPhoneNumber:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
@@ -2482,10 +2685,10 @@ components:
         status:
           $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
         description:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: توضیحات فاکتور
         customData:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: داده‌های سفارشی
         wallet:
           allOf:
@@ -2494,18 +2697,18 @@ components:
             - object
             - "null"
         userId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه کاربر در سیستم شما
           example: "user-123456"
         userEmail:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: email
           maxLength: 320
           description: ایمیل کاربر
           example: "user@example.com"
         userPhoneNumber:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
@@ -2519,17 +2722,17 @@ components:
             - "null"
           description: زبان کاربر
         returnUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس بازگشت
         webhookUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس وب‌هوک برای اعلان‌ها
         orderId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: شناسه خارجی
         amount:
           allOf:
@@ -2560,7 +2763,7 @@ components:
             $ref: '#/components/schemas/InvoicePaymentLinkDto'
           description: لینک‌های پرداخت
         paidAt:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: date-time
           description: زمان پرداخت
         expiredAt:
@@ -2677,7 +2880,7 @@ components:
           type: string
           description: آدرس لوگو کیف پول
         url:
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: لینک عمیق کیف پول
       example:
         name: "TON_KEEPER"
@@ -2784,41 +2987,41 @@ components:
           allOf:
             - $ref: "#/components/schemas/LanguageEnum"
           example: "FA"
-          type: [string, "null"]
+          type: [ string, "null" ]
           description: زبان کاربر
         webhookUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس وب‌هوک برای اعلان‌ها
         returnUrl:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: uri
           maxLength: 255
           description: آدرس بازگشت کاربر پس از پرداخت
         orderId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه سفارش خارجی
         description:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: توضیحات رسید
         customData:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 512
           description: متادیتا
         userId:
-          type: [string, "null"]
+          type: [ string, "null" ]
           maxLength: 255
           description: شناسه کاربر در سیستم شما
         userEmail:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: email
           maxLength: 320
           description: ایمیل کاربر
         userPhoneNumber:
-          type: [string, "null"]
+          type: [ string, "null" ]
           format: phone
           maxLength: 16
           description: شماره تلفن کاربر
