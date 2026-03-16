@@ -39,7 +39,7 @@ info:
     سپس کلید خود را در هدر درخواست‌ها به‌صورت زیر ارسال کنید:
 
     ```http
-    Authorization: Bearer apikey-xxx
+    Authorization: Bearer business-xxx
     ```
 
     > [!note]
@@ -95,7 +95,7 @@ tags:
   #      سپس کلید خود را در هدر تمام درخواست‌ها به‌صورت زیر ارسال کنید:
   #
   #      ```http
-  #      Authorization: Bearer apikey-xxx
+  #      Authorization: Bearer business-xxx
   #      ```
   #
   #      > [!note]
@@ -115,7 +115,7 @@ tags:
   #
   #      ```http
   #      GET /api/v1/utils/authentication/check
-  #      Authorization: Bearer apikey-xxx
+  #      Authorization: Bearer business-xxx
   #      ```
   #
   #      پاسخ موفق:
@@ -1209,7 +1209,7 @@ components:
       required: true
       schema:
         type: string
-        example: Bearer apikey-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+        example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
       description: >
         هدر احراز هویت
 
