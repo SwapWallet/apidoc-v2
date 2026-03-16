@@ -300,26 +300,26 @@ x-tagGroups:
       - رسید
 
 paths:
-  #  /v1/utils/authentication/check:
-  #    get:
-  #      tags:
-  #        - توکن
-  #      summary: بررسی توکن
-  #      description: |
-  #        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمینان حاصل پیدا کنید.
-  #      operationId: checkAuthentication
-  #      x-scalar-ignore: true
-  #      responses:
-  #        '200':
-  #          description: احراز با موفقیت انجام شد
-  #          content:
-  #            'application/json':
-  #              schema:
-  #                $ref: "#/components/schemas/EmptyResponse"
-  #        '401':
-  #          description: عدم احراز هویت
-  #      parameters:
-  #        - $ref: '#/components/parameters/AuthorizationHeader'
+  /v1/utils/authentication/check:
+    get:
+      tags:
+        - توکن
+      summary: بررسی توکن
+      description: |
+        با استفاده از این API می‌توانید از درست بودن توکن و روش استفاده از آن اطمینان حاصل پیدا کنید.
+      operationId: checkAuthentication
+      x-scalar-ignore: true
+      responses:
+        '200':
+          description: احراز با موفقیت انجام شد
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        '401':
+          description: عدم احراز هویت
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
 
   /v1/market/prices:
     get:
@@ -347,106 +347,219 @@ paths:
                   "TRX/IRT": "40000"
                   "...": "..."
 
-  #  /v1/market/otc/fast-swap:
-  #    post:
-  #      tags:
-  #        - بازار
-  #      summary: سواپ سریع
-  #      description: |
-  #        تبدیل فوری یک توکن به توکن دیگر با بهترین قیمت لحظه‌ای، بدون نیاز به تأیید قیمت.
-  #
-  #        یکی از دو فیلد `sourceAmount` یا `destinationAmount` را ارسال کنید:
-  #
-  #        | فیلد | رفتار |
-  #        |---:|---:|
-  #        | `sourceAmount` | مقدار مشخصی از توکن مبدأ فروخته می‌شود و توکن مقصد معادل آن دریافت می‌شود |
-  #        | `destinationAmount` | مقدار مشخصی از توکن مقصد دریافت می‌شود و توکن مبدأ به همان اندازه فروخته می‌شود |
-  #      operationId: fastSwap
-  #      parameters:
-  #        - $ref: '#/components/parameters/AuthorizationHeader'
-  #      requestBody:
-  #        required: true
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: '#/components/schemas/OtcSwapRequest'
-  #      responses:
-  #        '200':
-  #          description: سواپ با موفقیت انجام شد
-  #          content:
-  #            application/json:
-  #              schema:
-  #                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
-  #        '400':
-  #          description: درخواست نامعتبر (توکن پشتیبانی‌نشده، مقدار خارج از محدوده، یا موجودی ناکافی)
-  #        '401':
-  #          description: عدم احراز هویت
-  #  /v1/market/otc/price:
-  #    post:
-  #      tags:
-  #        - بازار
-  #      summary: دریافت قیمت OTC
-  #      description: |
-  #        یک قیمت قفل‌شده برای سواپ دریافت کنید. قیمت به مدت **۱۰ ثانیه** معتبر است.
-  #
-  #        برای اجرای سواپ با این قیمت، باید `swapToken` دریافتی را در endpoint تأیید سواپ ارسال کنید.
-  #
-  #        > [!warning]
-  #        > در هر لحظه فقط یک `swapToken` فعال می‌تواند وجود داشته باشد. ایجاد قیمت جدید، توکن قبلی را باطل می‌کند.
-  #
-  #        > [!note]
-  #        > برای اجرای سریع بدون نیاز به تأیید قیمت، از endpoint **سواپ سریع** استفاده کنید.
-  #      operationId: getOtcPrice
-  #      parameters:
-  #        - $ref: '#/components/parameters/AuthorizationHeader'
-  #      requestBody:
-  #        required: true
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: '#/components/schemas/OtcSwapRequest'
-  #      responses:
-  #        '200':
-  #          description: قیمت با موفقیت دریافت شد
-  #          content:
-  #            application/json:
-  #              schema:
-  #                $ref: '#/components/schemas/OtcPriceResponseWrapper'
-  #        '400':
-  #          description: درخواست نامعتبر
-  #        '401':
-  #          description: عدم احراز هویت
+  /v1/market/otc/fast-swap:
+    post:
+      tags:
+        - بازار
+      summary: سواپ سریع
+      description: |
+        تبدیل فوری یک توکن به توکن دیگر با بهترین قیمت لحظه‌ای، بدون نیاز به تأیید قیمت.
 
-  #  /v1/market/otc/order:
-  #    post:
-  #      tags:
-  #        - بازار
-  #      summary: تأیید و اجرای سواپ OTC
-  #      description: |
-  #        سواپ را با استفاده از `swapToken` دریافت‌شده از endpoint قیمت، تأیید و اجرا کنید.
-  #
-  #        > [!warning]
-  #        > `swapToken` تنها **۱۰ ثانیه** اعتبار دارد. در صورت انقضا باید قیمت جدیدی دریافت کنید.
-  #      operationId: executeOtcOrder
-  #      parameters:
-  #        - $ref: '#/components/parameters/AuthorizationHeader'
-  #      requestBody:
-  #        required: true
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: '#/components/schemas/OtcOrderRequest'
-  #      responses:
-  #        '200':
-  #          description: سواپ با موفقیت اجرا شد
-  #          content:
-  #            application/json:
-  #              schema:
-  #                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
-  #        '400':
-  #          description: توکن منقضی‌شده یا نامعتبر
-  #        '401':
-  #          description: عدم احراز هویت
+        یکی از دو فیلد `sourceAmount` یا `destinationAmount` را ارسال کنید:
+
+        | فیلد | رفتار |
+        |---:|---:|
+        | `sourceAmount` | مقدار مشخصی از توکن مبدأ فروخته می‌شود و توکن مقصد معادل آن دریافت می‌شود |
+        | `destinationAmount` | مقدار مشخصی از توکن مقصد دریافت می‌شود و توکن مبدأ به همان اندازه فروخته می‌شود |
+      operationId: fastSwap
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtcSwapRequest'
+      responses:
+        '200':
+          description: سواپ با موفقیت انجام شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
+        '400':
+          description: درخواست نامعتبر (توکن پشتیبانی‌نشده، مقدار خارج از محدوده، یا موجودی ناکافی)
+        '401':
+          description: عدم احراز هویت
+
+  /v1/market/otc/price:
+    post:
+      tags:
+        - بازار
+      summary: دریافت قیمت OTC
+      description: |
+        یک قیمت قفل‌شده برای سواپ دریافت کنید. قیمت به مدت **۱۰ ثانیه** معتبر است.
+
+        برای اجرای سواپ با این قیمت، باید `swapToken` دریافتی را در endpoint تأیید سواپ ارسال کنید.
+
+        > [!warning]
+        > در هر لحظه فقط یک `swapToken` فعال می‌تواند وجود داشته باشد. ایجاد قیمت جدید، توکن قبلی را باطل می‌کند.
+
+        > [!note]
+        > برای اجرای سریع بدون نیاز به تأیید قیمت، از endpoint **سواپ سریع** استفاده کنید.
+      operationId: getOtcPrice
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtcSwapRequest'
+      responses:
+        '200':
+          description: قیمت با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtcPriceResponseWrapper'
+        '400':
+          description: درخواست نامعتبر
+        '401':
+          description: عدم احراز هویت
+
+  /v1/market/otc/order:
+    post:
+      tags:
+        - بازار
+      summary: تأیید و اجرای سواپ OTC
+      description: |
+        سواپ را با استفاده از `swapToken` دریافت‌شده از endpoint قیمت، تأیید و اجرا کنید.
+
+        > [!warning]
+        > `swapToken` تنها **۱۰ ثانیه** اعتبار دارد. در صورت انقضا باید قیمت جدیدی دریافت کنید.
+      operationId: executeOtcOrder
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtcOrderRequest'
+      responses:
+        '200':
+          description: سواپ با موفقیت اجرا شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeTransactionResponseWrapper'
+        '400':
+          description: توکن منقضی‌شده یا نامعتبر
+        '401':
+          description: عدم احراز هویت
+
+  /v2/user/balance:
+    get:
+      tags:
+        - موجودی
+      summary: موجودی همه‌ی توکن‌ها
+      description: لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
+      operationId: getAllBalances
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: موجودی‌ها با موفقیت دریافت شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBalanceListResponseWrapper'
+              example:
+                status: "OK"
+                result:
+                  - token: "ETH"
+                    amount:
+                      number: "0"
+                      unit: "ETH"
+                  - token: "BNB"
+                    amount:
+                      number: "0"
+                      unit: "BNB"
+                  - token: "TON"
+                    amount:
+                      number: "12.5"
+                      unit: "TON"
+                  - token: "TRX"
+                    amount:
+                      number: "340"
+                      unit: "TRX"
+                  - token: "USDT"
+                    amount:
+                      number: "999800"
+                      unit: "USDT"
+                  - token: "IRT"
+                    amount:
+                      number: "150000000"
+                      unit: "IRT"
+        '401':
+          description: عدم احراز هویت
+
+  /v2/user/balance/{token}:
+    get:
+      tags:
+        - موجودی
+      summary: موجودی یک توکن
+      description: موجودی حساب برای یک توکن مشخص را برمی‌گرداند.
+      operationId: getTokenBalance
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: نماد توکن (مثلاً USDT، TON)
+          schema:
+            $ref: '#/components/schemas/TokenEnum'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: موجودی با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBalanceSingleResponseWrapper'
+              example:
+                status: "OK"
+                result:
+                  token: "USDT"
+                  amount:
+                    number: "999800"
+                    unit: "USDT"
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: توکن یافت نشد
+
+  /v1/transaction/{id}:
+    get:
+      tags:
+        - تراکنش‌ها
+      summary: دریافت تراکنش با شناسه
+      description: |
+        اطلاعات کامل یک تراکنش را بر اساس شناسه‌ی عددی آن برمی‌گرداند.
+
+        بسته به مقدار فیلد `type`، یکی از آبجکت‌های جزئیات (`transfer`، `trade`، `fiatWithdraw` و ...) در پاسخ وجود خواهد داشت و بقیه `null` هستند.
+      operationId: getTransactionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: شناسه‌ی عددی تراکنش
+          schema:
+            type: integer
+            format: int64
+            example: 170776
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: تراکنش با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponseWrapper'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: تراکنش یافت نشد
 
   /v1/merchants/balance:
     get:
@@ -456,7 +569,7 @@ paths:
       description: لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
       operationId: getAllBalances
       parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/MerchantAuthorizationHeader'
       responses:
         '200':
           description: موجودی‌ها با موفقیت دریافت شدند
@@ -507,7 +620,6 @@ paths:
                             latestPrice: "1.00"
                             dayChange: "0.00"
                             volume24h: "0.00"
-
                         - source: "USDT"
                           destination: "IRT"
                           marketData:
@@ -516,7 +628,6 @@ paths:
                             latestPrice: "200000"
                             dayChange: "0.00"
                             volume24h: "0.00"
-
                     - name: "IRT"
                       available:
                         amount:
@@ -545,7 +656,6 @@ paths:
                             latestPrice: "0.000005"
                             dayChange: "0.00"
                             volume24h: "0.00"
-
                         - source: "IRT"
                           destination: "IRT"
                           marketData:
@@ -571,7 +681,7 @@ paths:
           description: نماد توکن (مثلاً USDT، TON)
           schema:
             $ref: '#/components/schemas/TokenEnum'
-        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/MerchantAuthorizationHeader'
       responses:
         '200':
           description: موجودی با موفقیت دریافت شد
@@ -1252,9 +1362,20 @@ components:
       required: true
       schema:
         type: string
-        example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+        example: Bearer apikey-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
       description: >
         هدر احراز هویت
+
+    MerchantAuthorizationHeader:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+        example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+      description: >
+        هدر احراز هویت پنل فروشگاه
+  
 
   schemas:
     TokenNetworkListResponse:
@@ -2214,6 +2335,35 @@ components:
         amount:
           number: "999800"
           unit: "USDT"
+
+    TokenBalanceListResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenBalanceDto'
+      example:
+        status: "OK"
+        result:
+          - token: "ETH"
+            amount:
+              number: "0"
+              unit: "ETH"
+          - token: "BNB"
+            amount:
+              number: "0"
+              unit: "BNB"
+          - token: "TON"
+            amount:
+              number: "0"
+              unit: "TON"
+          - token: "USDT"
+            amount:
+              number: "999800"
+              unit: "USDT"
 
     TotalValueDto:
       type: object
