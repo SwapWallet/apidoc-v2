@@ -514,7 +514,7 @@ paths:
         '401':
           description: عدم احراز هویت
 
-  /v2/user/balance/{token}:
+  /v1/merchants/balance/{token}:
     get:
       tags:
         - موجودی
@@ -535,14 +535,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenBalanceSingleResponseWrapper'
+                $ref: '#/components/schemas/TokenBalanceDto'
               example:
                 status: "OK"
                 result:
-                  token: "USDT"
-                  amount:
-                    number: "999800"
-                    unit: "USDT"
+                  name: "USDT"
+                  available:
+                    amount:
+                      number: "100.50"
+                      unit: "USDT"
+                    values:
+                      - number: "100.50"
+                        unit: "USDT"
+                      - number: "20100000"
+                        unit: "IRT"
+                  onHold:
+                    amount:
+                      number: "0"
+                      unit: "USDT"
+                    values:
+                      - number: "0"
+                        unit: "USDT"
+                      - number: "0"
+                        unit: "IRT"
+                  marketData:
+                    - source: "USDT"
+                      destination: "USDT"
+                      marketData:
+                        bestSell: "1.00"
+                        bestBuy: "1.00"
+                        latestPrice: "1.00"
+                        dayChange: "0.00"
+                        volume24h: "0.00"
+
+                    - source: "USDT"
+                      destination: "IRT"
+                      marketData:
+                        bestSell: "200000"
+                        bestBuy: "200000"
+                        latestPrice: "200000"
+                        dayChange: "0.00"
+                        volume24h: "0.00"
         '401':
           description: عدم احراز هویت
         '404':
