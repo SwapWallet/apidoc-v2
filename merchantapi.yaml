@@ -1,0 +1,739 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: مستندات API سواپ‌ولت برای پنل مدیریت فروشگاه‌ها
+  description: |
+    این مستند برای آشنایی شما با API [سواپ‌ولت](https://business.swapwallet.app) تهیه شده است تا بتوانید بیشترین بهره را از حساب کاربری خود ببرید.
+
+    با استفاده از API سواپ‌ولت، می‌توانید کارهایی مانند موارد زیر را انجام دهید:
+    - مدیریت کیف پول و تراکنش‌ها  
+    - دریافت و ارسال پرداخت‌ها  
+    - مشاهده وضعیت تراکنش‌ها  
+    - اتصال سرویس‌های خودکار به حساب سواپ‌ولت  
+
+    ---
+
+    ## پیش‌نیازها و قوانین
+
+    پیش از استفاده از APIها، لطفاً  [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید
+    همچنین برای دریافت اطلاعیه‌های رسمی و تغییرات نسخه‌ها، در [گروه اطلاع‌رسانی سواپ‌ولت](https://t.me/SwapWalletGroup) عضو شوید.
+
+    ---
+
+    ## راهنمای شروع
+
+    اگر برای اولین بار از API استفاده می‌کنید، پیشنهاد می‌شود ابتدا بخش **راهنمای شروع به کار با API** را مطالعه کنید تا با نحوه‌ی احراز هویت و ساخت درخواست‌ها آشنا شوید.
+
+    ---
+
+    ## دریافت کلید فروشگاه
+
+    برای استفاده از API فروشگاه لازم است یک **کلید API** برای فروشگاه خود ایجاد کنید.
+
+    مراحل دریافت:
+    1. ورود به [پنل مدیریت فروشگاه](https://business.swapwallet.app)
+    2. ورود به فروشگاه مورد نظر
+    3. رفتن به بخش **تنظیمات ← کلید دسترسی (API Key)**
+    4. کلیک روی گزینه‌ی **دریافت کلید**
+
+    سپس کلید خود را در هدر درخواست‌ها به‌صورت زیر ارسال کنید:
+
+    ```http
+    Authorization: Bearer business-xxx
+    ```
+
+    > [!note]
+    > هر فروشگاه کلید اختصاصی خود را دارد و برای فروشگاه‌های دیگر باید همین روند را برای فروشگاه مد نظر طی کنید.
+
+    > [!note]
+    > کلیدهای API برای استفاده‌ی برنامه‌نویسی بهینه‌سازی شده‌اند؛ هنگام استفاده از این کلیدها، محدودیت‌های دومرحله‌ای نظیر ایمیل، پیامک و Google Authenticator اعمال نمی‌شوند.
+
+    > [!note]
+    > اگر به کلیدی با دسترسی‌های خاص (مانند محدودیت روی IP مشخص یا سطح دسترسی سفارشی) نیاز دارید، با پشتیبانی ما تماس بگیرید.
+
+    ---
+
+    ## جایگزینی کلید فروشگاه
+
+    برای غیرفعال‌سازی کلید فعلی و صدور کلید جدید:
+
+    **تنظیمات ← کلید دسترسی (API Key) ← بازنشانی کلید**
+
+    پس از تأیید، کلید قبلی بلافاصله از کار می‌افتد و یک کلید جدید برای شما صادر می‌شود.
+
+    ---
+
+    ## نکات امنیتی
+
+    > [!caution] **هشدار امنیتی**  
+    > توکن خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید.  
+    > در صورت لو رفتن یا شک به دسترسی غیرمجاز، فوراً از طریق پنل فروشگاه مورد نظر، توکن خود را منقضی کرده و توکن جدید دریافت کنید.
+
+    در صورت نیاز به استفاده از توکن در کد، مطمئن شوید که با روش‌های امن نگهداری داده‌های حساس آشنا هستید (مانند متغیرهای محیطی و رمزنگاری فایل‌های پیکربندی).
+
+    ---
+
+    ✨ با رعایت این نکات، می‌توانید به‌صورت ایمن و مؤثر از API سواپ‌ولت در پروژه‌های خود استفاده کنید.
+
+
+servers:
+  - url: "https://swapwallet.app/api"
+    description: |
+      سرور پروداکشن
+
+tags:
+  - name: بازار
+    description: |
+      با استفاده از این APIها می‌توانید قیمت لحظه‌ای توکن‌ها را دریافت کرده و عملیات سواپ (تبدیل توکن به توکن) را انجام دهید.
+
+      ## قیمت‌های لحظه‌ای
+
+      نام هر جفت قیمتی به‌صورت `TOKEN/QUOTE` نمایش داده می‌شود؛ مثلاً `TON/USDT` قیمت TON بر حسب تتر را نشان می‌دهد. ارزهای مرجع تنها USDT و IRT هستند.
+
+      ## سواپ OTC
+
+      دو روش برای سواپ توکن وجود دارد:
+
+      | روش | توضیح |
+      |---:|---:|
+      | **سواپ سریع** | تبدیل فوری با بهترین قیمت لحظه‌ای بدون نیاز به تأیید |
+      | **قیمت + تأیید** | ابتدا قیمت قفل‌شده دریافت کنید، سپس ظرف ۱۰ ثانیه تأیید کنید |
+
+      در هر درخواست سواپ، یکی از دو حالت زیر را مشخص کنید:
+
+      - **`sourceAmount`** — مقدار مشخصی از توکن مبدأ فروخته می‌شود
+      - **`destinationAmount`** — مقدار مشخصی از توکن مقصد دریافت می‌شود
+
+  - name: موجودی
+    description: |
+      موجودی لحظه‌ای حساب خود را به تفکیک هر توکن مشاهده کنید.
+
+  - name: برداشت کریپتو
+    description: |
+      توکن‌های کریپتو را به آدرس دلخواه روی شبکه‌های پشتیبانی‌شده برداشت کنید.
+
+      فرایند برداشت در دو مرحله انجام می‌شود:
+
+      1. **دریافت تنظیمات** — تنظیمات شبکه را دریافت کنید تا از کارمزد، محدودیت مقدار، و پشتیبانی از memo مطلع شوید.
+      2. **ارسال درخواست برداشت** — درخواست را با مقدار، شبکه، و آدرس مقصد ارسال کنید.
+
+      ## نحوه‌ی کسر کارمزد
+
+      | مقدار `feeDeductType` | رفتار |
+      |---:|---:|
+      | `INTERNAL` | کارمزد از مقدار اصلی کسر می‌شود؛ گیرنده کمتر از مقدار درخواستی دریافت می‌کند |
+      | `EXTERNAL` | کارمزد از موجودی کیف پول کسر می‌شود؛ مقدار برداشت دقیقاً همان عدد درخواستی باقی می‌ماند |
+
+      > [!note]
+      > فیلد `fee` اختیاری است و در صورت ارسال، سرور مقدار آن را با کارمزد واقعی مقایسه می‌کند. اگر مقادیر مطابقت نداشته باشند، درخواست با خطا رد می‌شود.
+
+      > [!note]
+      > فیلد `memo` تنها برای شبکه‌هایی که از آن پشتیبانی می‌کنند معتبر است و در غیر این صورت نادیده گرفته می‌شود. وضعیت پشتیبانی را از طریق فیلد `supportMemo` در endpoint تنظیمات بررسی کنید.
+
+  - name: برداشت ریالی
+    description: |
+      وجه ریالی را به شماره شبای ثبت‌شده در حساب خود برداشت کنید.
+
+      فرایند برداشت در دو مرحله انجام می‌شود:
+
+      1. **دریافت تنظیمات** — با ارسال شبا و مقدار، کارمزد دقیق، مقدار دریافتی، و زمان تخمینی تسویه را دریافت کنید.
+      2. **ارسال درخواست برداشت** — درخواست را با مقدار، شبا، و نحوه‌ی کسر کارمزد ارسال کنید.
+
+      > [!warning]
+      > شبا باید متعلق به خود شما باشد. استفاده از شبای دیگران مجاز نیست و درخواست رد خواهد شد.
+
+  - name: تراکنش‌ها
+    description: |
+      با استفاده از این APIها می‌توانید اطلاعات تراکنش‌های حساب خود را دریافت کنید.
+
+      هر تراکنش دارای یک فیلد `type` است که نوع آن را مشخص می‌کند. بسته به نوع تراکنش، یک آبجکت جزئیات اختصاصی نیز در پاسخ وجود دارد:
+
+      | نوع (`type`) | شرح | آبجکت جزئیات |
+      |---:|---:|---:|
+      | `TRANSFER` | انتقال بین کاربران سواپ‌ولت | `transfer` |
+      | `TRADE` | سواپ توکن به توکن | `trade` |
+      | `CRYPTO_DEPOSIT` | واریز کریپتو | `cryptoDeposit` |
+      | `CRYPTO_WITHDRAW` | برداشت کریپتو | `cryptoWithdraw` |
+      | `FIAT_DEPOSIT` | واریز ریالی | `fiatDeposit` |
+      | `FIAT_WITHDRAW` | برداشت ریالی | `fiatWithdraw` |
+      | `PAYMENT` | پرداخت فاکتور | `payment` |
+
+  - name: فاکتور
+    description: |
+      با استفاده از این APIها می‌توانید فاکتورهای پرداخت کریپتویی برای فروشگاه خود ایجاد و مدیریت کنید.
+
+      کاربر پس از دریافت لینک پرداخت، مبلغ را مستقیماً به کیف پول اختصاص‌یافته واریز می‌کند. پس از تأیید تراکنش روی شبکه، وب‌هوک شما فراخوانی می‌شود.
+
+  - name: رسید
+    description: |
+      رسیدها برای دریافت پرداخت با **مقدار ثابت به تومان (IRT)** طراحی شده‌اند.
+
+      مقدار دریافتی نهایی در لحظه‌ی پرداخت بر اساس نرخ لحظه‌ای محاسبه و به معادل کریپتو تبدیل می‌شود.
+
+  - name: قیمت‌های فروشگاه
+    description: |
+      قیمت فعلی تمام محصولات موجود در فروشگاه سواپ‌ولت را دریافت کنید.
+
+  - name: خدمات تلگرامی
+    description: |
+      محصولات تلگرامی را مستقیماً از کیف پول سواپ‌ولت خریداری کنید.
+
+      خرید بلافاصله پس از ارسال درخواست انجام می‌شود و نتیجه در قالب یک تراکنش از نوع `PAYMENT` برگردانده می‌شود.
+
+      ## تلگرام استارز
+
+      استارز تلگرام به حساب کاربری با `username` مشخص‌شده ارسال می‌شود. تعداد مجاز: **۱۰۰، ۲۵۰، ۵۰۰، ۱۰۰۰، ۵۰۰۰**.
+
+      ## تلگرام پریمیوم
+
+      اشتراک تلگرام پریمیوم برای کاربر مشخص‌شده فعال می‌شود. مدت‌های مجاز: **۳ ماه، ۶ ماه، ۱۲ ماه**.
+
+x-tagGroups:
+  - name: عمومی
+    tags:
+      - بازار
+      - تراکنش‌ها
+  - name: کیف پول
+    tags:
+      - موجودی
+      - برداشت کریپتو
+      - برداشت ریالی
+  - name: "فروشگاه"
+    tags:
+      - قیمت‌های فروشگاه
+      - خدمات تلگرامی
+  - name: "درگاه پرداخت کریپتویی"
+    tags:
+      - فاکتور
+  - name: "رسید پرداخت"
+    tags:
+      - رسید
+
+paths:
+  /v1/merchants/balance:
+    get:
+      tags:
+        - موجودی
+      summary: موجودی همه‌ی توکن‌ها
+      description: لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
+      operationId: getAllBalances
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: موجودی‌ها با موفقیت دریافت شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TotalBalanceDTO'
+              example:
+                status: "OK"
+                result:
+                  totalValue:
+                    available:
+                      - number: "100.50"
+                        unit: "USDT"
+                      - number: "200000"
+                        unit: "IRT"
+                    onHold:
+                      - number: "0"
+                        unit: "USDT"
+                      - number: "0"
+                        unit: "IRT"
+                  tokens:
+                    - name: "USDT"
+                      available:
+                        amount:
+                          number: "100.50"
+                          unit: "USDT"
+                        values:
+                          - number: "100.50"
+                            unit: "USDT"
+                          - number: "20100000"
+                            unit: "IRT"
+                      onHold:
+                        amount:
+                          number: "0"
+                          unit: "USDT"
+                        values:
+                          - number: "0"
+                            unit: "USDT"
+                          - number: "0"
+                            unit: "IRT"
+                      marketData:
+                        - source: "USDT"
+                          destination: "USDT"
+                          marketData:
+                            bestSell: "1.00"
+                            bestBuy: "1.00"
+                            latestPrice: "1.00"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+                        - source: "USDT"
+                          destination: "IRT"
+                          marketData:
+                            bestSell: "200000"
+                            bestBuy: "200000"
+                            latestPrice: "200000"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+                    - name: "IRT"
+                      available:
+                        amount:
+                          number: "200000"
+                          unit: "IRT"
+                        values:
+                          - number: "1.00"
+                            unit: "USDT"
+                          - number: "200000"
+                            unit: "IRT"
+                      onHold:
+                        amount:
+                          number: "0"
+                          unit: "IRT"
+                        values:
+                          - number: "0"
+                            unit: "USDT"
+                          - number: "0"
+                            unit: "IRT"
+                      marketData:
+                        - source: "IRT"
+                          destination: "USDT"
+                          marketData:
+                            bestSell: "0.000005"
+                            bestBuy: "0.000005"
+                            latestPrice: "0.000005"
+                            dayChange: "0.00"
+                            volume24h: "0.00"
+                        - source: "IRT"
+                          destination: "IRT"
+                          marketData:
+                            bestSell: "1"
+                            bestBuy: "1"
+                            latestPrice: "1"
+                            dayChange: "0"
+                            volume24h: "0"
+        '401':
+          description: عدم احراز هویت
+
+  /v1/merchants/balance/{token}:
+    get:
+      tags:
+        - موجودی
+      summary: موجودی یک توکن
+      description: موجودی حساب برای یک توکن مشخص را برمی‌گرداند.
+      operationId: getTokenBalance
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: نماد توکن (مثلاً USDT، TON)
+          schema:
+            $ref: '#/components/schemas/TokenEnum'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: موجودی با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBalanceDto'
+              example:
+                status: "OK"
+                result:
+                  name: "USDT"
+                  available:
+                    amount:
+                      number: "100.50"
+                      unit: "USDT"
+                    values:
+                      - number: "100.50"
+                        unit: "USDT"
+                      - number: "20100000"
+                        unit: "IRT"
+                  onHold:
+                    amount:
+                      number: "0"
+                      unit: "USDT"
+                    values:
+                      - number: "0"
+                        unit: "USDT"
+                      - number: "0"
+                        unit: "IRT"
+                  marketData:
+                    - source: "USDT"
+                      destination: "USDT"
+                      marketData:
+                        bestSell: "1.00"
+                        bestBuy: "1.00"
+                        latestPrice: "1.00"
+                        dayChange: "0.00"
+                        volume24h: "0.00"
+
+                    - source: "USDT"
+                      destination: "IRT"
+                      marketData:
+                        bestSell: "200000"
+                        bestBuy: "200000"
+                        latestPrice: "200000"
+                        dayChange: "0.00"
+                        volume24h: "0.00"
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: توکن یافت نشد
+
+  /v1/merchants/transactions/{transactionId}:
+    get:
+      tags:
+        - تراکنش‌ها
+      summary: دریافت تراکنش با شناسه
+      description: |
+        اطلاعات کامل یک تراکنش را بر اساس شناسه‌ی عددی آن برمی‌گرداند.
+
+        بسته به مقدار فیلد `type`، یکی از آبجکت‌های جزئیات (`transfer`، `trade`، `fiatWithdraw` و ...) در پاسخ وجود خواهد داشت و بقیه `null` هستند.
+      operationId: getTransactionById
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          description: شناسه‌ی عددی تراکنش
+          schema:
+            type: integer
+            format: int64
+            example: 170776
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: تراکنش با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantTransactionDto'
+        '401':
+          description: عدم احراز هویت
+        '404':
+          description: تراکنش یافت نشد
+
+components:
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+        example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+      description: >
+        هدر احراز هویت پنل فروشگاه
+
+  schemas:
+    ResponseStatusEnum:
+      type: string
+      enum:
+        - OK
+        - ERROR
+
+    TokenEnum:
+      type: string
+      enum:
+        - USDT
+        - TON
+        - TRX
+        - IRT
+        - ETH
+        - BNB
+
+    Money:
+      type: object
+      properties:
+        number:
+          type: string
+        unit:
+          type: string
+          description: واحد ارزی (مثلاً USDT، IRT، USD)
+      required:
+        - number
+        - unit
+      example:
+        number: "100.50"
+        unit: "USDT"
+
+    TokenBalanceDto:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        amount:
+          $ref: '#/components/schemas/Money'
+      example:
+        token: "USDT"
+        amount:
+          number: "999800"
+          unit: "USDT"
+
+    TotalValueDto:
+      type: object
+      properties:
+        available:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+        onHold:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+
+    TokenAmountAndValueDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Money'
+
+    MarketDataDTO:
+      type: object
+      properties:
+        bestSell:
+          type: String
+        bestBuy:
+          type: String
+        latestPrice:
+          type: String
+        dayChange:
+          type: String
+        volume24h:
+          type: String
+
+    ExternalMarketDataDTO:
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/TokenEnum'
+        destination:
+          $ref: '#/components/schemas/TokenEnum'
+        marketData:
+          $ref: '#/components/schemas/MarketDataDTO'
+
+    TokensBalanceDto:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TokenEnum'
+        available:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        onHold:
+          $ref: '#/components/schemas/TokenAmountAndValueDto'
+        marketData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalMarketDataDTO'
+
+    TotalBalanceDTO:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: object
+          properties:
+            totalValue:
+              $ref: '#/components/schemas/TotalValueDto'
+            tokens:
+              type: array
+              items:
+                $ref: '#/components/schemas/TokensBalanceDto'
+      example:
+        status: "OK"
+        result:
+          totalValue:
+            available:
+              - number: "100.50"
+                unit: "USDT"
+              - number: "200000"
+                unit: "IRT"
+            onHold:
+              - number: "0"
+                unit: "USDT"
+              - number: "0"
+                unit: "IRT"
+          tokens:
+            - name: "USDT"
+              available:
+                amount:
+                  number: "100.50"
+                  unit: "USDT"
+                values:
+                  - number: "100.50"
+                    unit: "USDT"
+                  - number: "20100000"
+                    unit: "IRT"
+              onHold:
+                amount:
+                  number: "0"
+                  unit: "USDT"
+                values:
+                  - number: "0"
+                    unit: "USDT"
+                  - number: "0"
+                    unit: "IRT"
+              marketData:
+                - source: "USDT"
+                  destination: "USDT"
+                  marketData:
+                    bestSell: "1.00"
+                    bestBuy: "1.00"
+                    latestPrice: "1.00"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+                - source: "USDT"
+                  destination: "IRT"
+                  marketData:
+                    bestSell: "200000"
+                    bestBuy: "200000"
+                    latestPrice: "200000"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+            - name: "IRT"
+              available:
+                amount:
+                  number: "200000"
+                  unit: "IRT"
+                values:
+                  - number: "1.00"
+                    unit: "USDT"
+                  - number: "200000"
+                    unit: "IRT"
+              onHold:
+                amount:
+                  number: "0"
+                  unit: "IRT"
+                values:
+                  - number: "0"
+                    unit: "USDT"
+                  - number: "0"
+                    unit: "IRT"
+              marketData:
+                - source: "IRT"
+                  destination: "USDT"
+                  marketData:
+                    bestSell: "0.000005"
+                    bestBuy: "0.000005"
+                    latestPrice: "0.000005"
+                    dayChange: "0.00"
+                    volume24h: "0.00"
+
+                - source: "IRT"
+                  destination: "IRT"
+                  marketData:
+                    bestSell: "1"
+                    bestBuy: "1"
+                    latestPrice: "1"
+                    dayChange: "0"
+                    volume24h: "0"
+
+    MerchantTransactionTypeEnum:
+      type: string
+      enum:
+        - INTERNAL_PAYMENT
+        - EXTERNAL_PAYMENT
+        - SETTLEMENT
+
+    AmountAndIrtAndUsdValues:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        usdValue:
+          $ref: '#/components/schemas/Money'
+        irtValue:
+          $ref: '#/components/schemas/Money'
+
+    MerchantApplicationInvoiceTypeEnum:
+      type: string
+      enum:
+        - EXTERNAL_BLOCKCHAIN
+        - INTERNAL_FIAT
+        - INTERNAL_CRYPTO
+
+    ApplicationInvoiceStatusEnum:
+      type: string
+      enum:
+        - ACTIVE
+        - PAID
+        - EXPIRED
+        - CANCELED
+
+    MerchantApplicationInvoiceExtraStatusEnum:
+      type: string
+      enum:
+        - OVER_PAID
+        - UNDER_PAID
+
+    MerchantApplicationInvoiceDto:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/MerchantApplicationInvoiceTypeEnum'
+        amount:
+          $ref: '#/components/schemas/Money'
+        supportCode:
+          type: string
+          description: کد پشتیبانی
+        orderId:
+          type: [ string, "null" ]
+        description:
+          type: [ string, "null" ]
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+        extraStatus:
+          type: [ string, "null" ]
+          $ref: '#/components/schemas/MerchantApplicationInvoiceExtraStatusEnum'
+
+    MerchantTransactionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: شناسه‌ی عددی تراکنش
+        type:
+          $ref: '#/components/schemas/MerchantTransactionTypeEnum'
+        amount:
+          $ref: '#/components/schemas/AmountAndIrtAndUsdValues'
+        fee:
+          $ref: '#/components/schemas/Money'
+        feeValue:
+          $ref: '#/components/schemas/Money'
+        timestamp:
+          type: string
+          format: date-time
+          description: زمان ثبت تراکنش (Unix milliseconds)
+        supportCode:
+          type: string
+          description: کد پشتیبانی
+        internalPaymentTransactionDto:
+          type: [ object, "null" ]
+          properties:
+            applicationInvoice:
+              $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
+            amount:
+              $ref: '#/components/schemas/AmountAndIrtAndUsdValues'
+        externalPaymentTransactionDto:
+          type: [ object, "null" ]
+          properties:
+            applicationInvoice:
+              $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
+        settlementTransactionDto:
+          type: [ object, "null" ]
+          properties:
+            type:
+              type: string
