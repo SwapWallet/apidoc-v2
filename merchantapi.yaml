@@ -89,6 +89,10 @@ tags:
     description: |
       موجودی لحظه‌ای حساب خود را به تفکیک هر توکن مشاهده کنید.
 
+  - name: آمار فروش
+    description: |
+      آمار فروش و درآمد فروشگاه را در بازه‌های زمانی مختلف مشاهده کنید.
+
   - name: برداشت کریپتو
     description: |
       توکن‌های کریپتو را به آدرس دلخواه روی شبکه‌های پشتیبانی‌شده برداشت کنید.
@@ -170,6 +174,7 @@ x-tagGroups:
     tags:
       - اطلاعات فروشگاه
       - تراکنش‌ها
+      - آمار فروش
   - name: کیف پول
     tags:
       - موجودی
@@ -647,6 +652,106 @@ paths:
                           createdAt: "2026-03-16T10:05:00Z"
                           status: ACTIVE
                           extraStatus: null
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/income/total:
+    get:
+      tags:
+        - آمار فروش
+      summary: مجموع درآمد فروشگاه
+      description: |
+        مجموع درآمد فروشگاه را در بازه زمانی مشخص برمی‌گرداند.
+
+        این endpoint اطلاعات زیر را ارائه می‌دهد:
+
+        - مجموع فروش موفق
+        - مقدار در انتظار تسویه (`onHoldAmount`)
+        - تعداد فروش‌های موفق
+        - داده‌های نمودار برای نمایش روند فروش
+
+        داده‌های نمودار در فیلد `chartBreakdown` قرار دارند.
+
+      operationId: getTotalIncome
+
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+
+        - name: rangeType
+          in: query
+          required: true
+          description: بازه زمانی مورد نظر
+          schema:
+            $ref: '#/components/schemas/BasicTimeRangeEnum'
+          example: WEEK
+
+        - name: baseToken
+          in: query
+          required: false
+          description: |
+            توکن پایه برای محاسبه مقادیر.
+
+            پیش‌فرض: `USD`
+          schema:
+            $ref: '#/components/schemas/TokenEnum'
+            default: USD
+          example: USD
+
+        - name: useJalaliCalendar
+          in: query
+          required: false
+          description: |
+            استفاده از تقویم جلالی برای محاسبه بازه زمانی
+          schema:
+            type: boolean
+            default: true
+          example: true
+
+        - name: timezone
+          in: header
+          required: false
+          description: |
+            منطقه زمانی برای محاسبه بازه زمانی
+
+            پیش‌فرض: `Asia/Tehran`
+          schema:
+            type: string
+            default: Asia/Tehran
+          example: Asia/Tehran
+
+      responses:
+        '200':
+          description: اطلاعات درآمد با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantTotalIncomeResponse'
+
+              examples:
+                totalIncomeExample:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      amount:
+                        number: "1250.75"
+                        unit: "USD"
+                      onHoldAmount:
+                        number: "150.00"
+                        unit: "USD"
+                      numberOfSuccessfulSales: 42
+                      totalNumberOfChartIndexes: 30
+                      chartBreakdown:
+                        "0":
+                          number: "50.00"
+                          unit: "USD"
+                        "1":
+                          number: "75.00"
+                          unit: "USD"
+                        "2":
+                          number: "30.50"
+                          unit: "USD"
+
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
@@ -1366,3 +1471,51 @@ components:
           $ref: '#/components/schemas/ResponseStatusEnum'
         result:
           $ref: '#/components/schemas/MerchantInvoicesPagination'
+
+    BasicTimeRangeEnum:
+      type: string
+      enum:
+        - DAY
+        - WEEK
+        - MONTH
+      example: WEEK
+
+    MerchantApplicationTotalIncomeDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        onHoldAmount:
+          $ref: '#/components/schemas/Money'
+        numberOfSuccessfulSales:
+          type: integer
+        totalNumberOfChartIndexes:
+          type: integer
+        chartBreakdown:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Money'
+      example:
+        amount:
+          number: "1250.75"
+          unit: "USD"
+        onHoldAmount:
+          number: "150.00"
+          unit: "USD"
+        numberOfSuccessfulSales: 42
+        totalNumberOfChartIndexes: 30
+        chartBreakdown:
+          "0":
+            number: "50.00"
+            unit: "USD"
+          "1":
+            number: "75.00"
+            unit: "USD"
+
+    MerchantTotalIncomeResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/MerchantApplicationTotalIncomeDto'
