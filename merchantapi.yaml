@@ -1,4 +1,5 @@
 openapi: 3.1.0
+
 info:
   version: 1.0.0
   title: مستندات API سواپ‌ولت برای پنل مدیریت فروشگاه‌ها
@@ -6,16 +7,16 @@ info:
     این مستند برای آشنایی شما با API [سواپ‌ولت](https://business.swapwallet.app) تهیه شده است تا بتوانید بیشترین بهره را از حساب کاربری خود ببرید.
 
     با استفاده از API سواپ‌ولت، می‌توانید کارهایی مانند موارد زیر را انجام دهید:
-    - مدیریت کیف پول و تراکنش‌ها  
-    - دریافت و ارسال پرداخت‌ها  
-    - مشاهده وضعیت تراکنش‌ها  
-    - اتصال سرویس‌های خودکار به حساب سواپ‌ولت  
+    - مدیریت کیف پول و تراکنش‌ها
+    - دریافت و ارسال پرداخت‌ها
+    - مشاهده وضعیت تراکنش‌ها
+    - اتصال سرویس‌های خودکار به حساب سواپ‌ولت
 
     ---
 
     ## پیش‌نیازها و قوانین
 
-    پیش از استفاده از APIها، لطفاً  [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید
+    پیش از استفاده از APIها، لطفاً [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید.
     همچنین برای دریافت اطلاعیه‌های رسمی و تغییرات نسخه‌ها، در [گروه اطلاع‌رسانی سواپ‌ولت](https://t.me/SwapWalletGroup) عضو شوید.
 
     ---
@@ -43,7 +44,7 @@ info:
     ```
 
     > [!note]
-    > هر فروشگاه کلید اختصاصی خود را دارد و برای فروشگاه‌های دیگر باید همین روند را برای فروشگاه مد نظر طی کنید.
+    > هر فروشگاه کلید اختصاصی خود را دارد و برای فروشگاه‌های دیگر باید همین روند را برای فروشگاه مدنظر طی کنید.
 
     > [!note]
     > کلیدهای API برای استفاده‌ی برنامه‌نویسی بهینه‌سازی شده‌اند؛ هنگام استفاده از این کلیدها، محدودیت‌های دومرحله‌ای نظیر ایمیل، پیامک و Google Authenticator اعمال نمی‌شوند.
@@ -65,8 +66,8 @@ info:
 
     ## نکات امنیتی
 
-    > [!caution] **هشدار امنیتی**  
-    > توکن خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید.  
+    > [!caution] **هشدار امنیتی**
+    > توکن خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید.
     > در صورت لو رفتن یا شک به دسترسی غیرمجاز، فوراً از طریق پنل فروشگاه مورد نظر، توکن خود را منقضی کرده و توکن جدید دریافت کنید.
 
     در صورت نیاز به استفاده از توکن در کد، مطمئن شوید که با روش‌های امن نگهداری داده‌های حساس آشنا هستید (مانند متغیرهای محیطی و رمزنگاری فایل‌های پیکربندی).
@@ -75,34 +76,15 @@ info:
 
     ✨ با رعایت این نکات، می‌توانید به‌صورت ایمن و مؤثر از API سواپ‌ولت در پروژه‌های خود استفاده کنید.
 
-
 servers:
-  - url: "https://swapwallet.app/api"
+  - url: https://swapwallet.app/api
     description: |
       سرور پروداکشن
 
 tags:
-  - name: بازار
+  - name: اطلاعات فروشگاه
     description: |
-      با استفاده از این APIها می‌توانید قیمت لحظه‌ای توکن‌ها را دریافت کرده و عملیات سواپ (تبدیل توکن به توکن) را انجام دهید.
-
-      ## قیمت‌های لحظه‌ای
-
-      نام هر جفت قیمتی به‌صورت `TOKEN/QUOTE` نمایش داده می‌شود؛ مثلاً `TON/USDT` قیمت TON بر حسب تتر را نشان می‌دهد. ارزهای مرجع تنها USDT و IRT هستند.
-
-      ## سواپ OTC
-
-      دو روش برای سواپ توکن وجود دارد:
-
-      | روش | توضیح |
-      |---:|---:|
-      | **سواپ سریع** | تبدیل فوری با بهترین قیمت لحظه‌ای بدون نیاز به تأیید |
-      | **قیمت + تأیید** | ابتدا قیمت قفل‌شده دریافت کنید، سپس ظرف ۱۰ ثانیه تأیید کنید |
-
-      در هر درخواست سواپ، یکی از دو حالت زیر را مشخص کنید:
-
-      - **`sourceAmount`** — مقدار مشخصی از توکن مبدأ فروخته می‌شود
-      - **`destinationAmount`** — مقدار مشخصی از توکن مقصد دریافت می‌شود
+      اطلاعات فروشگاه خود را مشاهده کنید.
 
   - name: موجودی
     description: |
@@ -120,7 +102,7 @@ tags:
       ## نحوه‌ی کسر کارمزد
 
       | مقدار `feeDeductType` | رفتار |
-      |---:|---:|
+      |---|---|
       | `INTERNAL` | کارمزد از مقدار اصلی کسر می‌شود؛ گیرنده کمتر از مقدار درخواستی دریافت می‌کند |
       | `EXTERNAL` | کارمزد از موجودی کیف پول کسر می‌شود؛ مقدار برداشت دقیقاً همان عدد درخواستی باقی می‌ماند |
 
@@ -144,19 +126,15 @@ tags:
 
   - name: تراکنش‌ها
     description: |
-      با استفاده از این APIها می‌توانید اطلاعات تراکنش‌های حساب خود را دریافت کنید.
+      با استفاده از این APIها می‌توانید اطلاعات تراکنش‌های حساب فروشگاه خود را دریافت کنید.
 
-      هر تراکنش دارای یک فیلد `type` است که نوع آن را مشخص می‌کند. بسته به نوع تراکنش، یک آبجکت جزئیات اختصاصی نیز در پاسخ وجود دارد:
+      هر تراکنش دارای یک فیلد `type` است که نوع آن را مشخص می‌کند. بسته به نوع تراکنش، یکی از آبجکت‌های جزئیات اختصاصی در پاسخ موجود خواهد بود:
 
       | نوع (`type`) | شرح | آبجکت جزئیات |
-      |---:|---:|---:|
-      | `TRANSFER` | انتقال بین کاربران سواپ‌ولت | `transfer` |
-      | `TRADE` | سواپ توکن به توکن | `trade` |
-      | `CRYPTO_DEPOSIT` | واریز کریپتو | `cryptoDeposit` |
-      | `CRYPTO_WITHDRAW` | برداشت کریپتو | `cryptoWithdraw` |
-      | `FIAT_DEPOSIT` | واریز ریالی | `fiatDeposit` |
-      | `FIAT_WITHDRAW` | برداشت ریالی | `fiatWithdraw` |
-      | `PAYMENT` | پرداخت فاکتور | `payment` |
+      |---|---|---|
+      | `INTERNAL_PAYMENT` | پرداخت داخلی | `internalPaymentTransactionDto` |
+      | `EXTERNAL_PAYMENT` | پرداخت خارجی | `externalPaymentTransactionDto` |
+      | `SETTLEMENT` | تسویه | `settlementTransactionDto` |
 
   - name: فاکتور
     description: |
@@ -191,31 +169,52 @@ tags:
 x-tagGroups:
   - name: عمومی
     tags:
-      - بازار
+      - اطلاعات فروشگاه
       - تراکنش‌ها
   - name: کیف پول
     tags:
       - موجودی
       - برداشت کریپتو
       - برداشت ریالی
-  - name: "فروشگاه"
+  - name: فروشگاه
     tags:
       - قیمت‌های فروشگاه
       - خدمات تلگرامی
-  - name: "درگاه پرداخت کریپتویی"
+  - name: درگاه پرداخت کریپتویی
     tags:
       - فاکتور
-  - name: "رسید پرداخت"
+  - name: رسید پرداخت
     tags:
       - رسید
 
 paths:
+  /v1/merchants/info:
+    get:
+      tags:
+        - اطلاعات فروشگاه
+      summary: اطلاعات فروشگاه
+      description: |
+        با استفاده از این API می‌توانید اطلاعات کلی فروشگاه خود را مشاهده نمایید.
+      operationId: getInfo
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: اطلاعات فروشگاه با موفقیت دریافت شد.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInformationResponse'
+        '401':
+          description: عدم احراز هویت
+
   /v1/merchants/balance:
     get:
       tags:
         - موجودی
       summary: موجودی همه‌ی توکن‌ها
-      description: لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
+      description: |
+        لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
       operationId: getAllBalances
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
@@ -225,94 +224,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TotalBalanceDTO'
-              example:
-                status: "OK"
-                result:
-                  totalValue:
-                    available:
-                      - number: "100.50"
-                        unit: "USDT"
-                      - number: "200000"
-                        unit: "IRT"
-                    onHold:
-                      - number: "0"
-                        unit: "USDT"
-                      - number: "0"
-                        unit: "IRT"
-                  tokens:
-                    - name: "USDT"
-                      available:
-                        amount:
-                          number: "100.50"
-                          unit: "USDT"
-                        values:
-                          - number: "100.50"
-                            unit: "USDT"
-                          - number: "20100000"
-                            unit: "IRT"
-                      onHold:
-                        amount:
-                          number: "0"
-                          unit: "USDT"
-                        values:
-                          - number: "0"
-                            unit: "USDT"
-                          - number: "0"
-                            unit: "IRT"
-                      marketData:
-                        - source: "USDT"
-                          destination: "USDT"
-                          marketData:
-                            bestSell: "1.00"
-                            bestBuy: "1.00"
-                            latestPrice: "1.00"
-                            dayChange: "0.00"
-                            volume24h: "0.00"
-                        - source: "USDT"
-                          destination: "IRT"
-                          marketData:
-                            bestSell: "200000"
-                            bestBuy: "200000"
-                            latestPrice: "200000"
-                            dayChange: "0.00"
-                            volume24h: "0.00"
-                    - name: "IRT"
-                      available:
-                        amount:
-                          number: "200000"
-                          unit: "IRT"
-                        values:
-                          - number: "1.00"
-                            unit: "USDT"
-                          - number: "200000"
-                            unit: "IRT"
-                      onHold:
-                        amount:
-                          number: "0"
-                          unit: "IRT"
-                        values:
-                          - number: "0"
-                            unit: "USDT"
-                          - number: "0"
-                            unit: "IRT"
-                      marketData:
-                        - source: "IRT"
-                          destination: "USDT"
-                          marketData:
-                            bestSell: "0.000005"
-                            bestBuy: "0.000005"
-                            latestPrice: "0.000005"
-                            dayChange: "0.00"
-                            volume24h: "0.00"
-                        - source: "IRT"
-                          destination: "IRT"
-                          marketData:
-                            bestSell: "1"
-                            bestBuy: "1"
-                            latestPrice: "1"
-                            dayChange: "0"
-                            volume24h: "0"
+                $ref: '#/components/schemas/TotalBalanceResponse'
         '401':
           description: عدم احراز هویت
 
@@ -321,7 +233,8 @@ paths:
       tags:
         - موجودی
       summary: موجودی یک توکن
-      description: موجودی حساب برای یک توکن مشخص را برمی‌گرداند.
+      description: |
+        موجودی حساب برای یک توکن مشخص را برمی‌گرداند.
       operationId: getTokenBalance
       parameters:
         - name: token
@@ -337,51 +250,168 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenBalanceDto'
-              example:
-                status: "OK"
-                result:
-                  name: "USDT"
-                  available:
-                    amount:
-                      number: "100.50"
-                      unit: "USDT"
-                    values:
-                      - number: "100.50"
-                        unit: "USDT"
-                      - number: "20100000"
-                        unit: "IRT"
-                  onHold:
-                    amount:
-                      number: "0"
-                      unit: "USDT"
-                    values:
-                      - number: "0"
-                        unit: "USDT"
-                      - number: "0"
-                        unit: "IRT"
-                  marketData:
-                    - source: "USDT"
-                      destination: "USDT"
-                      marketData:
-                        bestSell: "1.00"
-                        bestBuy: "1.00"
-                        latestPrice: "1.00"
-                        dayChange: "0.00"
-                        volume24h: "0.00"
-
-                    - source: "USDT"
-                      destination: "IRT"
-                      marketData:
-                        bestSell: "200000"
-                        bestBuy: "200000"
-                        latestPrice: "200000"
-                        dayChange: "0.00"
-                        volume24h: "0.00"
+                $ref: '#/components/schemas/TokenBalanceResponse'
         '401':
           description: عدم احراز هویت
         '404':
           description: توکن یافت نشد
+
+  /v1/merchants/transactions:
+    get:
+      tags:
+        - تراکنش‌ها
+      summary: دریافت لیست تراکنش‌ها
+      description: |
+        لیست اطلاعات تراکنش‌ها را برمی‌گرداند.
+
+        برای هر تراکنش، بسته به مقدار فیلد `type`، یکی از آبجکت‌های جزئیات
+        (`settlementTransactionDto`، `externalPaymentTransactionDto`، `internalPaymentTransactionDto`)
+        در پاسخ وجود خواهد داشت و بقیه `null` هستند.
+      operationId: getTransactions
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: لیست تراکنش‌ها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantTransactionsListResponse'
+              examples:
+                internalPaymentOnly:
+                  summary: نمونه تراکنش پرداخت داخلی
+                  value:
+                    status: OK
+                    result:
+                      page: 1
+                      perPage: 20
+                      totalItems: 1
+                      totalPages: 1
+                      data:
+                        - id: 170776
+                          type: INTERNAL_PAYMENT
+                          amount:
+                            amount:
+                              number: "250.00"
+                              unit: "USDT"
+                            usdValue:
+                              number: "250.00"
+                              unit: "USD"
+                            irtValue:
+                              number: "15750000"
+                              unit: "IRT"
+                          fee:
+                            number: "2.50"
+                            unit: "USDT"
+                          feeValue:
+                            number: "2.50"
+                            unit: "USD"
+                          timestamp: "2026-03-16T09:45:12Z"
+                          supportCode: "TX-9F3K2M1"
+                          internalPaymentTransactionDto:
+                            applicationInvoice:
+                              type: INTERNAL_CRYPTO
+                              amount:
+                                number: "250.00"
+                                unit: "USDT"
+                              supportCode: "AI-8LEYRQH-G8HM"
+                              orderId: "ORDER-1001"
+                              description: "خرید اشتراک ویژه"
+                              createdAt: "2026-03-16T09:40:00Z"
+                              status: PAID
+                              extraStatus: null
+                            amount:
+                              amount:
+                                number: "250.00"
+                                unit: "USDT"
+                              usdValue:
+                                number: "250.00"
+                                unit: "USD"
+                              irtValue:
+                                number: "15750000"
+                                unit: "IRT"
+                          externalPaymentTransactionDto: null
+                          settlementTransactionDto: null
+
+                externalPaymentOnly:
+                  summary: نمونه تراکنش پرداخت خارجی
+                  value:
+                    status: OK
+                    result:
+                      page: 1
+                      perPage: 20
+                      totalItems: 1
+                      totalPages: 1
+                      data:
+                        - id: 170777
+                          type: EXTERNAL_PAYMENT
+                          amount:
+                            amount:
+                              number: "1000000"
+                              unit: "IRT"
+                            usdValue:
+                              number: "15.87"
+                              unit: "USD"
+                            irtValue:
+                              number: "1000000"
+                              unit: "IRT"
+                          fee:
+                            number: "50000"
+                            unit: "IRT"
+                          feeValue:
+                            number: "0.79"
+                            unit: "USD"
+                          timestamp: "2026-03-16T11:10:05Z"
+                          supportCode: "TX-2L8P7Q4"
+                          internalPaymentTransactionDto: null
+                          externalPaymentTransactionDto:
+                            applicationInvoice:
+                              type: EXTERNAL_BLOCKCHAIN
+                              amount:
+                                number: "1000000"
+                                unit: "IRT"
+                              supportCode: "AI-2ZMN4TR-K1PL"
+                              orderId: "ORDER-1002"
+                              description: "پرداخت از طریق شبکه"
+                              createdAt: "2026-03-16T11:00:00Z"
+                              status: PAID
+                              extraStatus: OVER_PAID
+                          settlementTransactionDto: null
+
+                settlementOnly:
+                  summary: نمونه تراکنش تسویه
+                  value:
+                    status: OK
+                    result:
+                      page: 1
+                      perPage: 20
+                      totalItems: 1
+                      totalPages: 1
+                      data:
+                        - id: 170778
+                          type: SETTLEMENT
+                          amount:
+                            amount:
+                              number: "5000000"
+                              unit: "IRT"
+                            usdValue:
+                              number: "79.37"
+                              unit: "USD"
+                            irtValue:
+                              number: "5000000"
+                              unit: "IRT"
+                          fee:
+                            number: "0"
+                            unit: "IRT"
+                          feeValue:
+                            number: "0"
+                            unit: "USD"
+                          timestamp: "2026-03-16T14:20:33Z"
+                          supportCode: "TX-7H5D9N2"
+                          internalPaymentTransactionDto: null
+                          externalPaymentTransactionDto: null
+                          settlementTransactionDto:
+                            type: OWNER
 
   /v1/merchants/transactions/{transactionId}:
     get:
@@ -391,7 +421,9 @@ paths:
       description: |
         اطلاعات کامل یک تراکنش را بر اساس شناسه‌ی عددی آن برمی‌گرداند.
 
-        بسته به مقدار فیلد `type`، یکی از آبجکت‌های جزئیات (`transfer`، `trade`، `fiatWithdraw` و ...) در پاسخ وجود خواهد داشت و بقیه `null` هستند.
+        بسته به مقدار فیلد `type`، فقط یکی از آبجکت‌های جزئیات
+        (`internalPaymentTransactionDto`، `externalPaymentTransactionDto`، `settlementTransactionDto`)
+        مقدار خواهد داشت و بقیه `null` هستند.
       operationId: getTransactionById
       parameters:
         - name: transactionId
@@ -409,7 +441,127 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MerchantTransactionDto'
+                $ref: '#/components/schemas/MerchantTransactionResponse'
+              examples:
+                internalPayment:
+                  summary: نمونه پاسخ برای پرداخت داخلی
+                  value:
+                    status: OK
+                    result:
+                      id: 170776
+                      type: INTERNAL_PAYMENT
+                      amount:
+                        amount:
+                          number: "250.00"
+                          unit: "USDT"
+                        usdValue:
+                          number: "250.00"
+                          unit: "USD"
+                        irtValue:
+                          number: "15750000"
+                          unit: "IRT"
+                      fee:
+                        number: "2.50"
+                        unit: "USDT"
+                      feeValue:
+                        number: "2.50"
+                        unit: "USD"
+                      timestamp: "2026-03-16T09:45:12Z"
+                      supportCode: "TX-9F3K2M1"
+                      internalPaymentTransactionDto:
+                        applicationInvoice:
+                          type: INTERNAL_CRYPTO
+                          amount:
+                            number: "250.00"
+                            unit: "USDT"
+                          supportCode: "AI-8LEYRQH-G8HM"
+                          orderId: "ORDER-1001"
+                          description: "خرید اشتراک ویژه"
+                          createdAt: "2026-03-16T09:40:00Z"
+                          status: PAID
+                          extraStatus: null
+                        amount:
+                          amount:
+                            number: "250.00"
+                            unit: "USDT"
+                          usdValue:
+                            number: "250.00"
+                            unit: "USD"
+                          irtValue:
+                            number: "15750000"
+                            unit: "IRT"
+                      externalPaymentTransactionDto: null
+                      settlementTransactionDto: null
+
+                externalPayment:
+                  summary: نمونه پاسخ برای پرداخت خارجی
+                  value:
+                    status: OK
+                    result:
+                      id: 170777
+                      type: EXTERNAL_PAYMENT
+                      amount:
+                        amount:
+                          number: "1000000"
+                          unit: "IRT"
+                        usdValue:
+                          number: "15.87"
+                          unit: "USD"
+                        irtValue:
+                          number: "1000000"
+                          unit: "IRT"
+                      fee:
+                        number: "50000"
+                        unit: "IRT"
+                      feeValue:
+                        number: "0.79"
+                        unit: "USD"
+                      timestamp: "2026-03-16T11:10:05Z"
+                      supportCode: "TX-2L8P7Q4"
+                      internalPaymentTransactionDto: null
+                      externalPaymentTransactionDto:
+                        applicationInvoice:
+                          type: EXTERNAL_BLOCKCHAIN
+                          amount:
+                            number: "1000000"
+                            unit: "IRT"
+                          supportCode: "AI-2ZMN4TR-K1PL"
+                          orderId: "ORDER-1002"
+                          description: "پرداخت از طریق شبکه"
+                          createdAt: "2026-03-16T11:00:00Z"
+                          status: PAID
+                          extraStatus: OVER_PAID
+                      settlementTransactionDto: null
+
+                settlement:
+                  summary: نمونه پاسخ برای تراکنش تسویه
+                  value:
+                    status: OK
+                    result:
+                      id: 170778
+                      type: SETTLEMENT
+                      amount:
+                        amount:
+                          number: "5000000"
+                          unit: "IRT"
+                        usdValue:
+                          number: "79.37"
+                          unit: "USD"
+                        irtValue:
+                          number: "5000000"
+                          unit: "IRT"
+                      fee:
+                        number: "0"
+                        unit: "IRT"
+                      feeValue:
+                        number: "0"
+                        unit: "USD"
+                      timestamp: "2026-03-16T14:20:33Z"
+                      supportCode: "TX-7H5D9N2"
+                      internalPaymentTransactionDto: null
+                      externalPaymentTransactionDto: null
+                      settlementTransactionDto:
+                        type: OWNER
         '401':
           description: عدم احراز هویت
         '404':
@@ -424,7 +576,7 @@ components:
       schema:
         type: string
         example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
-      description: >
+      description: |
         هدر احراز هویت پنل فروشگاه
 
   schemas:
@@ -446,31 +598,18 @@ components:
 
     Money:
       type: object
+      required:
+        - number
+        - unit
       properties:
         number:
           type: string
         unit:
           type: string
           description: واحد ارزی (مثلاً USDT، IRT، USD)
-      required:
-        - number
-        - unit
       example:
         number: "100.50"
         unit: "USDT"
-
-    TokenBalanceDto:
-      type: object
-      properties:
-        token:
-          $ref: '#/components/schemas/TokenEnum'
-        amount:
-          $ref: '#/components/schemas/Money'
-      example:
-        token: "USDT"
-        amount:
-          number: "999800"
-          unit: "USDT"
 
     TotalValueDto:
       type: object
@@ -498,15 +637,15 @@ components:
       type: object
       properties:
         bestSell:
-          type: String
+          type: string
         bestBuy:
-          type: String
+          type: string
         latestPrice:
-          type: String
+          type: string
         dayChange:
-          type: String
+          type: string
         volume24h:
-          type: String
+          type: string
 
     ExternalMarketDataDTO:
       type: object
@@ -531,111 +670,138 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ExternalMarketDataDTO'
+      example:
+        name: USDT
+        available:
+          amount:
+            number: "100.50"
+            unit: "USDT"
+          values:
+            - number: "100.50"
+              unit: "USDT"
+            - number: "20100000"
+              unit: "IRT"
+        onHold:
+          amount:
+            number: "0"
+            unit: "USDT"
+          values:
+            - number: "0"
+              unit: "USDT"
+            - number: "0"
+              unit: "IRT"
+        marketData:
+          - source: USDT
+            destination: USDT
+            marketData:
+              bestSell: "1.00"
+              bestBuy: "1.00"
+              latestPrice: "1.00"
+              dayChange: "0.00"
+              volume24h: "0.00"
+          - source: USDT
+            destination: IRT
+            marketData:
+              bestSell: "200000"
+              bestBuy: "200000"
+              latestPrice: "200000"
+              dayChange: "0.00"
+              volume24h: "0.00"
 
     TotalBalanceDTO:
       type: object
       properties:
-        status:
-          $ref: '#/components/schemas/ResponseStatusEnum'
-        result:
-          type: object
-          properties:
-            totalValue:
-              $ref: '#/components/schemas/TotalValueDto'
-            tokens:
-              type: array
-              items:
-                $ref: '#/components/schemas/TokensBalanceDto'
+        totalValue:
+          $ref: '#/components/schemas/TotalValueDto'
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokensBalanceDto'
       example:
-        status: "OK"
-        result:
-          totalValue:
+        totalValue:
+          available:
+            - number: "100.50"
+              unit: "USDT"
+            - number: "200000"
+              unit: "IRT"
+          onHold:
+            - number: "0"
+              unit: "USDT"
+            - number: "0"
+              unit: "IRT"
+        tokens:
+          - name: USDT
             available:
-              - number: "100.50"
+              amount:
+                number: "100.50"
                 unit: "USDT"
-              - number: "200000"
-                unit: "IRT"
+              values:
+                - number: "100.50"
+                  unit: "USDT"
+                - number: "20100000"
+                  unit: "IRT"
             onHold:
-              - number: "0"
+              amount:
+                number: "0"
                 unit: "USDT"
-              - number: "0"
+              values:
+                - number: "0"
+                  unit: "USDT"
+                - number: "0"
+                  unit: "IRT"
+            marketData:
+              - source: USDT
+                destination: USDT
+                marketData:
+                  bestSell: "1.00"
+                  bestBuy: "1.00"
+                  latestPrice: "1.00"
+                  dayChange: "0.00"
+                  volume24h: "0.00"
+              - source: USDT
+                destination: IRT
+                marketData:
+                  bestSell: "200000"
+                  bestBuy: "200000"
+                  latestPrice: "200000"
+                  dayChange: "0.00"
+                  volume24h: "0.00"
+          - name: IRT
+            available:
+              amount:
+                number: "200000"
                 unit: "IRT"
-          tokens:
-            - name: "USDT"
-              available:
-                amount:
-                  number: "100.50"
+              values:
+                - number: "1.00"
                   unit: "USDT"
-                values:
-                  - number: "100.50"
-                    unit: "USDT"
-                  - number: "20100000"
-                    unit: "IRT"
-              onHold:
-                amount:
-                  number: "0"
+                - number: "200000"
+                  unit: "IRT"
+            onHold:
+              amount:
+                number: "0"
+                unit: "IRT"
+              values:
+                - number: "0"
                   unit: "USDT"
-                values:
-                  - number: "0"
-                    unit: "USDT"
-                  - number: "0"
-                    unit: "IRT"
-              marketData:
-                - source: "USDT"
-                  destination: "USDT"
-                  marketData:
-                    bestSell: "1.00"
-                    bestBuy: "1.00"
-                    latestPrice: "1.00"
-                    dayChange: "0.00"
-                    volume24h: "0.00"
-
-                - source: "USDT"
-                  destination: "IRT"
-                  marketData:
-                    bestSell: "200000"
-                    bestBuy: "200000"
-                    latestPrice: "200000"
-                    dayChange: "0.00"
-                    volume24h: "0.00"
-
-            - name: "IRT"
-              available:
-                amount:
-                  number: "200000"
+                - number: "0"
                   unit: "IRT"
-                values:
-                  - number: "1.00"
-                    unit: "USDT"
-                  - number: "200000"
-                    unit: "IRT"
-              onHold:
-                amount:
-                  number: "0"
-                  unit: "IRT"
-                values:
-                  - number: "0"
-                    unit: "USDT"
-                  - number: "0"
-                    unit: "IRT"
-              marketData:
-                - source: "IRT"
-                  destination: "USDT"
-                  marketData:
-                    bestSell: "0.000005"
-                    bestBuy: "0.000005"
-                    latestPrice: "0.000005"
-                    dayChange: "0.00"
-                    volume24h: "0.00"
-
-                - source: "IRT"
-                  destination: "IRT"
-                  marketData:
-                    bestSell: "1"
-                    bestBuy: "1"
-                    latestPrice: "1"
-                    dayChange: "0"
-                    volume24h: "0"
+            marketData:
+              - source: IRT
+                destination: USDT
+                marketData:
+                  bestSell: "0.000005"
+                  bestBuy: "0.000005"
+                  latestPrice: "0.000005"
+                  dayChange: "0.00"
+                  volume24h: "0.00"
+              - source: IRT
+                destination: IRT
+                marketData:
+                  bestSell: "1"
+                  bestBuy: "1"
+                  latestPrice: "1"
+                  dayChange: "0"
+                  volume24h: "0"
 
     MerchantTransactionTypeEnum:
       type: string
@@ -686,17 +852,53 @@ components:
           type: string
           description: کد پشتیبانی
         orderId:
-          type: [ string, "null" ]
+          anyOf:
+            - type: string
+            - type: 'null'
         description:
-          type: [ string, "null" ]
+          anyOf:
+            - type: string
+            - type: 'null'
         createdAt:
           type: string
           format: date-time
         status:
           $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
         extraStatus:
-          type: [ string, "null" ]
-          $ref: '#/components/schemas/MerchantApplicationInvoiceExtraStatusEnum'
+          anyOf:
+            - $ref: '#/components/schemas/MerchantApplicationInvoiceExtraStatusEnum'
+            - type: 'null'
+      example:
+        type: INTERNAL_CRYPTO
+        amount:
+          number: "100.50"
+          unit: "USDT"
+        supportCode: "AI-8LEYRQH-G8HM"
+        orderId: null
+        description: null
+        createdAt: "2026-02-24T15:12:01.008878Z"
+        status: PAID
+        extraStatus: null
+
+    MerchantInternalPaymentTransactionDetailsDto:
+      type: object
+      properties:
+        applicationInvoice:
+          $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
+        amount:
+          $ref: '#/components/schemas/AmountAndIrtAndUsdValues'
+
+    MerchantExternalPaymentTransactionDetailsDto:
+      type: object
+      properties:
+        applicationInvoice:
+          $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
+
+    MerchantSettlementTransactionDetailsDto:
+      type: object
+      properties:
+        type:
+          type: string
 
     MerchantTransactionDto:
       type: object
@@ -716,24 +918,285 @@ components:
         timestamp:
           type: string
           format: date-time
-          description: زمان ثبت تراکنش (Unix milliseconds)
+          description: زمان ثبت تراکنش به فرمت ISO 8601
         supportCode:
           type: string
           description: کد پشتیبانی
         internalPaymentTransactionDto:
-          type: [ object, "null" ]
-          properties:
-            applicationInvoice:
-              $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
-            amount:
-              $ref: '#/components/schemas/AmountAndIrtAndUsdValues'
+          anyOf:
+            - $ref: '#/components/schemas/MerchantInternalPaymentTransactionDetailsDto'
+            - type: 'null'
         externalPaymentTransactionDto:
-          type: [ object, "null" ]
-          properties:
-            applicationInvoice:
-              $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
+          anyOf:
+            - $ref: '#/components/schemas/MerchantExternalPaymentTransactionDetailsDto'
+            - type: 'null'
         settlementTransactionDto:
-          type: [ object, "null" ]
-          properties:
-            type:
-              type: string
+          anyOf:
+            - $ref: '#/components/schemas/MerchantSettlementTransactionDetailsDto'
+            - type: 'null'
+      example:
+        id: 1
+        type: INTERNAL_PAYMENT
+        amount:
+          amount:
+            number: "100.50"
+            unit: "USDT"
+          usdValue:
+            number: "100.50"
+            unit: "USDT"
+          irtValue:
+            number: "20100000"
+            unit: "IRT"
+        fee:
+          number: "0.1005"
+          unit: "USDT"
+        feeValue:
+          number: "0.1005"
+          unit: "USDT"
+        timestamp: "2026-03-16T23:17:56.349Z"
+        supportCode: "AI-8LEYRQH-G8HM"
+        internalPaymentTransactionDto:
+          applicationInvoice:
+            type: INTERNAL_CRYPTO
+            amount:
+              number: "100.50"
+              unit: "USDT"
+            supportCode: "AI-8LEYRQH-G8HM"
+            orderId: null
+            description: null
+            createdAt: "2026-02-24T15:12:01.008878Z"
+            status: PAID
+            extraStatus: null
+          amount:
+            amount:
+              number: "100.50"
+              unit: "USDT"
+            usdValue:
+              number: "100.50"
+              unit: "USDT"
+            irtValue:
+              number: "20100000"
+              unit: "IRT"
+        externalPaymentTransactionDto: null
+        settlementTransactionDto: null
+
+    MerchantTransactionsResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        perPage:
+          type: integer
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantTransactionDto'
+
+    ApplicationStatusEnum:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - DELETED
+      example: ACTIVE
+
+    ApplicationInformationDto:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApplicationStatusEnum'
+        username:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        logo:
+          anyOf:
+            - type: string
+            - type: 'null'
+        website:
+          anyOf:
+            - type: string
+            - type: 'null'
+        verified:
+          type: boolean
+      example:
+        status: ACTIVE
+        username: Foo
+        name: Foo
+        description: Foo
+        logo: https://swapwallet.app/favicon.ico
+        website: https://business.swapwallet.app
+        verified: true
+
+    ApplicationInformationResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInformationDto'
+
+    TotalBalanceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/TotalBalanceDTO'
+
+    TokenBalanceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/TokensBalanceDto'
+
+    MerchantTransactionsListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/MerchantTransactionsResponse'
+      example:
+        status: OK
+        result:
+          page: 1
+          perPage: 20
+          totalItems: 2
+          totalPages: 1
+          data:
+            - id: 170776
+              type: INTERNAL_PAYMENT
+              amount:
+                amount:
+                  number: "250.00"
+                  unit: "USDT"
+                usdValue:
+                  number: "250.00"
+                  unit: "USD"
+                irtValue:
+                  number: "15750000"
+                  unit: "IRT"
+              fee:
+                number: "2.50"
+                unit: "USDT"
+              feeValue:
+                number: "2.50"
+                unit: "USD"
+              timestamp: "2026-03-16T09:45:12Z"
+              supportCode: "TX-9F3K2M1"
+              internalPaymentTransactionDto:
+                applicationInvoice:
+                  type: INTERNAL_CRYPTO
+                  amount:
+                    number: "250.00"
+                    unit: "USDT"
+                  supportCode: "AI-8LEYRQH-G8HM"
+                  orderId: "ORDER-1001"
+                  description: "خرید اشتراک ویژه"
+                  createdAt: "2026-03-16T09:40:00Z"
+                  status: PAID
+                  extraStatus: null
+                amount:
+                  amount:
+                    number: "250.00"
+                    unit: "USDT"
+                  usdValue:
+                    number: "250.00"
+                    unit: "USD"
+                  irtValue:
+                    number: "15750000"
+                    unit: "IRT"
+              externalPaymentTransactionDto: null
+              settlementTransactionDto: null
+
+            - id: 170778
+              type: SETTLEMENT
+              amount:
+                amount:
+                  number: "5000000"
+                  unit: "IRT"
+                usdValue:
+                  number: "79.37"
+                  unit: "USD"
+                irtValue:
+                  number: "5000000"
+                  unit: "IRT"
+              fee:
+                number: "0"
+                unit: "IRT"
+              feeValue:
+                number: "0"
+                unit: "USD"
+              timestamp: "2026-03-16T14:20:33Z"
+              supportCode: "TX-7H5D9N2"
+              internalPaymentTransactionDto: null
+              externalPaymentTransactionDto: null
+              settlementTransactionDto:
+                type: OWNER
+
+    MerchantTransactionResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/MerchantTransactionDto'
+      example:
+        status: OK
+        result:
+          id: 170776
+          type: INTERNAL_PAYMENT
+          amount:
+            amount:
+              number: "250.00"
+              unit: "USDT"
+            usdValue:
+              number: "250.00"
+              unit: "USD"
+            irtValue:
+              number: "15750000"
+              unit: "IRT"
+          fee:
+            number: "2.50"
+            unit: "USDT"
+          feeValue:
+            number: "2.50"
+            unit: "USD"
+          timestamp: "2026-03-16T09:45:12Z"
+          supportCode: "TX-9F3K2M1"
+          internalPaymentTransactionDto:
+            applicationInvoice:
+              type: INTERNAL_CRYPTO
+              amount:
+                number: "250.00"
+                unit: "USDT"
+              supportCode: "AI-8LEYRQH-G8HM"
+              orderId: "ORDER-1001"
+              description: "خرید اشتراک ویژه"
+              createdAt: "2026-03-16T09:40:00Z"
+              status: PAID
+              extraStatus: null
+            amount:
+              amount:
+                number: "250.00"
+                unit: "USDT"
+              usdValue:
+                number: "250.00"
+                unit: "USD"
+              irtValue:
+                number: "15750000"
+                unit: "IRT"
+          externalPaymentTransactionDto: null
+          settlementTransactionDto: null
