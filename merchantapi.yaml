@@ -666,11 +666,10 @@ paths:
         این endpoint اطلاعات زیر را ارائه می‌دهد:
 
         - مجموع فروش موفق
-        - مقدار در انتظار تسویه (`onHoldAmount`)
+        - مبلغ در انتظار تسویه (`onHoldAmount`)
         - تعداد فروش‌های موفق
-        - داده‌های نمودار برای نمایش روند فروش
-
-        داده‌های نمودار در فیلد `chartBreakdown` قرار دارند.
+        - تعداد نقاط نمودار
+        - داده‌های نمودار در فیلد `chartBreakdown`
 
       operationId: getTotalIncome
 
@@ -680,7 +679,7 @@ paths:
         - name: rangeType
           in: query
           required: true
-          description: بازه زمانی مورد نظر
+          description: بازه زمانی مورد نظر برای محاسبه درآمد
           schema:
             $ref: '#/components/schemas/BasicTimeRangeEnum'
           example: WEEK
@@ -700,8 +699,7 @@ paths:
         - name: useJalaliCalendar
           in: query
           required: false
-          description: |
-            استفاده از تقویم جلالی برای محاسبه بازه زمانی
+          description: استفاده از تقویم جلالی برای محاسبه بازه زمانی
           schema:
             type: boolean
             default: true
@@ -710,10 +708,7 @@ paths:
         - name: timezone
           in: header
           required: false
-          description: |
-            منطقه زمانی برای محاسبه بازه زمانی
-
-            پیش‌فرض: `Asia/Tehran`
+          description: منطقه زمانی برای محاسبه بازه زمانی
           schema:
             type: string
             default: Asia/Tehran
@@ -726,7 +721,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MerchantTotalIncomeResponse'
-
               examples:
                 totalIncomeExample:
                   summary: نمونه پاسخ
@@ -746,10 +740,13 @@ paths:
                           number: "50.00"
                           unit: "USD"
                         "1":
-                          number: "75.00"
+                          number: "75.25"
                           unit: "USD"
                         "2":
                           number: "30.50"
+                          unit: "USD"
+                        "3":
+                          number: "110.00"
                           unit: "USD"
 
         '401':
@@ -842,6 +839,7 @@ components:
         - IRT
         - ETH
         - BNB
+        - USD
 
     Money:
       type: object
@@ -1489,10 +1487,14 @@ components:
           $ref: '#/components/schemas/Money'
         numberOfSuccessfulSales:
           type: integer
+          example: 42
         totalNumberOfChartIndexes:
           type: integer
+          example: 30
         chartBreakdown:
           type: object
+          description: |
+            داده‌های نمودار به ازای هر index. کلیدها index نمودار هستند.
           additionalProperties:
             $ref: '#/components/schemas/Money'
       example:
@@ -1509,7 +1511,10 @@ components:
             number: "50.00"
             unit: "USD"
           "1":
-            number: "75.00"
+            number: "75.25"
+            unit: "USD"
+          "2":
+            number: "30.50"
             unit: "USD"
 
     MerchantTotalIncomeResponse:
@@ -1519,3 +1524,24 @@ components:
           $ref: '#/components/schemas/ResponseStatusEnum'
         result:
           $ref: '#/components/schemas/MerchantApplicationTotalIncomeDto'
+      example:
+        status: OK
+        result:
+          amount:
+            number: "1250.75"
+            unit: "USD"
+          onHoldAmount:
+            number: "150.00"
+            unit: "USD"
+          numberOfSuccessfulSales: 42
+          totalNumberOfChartIndexes: 30
+          chartBreakdown:
+            "0":
+              number: "50.00"
+              unit: "USD"
+            "1":
+              number: "75.25"
+              unit: "USD"
+            "2":
+              number: "30.50"
+              unit: "USD"
