@@ -69,6 +69,9 @@ info:
 
     ---
 
+    ✨ با رعایت این نکات، می‌توانید به‌صورت ایمن و مؤثر از API سواپ‌ولت در پروژه‌های خود استفاده کنید.
+
+
 servers:
   - url: "https://swapwallet.app/api"
     description: |
