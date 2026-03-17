@@ -83,7 +83,7 @@ servers:
 tags:
   - name: اطلاعات فروشگاه
     description: |
-      اطلاعات فروشگاه خود را مشاهده کنید.
+      اطلاعات کلی فروشگاه و اعضای آن را مشاهده کنید.
 
   - name: موجودی
     description: |
@@ -749,6 +749,50 @@ paths:
                           number: "110.00"
                           unit: "USD"
 
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/members:
+    get:
+      tags:
+        - اطلاعات فروشگاه
+      summary: دریافت اعضای فروشگاه
+      description: |
+        لیست اعضای فروشگاه را به همراه نقش‌های آن‌ها برمی‌گرداند.
+      operationId: getMembers
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: لیست اعضای فروشگاه با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationMembersResponse'
+              examples:
+                membersExample:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      - applicationUsername: "my-shop"
+                        userId: 101
+                        name: "Ali Ahmadi"
+                        roles:
+                          - OWNER
+                          - FINANCE
+                      - applicationUsername: "my-shop"
+                        userId: 102
+                        name: "Sara Karimi"
+                        roles:
+                          - SUPPORT
+                          - SALES
+                      - applicationUsername: "my-shop"
+                        userId: 103
+                        name: "Reza Mohammadi"
+                        roles:
+                          - DEVELOPER
+                          - ADMIN
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
@@ -1545,3 +1589,65 @@ components:
             "2":
               number: "30.50"
               unit: "USD"
+
+    ApplicationMemberRoleEnum:
+      type: string
+      enum:
+        - OWNER
+        - ADMIN
+        - FINANCE
+        - ACCOUNTING
+        - SALES
+        - DEVELOPER
+        - SUPPORT
+      example: OWNER
+
+    ApplicationMemberDto:
+      type: object
+      properties:
+        applicationUsername:
+          type: string
+          example: my-shop
+        userId:
+          type: integer
+          format: int64
+          example: 101
+        name:
+          type: string
+          example: Ali Ahmadi
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationMemberRoleEnum'
+      example:
+        applicationUsername: my-shop
+        userId: 101
+        name: Ali Ahmadi
+        roles:
+          - OWNER
+          - FINANCE
+
+    ApplicationMembersResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationMemberDto'
+      example:
+        status: OK
+        result:
+          - applicationUsername: my-shop
+            userId: 101
+            name: Ali Ahmadi
+            roles:
+              - OWNER
+              - FINANCE
+          - applicationUsername: my-shop
+            userId: 102
+            name: Sara Karimi
+            roles:
+              - SUPPORT
+              - SALES
