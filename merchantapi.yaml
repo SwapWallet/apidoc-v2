@@ -78,8 +78,7 @@ info:
 
 servers:
   - url: https://swapwallet.app/api
-    description: |
-      سرور پروداکشن
+    description: سرور پروداکشن
 
 tags:
   - name: اطلاعات فروشگاه
@@ -200,13 +199,13 @@ paths:
         - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
         '200':
-          description: اطلاعات فروشگاه با موفقیت دریافت شد.
+          description: اطلاعات فروشگاه با موفقیت دریافت شد
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationInformationResponse'
         '401':
-          description: عدم احراز هویت
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /v1/merchants/balance:
     get:
@@ -226,7 +225,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TotalBalanceResponse'
         '401':
-          description: عدم احراز هویت
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /v1/merchants/balance/{token}:
     get:
@@ -252,7 +251,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenBalanceResponse'
         '401':
-          description: عدم احراز هویت
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           description: توکن یافت نشد
 
@@ -262,14 +261,48 @@ paths:
         - تراکنش‌ها
       summary: دریافت لیست تراکنش‌ها
       description: |
-        لیست اطلاعات تراکنش‌ها را برمی‌گرداند.
+        لیست تراکنش‌های فروشگاه را برمی‌گرداند.
 
-        برای هر تراکنش، بسته به مقدار فیلد `type`، یکی از آبجکت‌های جزئیات
-        (`settlementTransactionDto`، `externalPaymentTransactionDto`، `internalPaymentTransactionDto`)
-        در پاسخ وجود خواهد داشت و بقیه `null` هستند.
+        این endpoint از **pagination**، **sorting** و **filtering** پشتیبانی می‌کند.
+
+        برای هر تراکنش، بسته به مقدار فیلد `type`، فقط یکی از آبجکت‌های زیر مقدار خواهد داشت:
+
+        - `internalPaymentTransactionDto`
+        - `externalPaymentTransactionDto`
+        - `settlementTransactionDto`
       operationId: getTransactions
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/TransactionsSortedByParam'
+        - $ref: '#/components/parameters/DirectionParam'
+        - name: supportCode
+          in: query
+          required: false
+          description: فیلتر بر اساس کد پشتیبانی تراکنش
+          schema:
+            type: string
+            example: TX-9F3K2M1
+        - name: transactionTypes
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس نوع تراکنش.
+
+            می‌توان چند مقدار ارسال کرد.
+
+            مثال:
+            `transactionTypes=INTERNAL_PAYMENT&transactionTypes=SETTLEMENT`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/MerchantTransactionTypeEnum'
+          example:
+            - INTERNAL_PAYMENT
+            - SETTLEMENT
       responses:
         '200':
           description: لیست تراکنش‌ها با موفقیت دریافت شد
@@ -278,14 +311,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/MerchantTransactionsListResponse'
               examples:
-                internalPaymentOnly:
-                  summary: نمونه تراکنش پرداخت داخلی
+                defaultResponse:
+                  summary: نمونه پاسخ
                   value:
                     status: OK
                     result:
-                      page: 1
-                      perPage: 20
-                      totalItems: 1
+                      page: 0
+                      perPage: 10
+                      totalItems: 2
                       totalPages: 1
                       data:
                         - id: 170776
@@ -332,62 +365,6 @@ paths:
                                 unit: "IRT"
                           externalPaymentTransactionDto: null
                           settlementTransactionDto: null
-
-                externalPaymentOnly:
-                  summary: نمونه تراکنش پرداخت خارجی
-                  value:
-                    status: OK
-                    result:
-                      page: 1
-                      perPage: 20
-                      totalItems: 1
-                      totalPages: 1
-                      data:
-                        - id: 170777
-                          type: EXTERNAL_PAYMENT
-                          amount:
-                            amount:
-                              number: "1000000"
-                              unit: "IRT"
-                            usdValue:
-                              number: "15.87"
-                              unit: "USD"
-                            irtValue:
-                              number: "1000000"
-                              unit: "IRT"
-                          fee:
-                            number: "50000"
-                            unit: "IRT"
-                          feeValue:
-                            number: "0.79"
-                            unit: "USD"
-                          timestamp: "2026-03-16T11:10:05Z"
-                          supportCode: "TX-2L8P7Q4"
-                          internalPaymentTransactionDto: null
-                          externalPaymentTransactionDto:
-                            applicationInvoice:
-                              type: EXTERNAL_BLOCKCHAIN
-                              amount:
-                                number: "1000000"
-                                unit: "IRT"
-                              supportCode: "AI-2ZMN4TR-K1PL"
-                              orderId: "ORDER-1002"
-                              description: "پرداخت از طریق شبکه"
-                              createdAt: "2026-03-16T11:00:00Z"
-                              status: PAID
-                              extraStatus: OVER_PAID
-                          settlementTransactionDto: null
-
-                settlementOnly:
-                  summary: نمونه تراکنش تسویه
-                  value:
-                    status: OK
-                    result:
-                      page: 1
-                      perPage: 20
-                      totalItems: 1
-                      totalPages: 1
-                      data:
                         - id: 170778
                           type: SETTLEMENT
                           amount:
@@ -412,6 +389,8 @@ paths:
                           externalPaymentTransactionDto: null
                           settlementTransactionDto:
                             type: OWNER
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /v1/merchants/transactions/{transactionId}:
     get:
@@ -563,9 +542,113 @@ paths:
                       settlementTransactionDto:
                         type: OWNER
         '401':
-          description: عدم احراز هویت
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           description: تراکنش یافت نشد
+
+  /v1/merchants/invoices:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت لیست فاکتورهای فروشگاه
+      description: |
+        لیست فاکتورهای ایجاد شده برای فروشگاه را برمی‌گرداند.
+
+        این endpoint از **pagination**، **sorting** و **filtering** پشتیبانی می‌کند.
+
+        می‌توانید نتایج را بر اساس:
+        - نوع فاکتور (`invoiceTypes`)
+        - وضعیت فاکتور (`invoiceStatuses`)
+        - جستجو (`search`)
+        فیلتر کنید.
+      operationId: getRecentApplicationInvoices
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/InvoicesSortedByParam'
+        - $ref: '#/components/parameters/DirectionParam'
+        - name: search
+          in: query
+          required: false
+          description: جستجو در فیلدهای فاکتور مانند `supportCode` یا `orderId`
+          schema:
+            type: string
+            example: AI-8LEYRQH-G8HM
+        - name: invoiceTypes
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس نوع فاکتور.
+
+            مثال:
+            `invoiceTypes=INTERNAL_CRYPTO&invoiceTypes=EXTERNAL_BLOCKCHAIN`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/MerchantApplicationInvoiceTypeEnum'
+          example:
+            - INTERNAL_CRYPTO
+            - EXTERNAL_BLOCKCHAIN
+        - name: invoiceStatuses
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس وضعیت فاکتور.
+
+            مثال:
+            `invoiceStatuses=ACTIVE&invoiceStatuses=PAID`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+          example:
+            - ACTIVE
+            - PAID
+      responses:
+        '200':
+          description: لیست فاکتورها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantInvoicesListResponse'
+              examples:
+                invoicesExample:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      page: 0
+                      perPage: 10
+                      totalItems: 2
+                      totalPages: 1
+                      data:
+                        - type: INTERNAL_CRYPTO
+                          amount:
+                            number: "100.50"
+                            unit: "USDT"
+                          supportCode: "AI-8LEYRQH-G8HM"
+                          orderId: "ORDER-1001"
+                          description: "پرداخت اشتراک"
+                          createdAt: "2026-03-15T12:10:00Z"
+                          status: PAID
+                          extraStatus: null
+                        - type: EXTERNAL_BLOCKCHAIN
+                          amount:
+                            number: "500000"
+                            unit: "IRT"
+                          supportCode: "AI-2ZMN4TR-K1PL"
+                          orderId: "ORDER-1002"
+                          description: "پرداخت از طریق شبکه"
+                          createdAt: "2026-03-16T10:05:00Z"
+                          status: ACTIVE
+                          extraStatus: null
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
 components:
   parameters:
@@ -576,8 +659,67 @@ components:
       schema:
         type: string
         example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
-      description: |
-        هدر احراز هویت پنل فروشگاه
+      description: هدر احراز هویت پنل فروشگاه
+
+    PageParam:
+      name: page
+      in: query
+      required: false
+      description: شماره صفحه (از صفر شروع می‌شود)
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+        example: 0
+
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      description: تعداد آیتم‌های هر صفحه
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+        example: 10
+
+    DirectionParam:
+      name: direction
+      in: query
+      required: false
+      description: جهت مرتب‌سازی
+      schema:
+        type: string
+        enum:
+          - ASC
+          - DESC
+        default: DESC
+        example: DESC
+
+    TransactionsSortedByParam:
+      name: sortedBy
+      in: query
+      required: false
+      description: فیلد مرتب‌سازی در لیست تراکنش‌ها
+      schema:
+        type: string
+        default: id
+        example: timestamp
+
+    InvoicesSortedByParam:
+      name: sortedBy
+      in: query
+      required: false
+      description: فیلد مرتب‌سازی در لیست فاکتورها
+      schema:
+        type: string
+        default: createdAt
+        example: createdAt
+
+  responses:
+    UnauthorizedResponse:
+      description: عدم احراز هویت
 
   schemas:
     ResponseStatusEnum:
@@ -943,7 +1085,7 @@ components:
             unit: "USDT"
           usdValue:
             number: "100.50"
-            unit: "USDT"
+            unit: "USD"
           irtValue:
             number: "20100000"
             unit: "IRT"
@@ -952,7 +1094,7 @@ components:
           unit: "USDT"
         feeValue:
           number: "0.1005"
-          unit: "USDT"
+          unit: "USD"
         timestamp: "2026-03-16T23:17:56.349Z"
         supportCode: "AI-8LEYRQH-G8HM"
         internalPaymentTransactionDto:
@@ -973,7 +1115,7 @@ components:
               unit: "USDT"
             usdValue:
               number: "100.50"
-              unit: "USDT"
+              unit: "USD"
             irtValue:
               number: "20100000"
               unit: "IRT"
@@ -996,6 +1138,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MerchantTransactionDto'
+
+    MerchantInvoicesPagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        perPage:
+          type: integer
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantApplicationInvoiceDto'
 
     ApplicationStatusEnum:
       type: string
@@ -1120,7 +1279,6 @@ components:
                     unit: "IRT"
               externalPaymentTransactionDto: null
               settlementTransactionDto: null
-
             - id: 170778
               type: SETTLEMENT
               amount:
@@ -1200,3 +1358,11 @@ components:
                 unit: "IRT"
           externalPaymentTransactionDto: null
           settlementTransactionDto: null
+
+    MerchantInvoicesListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/MerchantInvoicesPagination'
