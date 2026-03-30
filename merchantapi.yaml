@@ -89,6 +89,10 @@ tags:
     description: |
       موجودی لحظه‌ای حساب خود را به تفکیک هر توکن مشاهده کنید.
 
+  - name: برداشت ریالی
+    description: |
+      عملیات تسویه و برداشت ریالی فروشگاه را انجام دهید.
+
   - name: آمار فروش
     description: |
       آمار فروش و درآمد فروشگاه را در بازه‌های زمانی مختلف مشاهده کنید.
@@ -121,6 +125,7 @@ x-tagGroups:
       - موجودی
       - تراکنش‌ها
       - فاکتور
+      - برداشت ریالی
 
 paths:
   /v1/merchants/info:
@@ -130,7 +135,7 @@ paths:
       summary: اطلاعات فروشگاه
       description: |
         با استفاده از این API می‌توانید اطلاعات کلی فروشگاه خود را مشاهده نمایید.
-      operationId: getInfo
+      operationId: getApplicationInformation
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
       responses:
@@ -139,9 +144,148 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationInformationResponse'
+                $ref: '#/components/schemas/ApplicationResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: 101
+                      type: API
+                      ownerId: 12
+                      supportCode: "APP-8LEYRQH-G8HM"
+                      status: ACTIVE
+                      username: "my-shop"
+                      logo: "https://swapwallet.app/media/logo.png"
+                      name: "My Shop"
+                      description: "فروشگاه نمونه"
+                      website: "https://example.com"
+                      webhookUrl: "https://example.com/webhook"
+                      deepLinks:
+                        - SWAP_WALLET
+                        - TRUST_WALLET
+                        - METAMASK
+                      feePayer: APPLICATION
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invitation-token:
+    post:
+      tags:
+        - اطلاعات فروشگاه
+      summary: ایجاد توکن دعوت عضو
+      description: |
+        یک توکن دعوت جدید برای افزودن عضو به فروشگاه ایجاد می‌کند.
+
+        در این درخواست باید نام و نقش‌های عضو جدید مشخص شوند.
+      operationId: createInvitationToken
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationMemberInvitationRequest'
+            examples:
+              default:
+                summary: نمونه درخواست ایجاد دعوت‌نامه
+                value:
+                  name: "Ali Ahmadi"
+                  roles:
+                    - SUPPORT
+                    - SALES
+      responses:
+        '200':
+          description: توکن دعوت با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationTokenResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result: "f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+    get:
+      tags:
+        - اطلاعات فروشگاه
+      summary: دریافت همه دعوت‌نامه‌ها
+      description: |
+        لیست تمام دعوت‌نامه‌های ایجادشده برای فروشگاه را برمی‌گرداند.
+      operationId: getAllInvitationTokens
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: لیست دعوت‌نامه‌ها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationMemberInvitationsResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      - id: 1
+                        applicationUsername: "my-shop"
+                        name: "Ali Ahmadi"
+                        roles:
+                          - SUPPORT
+                          - SALES
+                        token: "f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1"
+                        status: PENDING
+                      - id: 2
+                        applicationUsername: "my-shop"
+                        name: "Sara Karimi"
+                        roles:
+                          - DEVELOPER
+                        token: "d41b1f76-bfd4-47a4-9e14-1ce4fb9b7440"
+                        status: ACCEPTED
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invitation-token/{invitationId}:
+    delete:
+      tags:
+        - اطلاعات فروشگاه
+      summary: لغو دعوت‌نامه
+      description: |
+        یک دعوت‌نامه فعال را بر اساس شناسه آن لغو می‌کند.
+      operationId: cancelInvitationToken
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: invitationId
+          in: path
+          required: true
+          description: شناسه دعوت‌نامه
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: دعوت‌نامه با موفقیت لغو شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptySuccessResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          description: دعوت‌نامه یافت نشد
 
   /v1/merchants/balance:
     get:
@@ -586,6 +730,506 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور
+      description: |
+        یک فاکتور پرداخت جدید ایجاد می‌کند و لینک‌های پرداخت مربوط به آن را برمی‌گرداند.
+      operationId: createApplicationInvoice
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceRequestV2'
+            examples:
+              default:
+                summary: نمونه درخواست ایجاد فاکتور
+                value:
+                  amount:
+                    number: "100.00"
+                    unit: "USDT"
+                  allowedTokens:
+                    - token: USDT
+                      network: TRON
+                    - token: TON
+                      network: TON
+                  feePayer: APPLICATION
+                  userLanguage: FA
+                  ttl: 1800
+                  underPaidCoveragePercent: 0
+                  returnUrl: "https://example.com/return"
+                  webhookUrl: "https://example.com/webhook"
+                  orderId: "ORDER-2001"
+                  description: "پرداخت سفارش"
+                  customData: "{\"productId\":\"p-100\"}"
+                  userId: "user-321"
+                  userEmail: "buyer@example.com"
+                  userPhoneNumber: "+989121112233"
+      responses:
+        '200':
+          description: فاکتور با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: "6c9e0d6f-b934-4b20-b7a1-9151320886d5"
+                      paymentLinks:
+                        - type: WEBSITE
+                          url: "https://business.swapwallet.app/pay/invoice-example"
+                        - type: TELEGRAM_WEBAPP
+                          url: "https://t.me/example_bot/app?startapp=invoice_123"
+                      expiredAt: "2026-03-30T13:30:00Z"
+                      createdAt: "2026-03-30T13:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invoices/full-data:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت لیست کامل فاکتورها
+      description: |
+        لیست کامل فاکتورهای فروشگاه را به همراه اطلاعات کامل‌تر هر فاکتور برمی‌گرداند.
+
+        این endpoint از **pagination**، **sorting** و **filtering** پشتیبانی می‌کند.
+
+        می‌توانید نتایج را بر اساس:
+        - نوع فاکتور (`invoiceTypes`)
+        - وضعیت فاکتور (`invoiceStatuses`)
+        - جستجو (`search`)
+        فیلتر کنید.
+      operationId: getApplicationInvoices
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/InvoicesSortedByParam'
+        - $ref: '#/components/parameters/DirectionParam'
+
+        - name: search
+          in: query
+          required: false
+          description: جستجو در فیلدهای فاکتور مانند `supportCode` یا `orderId`
+          schema:
+            type: string
+            example: AI-8LEYRQH-G8HM
+
+        - name: invoiceTypes
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس نوع فاکتور.
+
+            مثال:
+            `invoiceTypes=CRYPTO_INVOICE&invoiceTypes=TEMP_WALLET`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApplicationInvoiceTypeEnum'
+          example:
+            - CRYPTO_INVOICE
+            - TEMP_WALLET
+
+        - name: invoiceStatuses
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس وضعیت فاکتور.
+
+            مثال:
+            `invoiceStatuses=ACTIVE&invoiceStatuses=PAID`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+          example:
+            - ACTIVE
+            - PAID
+
+      responses:
+        '200':
+          description: لیست کامل فاکتورها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoicesFullDataListResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      page: 0
+                      perPage: 10
+                      totalItems: 2
+                      totalPages: 1
+                      data:
+                        - id: "c7f4df74-0168-4a58-b04b-3fe4c0dd9e11"
+                          supportCode: "AI-8LEYRQH-G8HM"
+                          status: ACTIVE
+                          description: "پرداخت سفارش"
+                          customData: "{\"productId\":\"p-100\"}"
+                          wallet: null
+                          ownerId: 101
+                          telegramInlineMessageId: null
+                          userLanguage: FA
+                          returnUrl: "https://example.com/return"
+                          webhookUrl: "https://example.com/webhook"
+                          orderId: "ORDER-1001"
+                          amount:
+                            number: "100.00"
+                            unit: "USDT"
+                          value:
+                            number: "8400000"
+                            unit: "IRT"
+                          feePayer: APPLICATION
+                          feeAmount:
+                            number: "1.00"
+                            unit: "USDT"
+                          paymentLinks:
+                            - type: WEBSITE
+                              url: "https://business.swapwallet.app/pay/example"
+                          paidAt: null
+                          blockchainStatus: null
+                          userId: "user-123"
+                          userEmail: "user@example.com"
+                          userPhoneNumber: "+989121234567"
+                          expiredAt: "2026-03-30T15:00:00Z"
+                          createdAt: "2026-03-30T14:00:00Z"
+
+                        - id: "5b0a6e45-2335-4f1d-bd1f-6e2f0f6a8a88"
+                          supportCode: "AI-2ZMN4TR-K1PL"
+                          status: PAID
+                          description: "پرداخت با کیف پول موقت"
+                          customData: null
+                          wallet:
+                            network: TRON
+                            token: USDT
+                            address: "TExampleWalletAddress123"
+                            validUntil: "2026-03-30T14:00:00Z"
+                            deepLinks:
+                              - name: TRUST_WALLET
+                                logo: "https://example.com/trust-wallet.png"
+                                url: "trust://pay/example"
+                              - name: METAMASK
+                                logo: "https://example.com/metamask.png"
+                                url: "metamask://pay/example"
+                          ownerId: 101
+                          telegramInlineMessageId: null
+                          userLanguage: EN
+                          returnUrl: null
+                          webhookUrl: "https://example.com/webhook"
+                          orderId: "ORDER-1002"
+                          amount:
+                            number: "500000"
+                            unit: "IRT"
+                          value:
+                            number: "500000"
+                            unit: "IRT"
+                          feePayer: USER
+                          feeAmount:
+                            number: "0"
+                            unit: "IRT"
+                          paymentLinks:
+                            - type: TELEGRAM_BOT
+                              url: "https://t.me/example_bot?start=invoice_123"
+                          paidAt: "2026-03-30T13:30:00Z"
+                          blockchainStatus: CONFIRMED
+                          userId: null
+                          userEmail: null
+                          userPhoneNumber: null
+                          expiredAt: "2026-03-30T14:00:00Z"
+                          createdAt: "2026-03-30T12:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invoices/by-order-id/{orderId}:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت فاکتور با شناسه سفارش
+      description: |
+        اطلاعات کامل یک فاکتور را بر اساس `orderId` برمی‌گرداند.
+      operationId: getApplicationInvoiceByExternalId
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: orderId
+          in: path
+          required: true
+          description: شناسه سفارش خارجی
+          schema:
+            type: string
+            example: ORDER-1001
+      responses:
+        '200':
+          description: فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2Response'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: "c7f4df74-0168-4a58-b04b-3fe4c0dd9e11"
+                      supportCode: "AI-8LEYRQH-G8HM"
+                      status: ACTIVE
+                      description: "پرداخت سفارش"
+                      customData: "{\"productId\":\"p-100\"}"
+                      wallet: null
+                      ownerId: 101
+                      telegramInlineMessageId: null
+                      userLanguage: FA
+                      returnUrl: "https://example.com/return"
+                      webhookUrl: "https://example.com/webhook"
+                      orderId: "ORDER-1001"
+                      amount:
+                        number: "100.00"
+                        unit: "USDT"
+                      value:
+                        number: "8400000"
+                        unit: "IRT"
+                      feePayer: APPLICATION
+                      feeAmount:
+                        number: "1.00"
+                        unit: "USDT"
+                      paymentLinks:
+                        - type: WEBSITE
+                          url: "https://business.swapwallet.app/pay/example"
+                        - type: TELEGRAM_WEBAPP
+                          url: "https://t.me/example_bot/app?startapp=invoice_123"
+                      paidAt: null
+                      blockchainStatus: null
+                      userId: "user-123"
+                      userEmail: "user@example.com"
+                      userPhoneNumber: "+989121234567"
+                      expiredAt: "2026-03-30T15:00:00Z"
+                      createdAt: "2026-03-30T14:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          description: فاکتور یافت نشد
+
+  /v1/merchants/invoices/{invoiceId}:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت اطلاعات فاکتور با شناسه
+      description: |
+        اطلاعات کامل یک فاکتور را بر اساس شناسه‌ی یکتای آن برمی‌گرداند.
+      operationId: getApplicationInvoiceInformation
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه یکتای فاکتور
+          schema:
+            type: string
+            format: uuid
+            example: c7f4df74-0168-4a58-b04b-3fe4c0dd9e11
+      responses:
+        '200':
+          description: اطلاعات فاکتور با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInvoiceV2Response'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: "c7f4df74-0168-4a58-b04b-3fe4c0dd9e11"
+                      supportCode: "AI-8LEYRQH-G8HM"
+                      status: ACTIVE
+                      description: "پرداخت سفارش"
+                      customData: "{\"productId\":\"p-100\"}"
+                      wallet: null
+                      ownerId: 101
+                      telegramInlineMessageId: null
+                      userLanguage: FA
+                      returnUrl: "https://example.com/return"
+                      webhookUrl: "https://example.com/webhook"
+                      orderId: "ORDER-1001"
+                      amount:
+                        number: "100.00"
+                        unit: "USDT"
+                      value:
+                        number: "8400000"
+                        unit: "IRT"
+                      feePayer: APPLICATION
+                      feeAmount:
+                        number: "1.00"
+                        unit: "USDT"
+                      paymentLinks:
+                        - type: WEBSITE
+                          url: "https://business.swapwallet.app/pay/example"
+                        - type: TELEGRAM_WEBAPP
+                          url: "https://t.me/example_bot/app?startapp=invoice_123"
+                      paidAt: null
+                      blockchainStatus: null
+                      userId: "user-123"
+                      userEmail: "user@example.com"
+                      userPhoneNumber: "+989121234567"
+                      expiredAt: "2026-03-30T15:00:00Z"
+                      createdAt: "2026-03-30T14:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          description: فاکتور یافت نشد
+
+  /v1/merchants/resid:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد رسید ریالی
+      description: |
+        یک رسید ریالی جدید ایجاد می‌کند.
+
+        این endpoint برای دریافت پرداخت با مبلغ ثابت به تومان (IRT) استفاده می‌شود.
+      operationId: createNewResid
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResidRequestV1'
+            examples:
+              default:
+                summary: نمونه درخواست ایجاد رسید
+                value:
+                  amount:
+                    number: "500000"
+                    unit: "IRT"
+                  userLanguage: FA
+                  ttl: 1800
+                  webhookUrl: "https://example.com/webhook"
+                  returnUrl: "https://example.com/return"
+                  orderId: "ORDER-1001"
+                  description: "پرداخت سفارش 1001"
+                  customData: "{\"source\":\"landing-page\"}"
+                  userId: "user-123"
+                  userEmail: "user@example.com"
+                  userPhoneNumber: "+989121234567"
+      responses:
+        '200':
+          description: رسید با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIrtResidResponseWrapper'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: "cc8ad7e1-41df-4d02-8f8c-6e4726de19c2"
+                      paymentLinks:
+                        - type: WEBSITE
+                          url: "https://business.swapwallet.app/pay/example"
+                        - type: TELEGRAM_BOT
+                          url: "https://t.me/example_bot?start=pay_123"
+                      expiredAt: "2026-03-30T12:30:00Z"
+                      createdAt: "2026-03-30T12:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invoices/temporary-wallet:
+    post:
+      tags:
+        - فاکتور
+      summary: ایجاد فاکتور با کیف پول موقت
+      description: |
+        یک فاکتور جدید با کیف پول موقت ایجاد می‌کند.
+
+        در این روش، فقط یک توکن و یک شبکه مشخص برای پرداخت مجاز هستند و اطلاعات کیف پول موقت نیز در پاسخ برگردانده می‌شود.
+      operationId: createApplicationInvoiceWithTemporaryWallet
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
+            examples:
+              default:
+                summary: نمونه درخواست ایجاد فاکتور با کیف پول موقت
+                value:
+                  amount:
+                    number: "100.00"
+                    unit: "USDT"
+                  allowedToken: USDT
+                  network: TRON
+                  webhookUrl: "https://example.com/webhook"
+                  returnUrl: "https://example.com/return"
+                  ttl: 1800
+                  underPaidCoveragePercent: 0
+                  orderId: "ORDER-3001"
+                  customData: "{\"campaign\":\"spring-sale\"}"
+                  description: "پرداخت با کیف پول موقت"
+                  userId: "user-999"
+                  userEmail: "wallet@example.com"
+                  userPhoneNumber: "+989123334455"
+                  userLanguage: FA
+      responses:
+        '200':
+          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      id: "11811edb-e36b-4bf7-b7f8-1c7eb11b457b"
+                      walletAddress: "TExampleWalletAddress123"
+                      links:
+                        - name: TRUST_WALLET
+                          logo: "https://example.com/trust-wallet.png"
+                          url: "trust://pay/example"
+                        - name: METAMASK
+                          logo: "https://example.com/metamask.png"
+                          url: "metamask://pay/example"
+                      amount:
+                        amount:
+                          number: "100.00"
+                          unit: "USDT"
+                        usdValue:
+                          number: "100.00"
+                          unit: "USD"
+                        userCurrencyValue:
+                          number: "8400000"
+                          unit: "IRT"
+                      expiredAt: "2026-03-30T14:30:00Z"
+                      createdAt: "2026-03-30T14:00:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /v1/merchants/income/total:
     get:
       tags:
@@ -727,6 +1371,157 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /v1/merchants/settle-all:
+    post:
+      tags:
+        - برداشت ریالی
+      summary: تسویه همه موجودی‌ها
+      description: |
+        تمام موجودی‌های قابل تسویه فروشگاه را به‌صورت یکجا تسویه می‌کند.
+      operationId: settleAllBalances
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      responses:
+        '200':
+          description: تسویه با موفقیت انجام شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptySuccessResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/settle:
+    post:
+      tags:
+        - برداشت ریالی
+      summary: تسویه یک موجودی مشخص
+      description: |
+        یک مبلغ مشخص از موجودی فروشگاه را تسویه می‌کند.
+      operationId: settleSpecificBalance
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementRequest'
+            examples:
+              default:
+                summary: نمونه درخواست تسویه
+                value:
+                  amount:
+                    number: "500000"
+                    unit: "IRT"
+      responses:
+        '200':
+          description: تسویه با موفقیت انجام شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptySuccessResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /v1/merchants/invoices/{invoiceId}/webhook:
+    get:
+      tags:
+        - فاکتور
+      summary: دریافت اطلاعات وب‌هوک فاکتور
+      description: |
+        اطلاعات وب‌هوک مربوط به یک فاکتور را بر اساس شناسه آن برمی‌گرداند.
+
+        پاسخ شامل وضعیت کلی وب‌هوک و تاریخچه‌ی درخواست‌های ارسال‌شده است.
+      operationId: getInvoiceWebhook
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه یکتای فاکتور
+          schema:
+            type: string
+            format: uuid
+            example: c7f4df74-0168-4a58-b04b-3fe4c0dd9e11
+      responses:
+        '200':
+          description: اطلاعات وب‌هوک با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceWebhookResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+                    result:
+                      status: FAILED
+                      calls:
+                        - requestId: "a7d0cb53-b035-44b4-b48e-4b04a59d5f97"
+                          url: "https://example.com/webhook"
+                          requestBody: "{\"invoiceId\":\"c7f4df74-0168-4a58-b04b-3fe4c0dd9e11\",\"status\":\"PAID\"}"
+                          responseBody: "{\"message\":\"invalid signature\"}"
+                          status: 400
+                          succeed: false
+                          createdAt: "2026-03-30T12:00:00Z"
+                        - requestId: "0e6a3f89-f1d9-4765-b1bb-7d404adbeff7"
+                          url: "https://example.com/webhook"
+                          requestBody: "{\"invoiceId\":\"c7f4df74-0168-4a58-b04b-3fe4c0dd9e11\",\"status\":\"PAID\"}"
+                          responseBody: null
+                          status: 500
+                          succeed: false
+                          createdAt: "2026-03-30T12:05:00Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          description: فاکتور یا وب‌هوک یافت نشد
+
+  /v1/merchants/invoices/{invoiceId}/webhook/retry:
+    post:
+      tags:
+        - فاکتور
+      summary: تلاش مجدد برای ارسال وب‌هوک فاکتور
+      description: |
+        ارسال وب‌هوک مربوط به فاکتور را مجدداً تلاش می‌کند.
+      operationId: retryInvoiceWebhook
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: invoiceId
+          in: path
+          required: true
+          description: شناسه یکتای فاکتور
+          schema:
+            type: string
+            format: uuid
+            example: c7f4df74-0168-4a58-b04b-3fe4c0dd9e11
+      responses:
+        '200':
+          description: تلاش مجدد با موفقیت ثبت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptySuccessResponse'
+              examples:
+                success:
+                  summary: نمونه پاسخ
+                  value:
+                    status: OK
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          description: فاکتور یا وب‌هوک یافت نشد
 components:
   parameters:
     AuthorizationHeader:
@@ -1582,3 +2377,855 @@ components:
             roles:
               - SUPPORT
               - SALES
+
+    LanguageEnum:
+      type: string
+      enum:
+        - EN
+        - FA
+        - RU
+        - ZH
+        - FR
+      example: FA
+
+    FeePayerEnum:
+      type: string
+      enum:
+        - USER
+        - APPLICATION
+      example: APPLICATION
+
+    NetworkEnum:
+      type: string
+      enum:
+        - INTERNAL
+        - TRON
+        - ETHEREUM
+        - BSC
+        - TON
+        - POLYGON
+        - ARBITRUM
+        - AVALANCHE
+        - OPTIMISM
+        - SOLANA
+        - FANTOM
+        - SUI
+        - DOGE
+        - BTC
+        - ADA
+        - XRP
+        - NEAR
+      example: TRON
+
+    PaymentLinkTypeEnum:
+      type: string
+      enum:
+        - TELEGRAM_BOT
+        - TELEGRAM_WEBAPP
+        - WEBSITE
+
+    WalletProvidersEnum:
+      type: string
+      enum:
+        - SWAP_WALLET
+        - SWAP_WALLET_WEBSITE
+        - TRUST_WALLET
+        - METAMASK
+        - TON_KEEPER
+        - TONHUB
+        - MYTONWALLET
+
+    TokenNetworkDto:
+      type: object
+      required:
+        - token
+        - network
+      properties:
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+
+    InvoicePaymentLinkDto:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentLinkTypeEnum'
+        url:
+          type: string
+          format: uri
+      example:
+        type: WEBSITE
+        url: https://business.swapwallet.app/pay/example
+
+    DeepLinkDto:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/WalletProvidersEnum'
+        logo:
+          type: string
+          format: uri
+        url:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+      example:
+        name: TRUST_WALLET
+        logo: https://example.com/logo.png
+        url: trust://pay/example
+
+    AmountAndValueDto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        usdValue:
+          $ref: '#/components/schemas/Money'
+        userCurrencyValue:
+          $ref: '#/components/schemas/Money'
+
+    CreateResidRequestV1:
+      type: object
+      required:
+        - amount
+        - ttl
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        userLanguage:
+          anyOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+            - type: 'null'
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 86400
+        webhookUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        returnUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        orderId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        description:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        customData:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        userEmail:
+          anyOf:
+            - type: string
+              format: email
+              maxLength: 320
+            - type: 'null'
+        userPhoneNumber:
+          anyOf:
+            - type: string
+              maxLength: 16
+            - type: 'null'
+
+    CreateIrtResidResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        paymentLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicePaymentLinkDto'
+        expiredAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateIrtResidResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/CreateIrtResidResponse'
+
+    CreateApplicationInvoiceRequestV2:
+      type: object
+      required:
+        - amount
+        - allowedTokens
+        - ttl
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        allowedTokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenNetworkDto'
+        feePayer:
+          anyOf:
+            - $ref: '#/components/schemas/FeePayerEnum'
+            - type: 'null'
+        userLanguage:
+          anyOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+            - type: 'null'
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 21600
+        underPaidCoveragePercent:
+          anyOf:
+            - type: number
+              minimum: 0
+              maximum: 60
+            - type: 'null'
+        returnUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        webhookUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        orderId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        description:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        customData:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        userEmail:
+          anyOf:
+            - type: string
+              format: email
+              maxLength: 320
+            - type: 'null'
+        userPhoneNumber:
+          anyOf:
+            - type: string
+              maxLength: 16
+            - type: 'null'
+
+    ApplicationInvoiceWithPaymentLinksResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        paymentLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicePaymentLinkDto'
+        expiredAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    ApplicationInvoiceWithPaymentLinksResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponse'
+
+    CreateApplicationInvoiceWithTemporaryWalletRequest:
+      type: object
+      required:
+        - amount
+        - allowedToken
+        - network
+        - ttl
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        allowedToken:
+          $ref: '#/components/schemas/TokenEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        webhookUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        returnUrl:
+          anyOf:
+            - type: string
+              format: uri
+              maxLength: 255
+            - type: 'null'
+        ttl:
+          type: integer
+          format: int64
+          minimum: 300
+          maximum: 21600
+        underPaidCoveragePercent:
+          anyOf:
+            - type: number
+              minimum: 0
+              maximum: 60
+            - type: 'null'
+        orderId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        customData:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        description:
+          anyOf:
+            - type: string
+              maxLength: 512
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+              maxLength: 255
+            - type: 'null'
+        userEmail:
+          anyOf:
+            - type: string
+              format: email
+              maxLength: 320
+            - type: 'null'
+        userPhoneNumber:
+          anyOf:
+            - type: string
+              maxLength: 16
+            - type: 'null'
+        userLanguage:
+          anyOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+            - type: 'null'
+
+    CreateApplicationInvoiceWithTemporaryWalletResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        walletAddress:
+          type: string
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeepLinkDto'
+        amount:
+          $ref: '#/components/schemas/AmountAndValueDto'
+        expiredAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateApplicationInvoiceWithTemporaryWalletResponseWrapper:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponse'
+
+    ApplicationInvoiceTypeEnum:
+      type: string
+      enum:
+        - TEMP_WALLET
+        - FIAT_INVOICE
+        - CRYPTO_INVOICE
+      example: CRYPTO_INVOICE
+
+    ApplicationInvoiceBlockchainStatusEnum:
+      type: string
+      enum:
+        - NOT_SEEN
+        - NOT_CONFIRM
+        - CONFIRMED
+      example: CONFIRMED
+
+    ApplicationInvoiceWalletDto:
+      type: object
+      properties:
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        token:
+          $ref: '#/components/schemas/TokenEnum'
+        address:
+          type: string
+        validUntil:
+          type: string
+          format: date-time
+        deepLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeepLinkDto'
+      example:
+        network: TRON
+        token: USDT
+        address: "TExampleWalletAddress123"
+        validUntil: "2026-03-30T15:00:00Z"
+        deepLinks:
+          - name: TRUST_WALLET
+            logo: "https://example.com/trust-wallet.png"
+            url: "trust://pay/example"
+          - name: METAMASK
+            logo: "https://example.com/metamask.png"
+            url: "metamask://pay/example"
+
+    ApplicationInvoiceV2Dto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        supportCode:
+          type: string
+        status:
+          $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        customData:
+          anyOf:
+            - type: string
+            - type: 'null'
+        wallet:
+          anyOf:
+            - $ref: '#/components/schemas/ApplicationInvoiceWalletDto'
+            - type: 'null'
+        ownerId:
+          type: integer
+          format: int64
+        telegramInlineMessageId:
+          anyOf:
+            - type: string
+            - type: 'null'
+        userLanguage:
+          anyOf:
+            - $ref: '#/components/schemas/LanguageEnum'
+            - type: 'null'
+        returnUrl:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+        webhookUrl:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+        orderId:
+          anyOf:
+            - type: string
+            - type: 'null'
+        amount:
+          anyOf:
+            - $ref: '#/components/schemas/Money'
+            - type: 'null'
+        value:
+          anyOf:
+            - $ref: '#/components/schemas/Money'
+            - type: 'null'
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+        feeAmount:
+          anyOf:
+            - $ref: '#/components/schemas/Money'
+            - type: 'null'
+        paymentLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicePaymentLinkDto'
+        paidAt:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        blockchainStatus:
+          anyOf:
+            - $ref: '#/components/schemas/ApplicationInvoiceBlockchainStatusEnum'
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+            - type: 'null'
+        userEmail:
+          anyOf:
+            - type: string
+              format: email
+            - type: 'null'
+        userPhoneNumber:
+          anyOf:
+            - type: string
+            - type: 'null'
+        expiredAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    ApplicationInvoicesFullDataPagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        perPage:
+          type: integer
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationInvoiceV2Dto'
+
+    ApplicationInvoicesFullDataListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoicesFullDataPagination'
+
+    ApplicationInvoiceV2Response:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationInvoiceV2Dto'
+
+    ApplicationMemberInvitationStatusEnum:
+      type: string
+      enum:
+        - PENDING
+        - ACCEPTED
+        - CANCELLED
+        - EXPIRED
+      example: PENDING
+
+    ApplicationMemberInvitationRequest:
+      type: object
+      required:
+        - name
+        - roles
+      properties:
+        name:
+          type: string
+          example: Ali Ahmadi
+        roles:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ApplicationMemberRoleEnum'
+      example:
+        name: Ali Ahmadi
+        roles:
+          - SUPPORT
+          - SALES
+
+    ApplicationMemberInvitationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        applicationUsername:
+          type: string
+          example: my-shop
+        name:
+          type: string
+          example: Ali Ahmadi
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationMemberRoleEnum'
+        token:
+          type: string
+          format: uuid
+          example: f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1
+        status:
+          $ref: '#/components/schemas/ApplicationMemberInvitationStatusEnum'
+      example:
+        id: 1
+        applicationUsername: my-shop
+        name: Ali Ahmadi
+        roles:
+          - SUPPORT
+          - SALES
+        token: f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1
+        status: PENDING
+
+    InvitationTokenResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: string
+          format: uuid
+          description: توکن دعوت ایجادشده
+          example: f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1
+
+    ApplicationMemberInvitationsResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationMemberInvitationDto'
+
+    EmptySuccessResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+      example:
+        status: OK
+
+    ApplicationTypeEnum:
+      type: string
+      enum:
+        - API
+        - MANUAL
+      example: API
+
+    ApplicationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 101
+        type:
+          $ref: '#/components/schemas/ApplicationTypeEnum'
+        ownerId:
+          type: integer
+          format: int64
+          example: 12
+        supportCode:
+          type: string
+          example: APP-8LEYRQH-G8HM
+        status:
+          $ref: '#/components/schemas/ApplicationStatusEnum'
+        username:
+          type: string
+          example: my-shop
+        logo:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+        name:
+          type: string
+          example: My Shop
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        website:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+        webhookUrl:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+        deepLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/WalletProvidersEnum'
+        feePayer:
+          $ref: '#/components/schemas/FeePayerEnum'
+      example:
+        id: 101
+        type: API
+        ownerId: 12
+        supportCode: APP-8LEYRQH-G8HM
+        status: ACTIVE
+        username: my-shop
+        logo: https://swapwallet.app/media/logo.png
+        name: My Shop
+        description: فروشگاه نمونه
+        website: https://example.com
+        webhookUrl: https://example.com/webhook
+        deepLinks:
+          - SWAP_WALLET
+          - TRUST_WALLET
+          - METAMASK
+        feePayer: APPLICATION
+
+    ApplicationResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/ApplicationDto'
+      example:
+        status: OK
+        result:
+          id: 101
+          type: API
+          ownerId: 12
+          supportCode: APP-8LEYRQH-G8HM
+          status: ACTIVE
+          username: my-shop
+          logo: https://swapwallet.app/media/logo.png
+          name: My Shop
+          description: فروشگاه نمونه
+          website: https://example.com
+          webhookUrl: https://example.com/webhook
+          deepLinks:
+            - SWAP_WALLET
+            - TRUST_WALLET
+            - METAMASK
+          feePayer: APPLICATION
+
+    SettlementRequest:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+      example:
+        amount:
+          number: "500000"
+          unit: "IRT"
+
+    ApplicationInvoiceWebhookStatusEnum:
+      type: string
+      enum:
+        - DISABLED
+        - PENDING
+        - SUCCEED
+        - FAILED
+      example: FAILED
+
+    WebhookRequestDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          example: a7d0cb53-b035-44b4-b48e-4b04a59d5f97
+        url:
+          type: string
+          format: uri
+          example: https://example.com/webhook
+        requestBody:
+          type: string
+          example: "{\"invoiceId\":\"c7f4df74-0168-4a58-b04b-3fe4c0dd9e11\",\"status\":\"PAID\"}"
+        responseBody:
+          anyOf:
+            - type: string
+            - type: 'null'
+          example: "{\"message\":\"invalid signature\"}"
+        status:
+          type: integer
+          example: 400
+        succeed:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-03-30T12:00:00Z"
+
+    InvoiceWebhookDto:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApplicationInvoiceWebhookStatusEnum'
+        calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookRequestDto'
+      example:
+        status: FAILED
+        calls:
+          - requestId: a7d0cb53-b035-44b4-b48e-4b04a59d5f97
+            url: https://example.com/webhook
+            requestBody: "{\"invoiceId\":\"c7f4df74-0168-4a58-b04b-3fe4c0dd9e11\",\"status\":\"PAID\"}"
+            responseBody: "{\"message\":\"invalid signature\"}"
+            status: 400
+            succeed: false
+            createdAt: "2026-03-30T12:00:00Z"
+
+    InvoiceWebhookResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          $ref: '#/components/schemas/InvoiceWebhookDto'
+      example:
+        status: OK
+        result:
+          status: FAILED
+          calls:
+            - requestId: a7d0cb53-b035-44b4-b48e-4b04a59d5f97
+              url: https://example.com/webhook
+              requestBody: "{\"invoiceId\":\"c7f4df74-0168-4a58-b04b-3fe4c0dd9e11\",\"status\":\"PAID\"}"
+              responseBody: "{\"message\":\"invalid signature\"}"
+              status: 400
+              succeed: false
+              createdAt: "2026-03-30T12:00:00Z"
