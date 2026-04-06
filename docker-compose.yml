@@ -1,9 +1,27 @@
 services:
-  scalar:
+  apidoc-legacy:
     image: scalarapi/api-reference:latest
     container_name: scalar_persian
     ports:
-      - "80:8080"
+      - "8083:8080"
+    volumes:
+      - ./docV1Legacy.yaml:/docs/openapi.yaml
+      - ./index.html:/usr/share/caddy/index.html
+
+  apidoc-merchant:
+    image: scalarapi/api-reference:latest
+    container_name: scalar_persian
+    ports:
+      - "8084:8080"
+    volumes:
+      - ./merchantapi.yaml:/docs/openapi.yaml
+      - ./index.html:/usr/share/caddy/index.html
+
+  apidoc-swapwallet:
+    image: scalarapi/api-reference:latest
+    container_name: scalar_persian
+    ports:
+      - "8085:8080"
     volumes:
       - ./openapi.yaml:/docs/openapi.yaml
       - ./index.html:/usr/share/caddy/index.html
