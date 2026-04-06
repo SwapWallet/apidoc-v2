@@ -1,7 +1,7 @@
 services:
   apidoc-legacy:
     image: scalarapi/api-reference:latest
-    container_name: scalar_persian
+    container_name: apidoc-legacy
     ports:
       - "8083:8080"
     volumes:
@@ -10,7 +10,7 @@ services:
 
   apidoc-merchant:
     image: scalarapi/api-reference:latest
-    container_name: scalar_persian
+    container_name: apidoc-merchant
     ports:
       - "8084:8080"
     volumes:
@@ -19,7 +19,7 @@ services:
 
   apidoc-swapwallet:
     image: scalarapi/api-reference:latest
-    container_name: scalar_persian
+    container_name: apidoc-swapwallet
     ports:
       - "8085:8080"
     volumes:
