@@ -536,8 +536,8 @@ paths:
                 summary: نمونه درخواست ایجاد فاکتور با کیف پول موقت
                 value:
                   amount:
-                    number: "100.00"
-                    unit: "USDT"
+                    number: "1000000"
+                    unit: "IRT"
                   allowedToken: USDT
                   network: BSC
                   webhookUrl: "https://example.com/webhook"
