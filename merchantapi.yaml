@@ -57,23 +57,23 @@ servers:
     description: سرور پروداکشن
 
 tags:
-  - name: اطلاعات فروشگاه
+  - name: shop-info
+    x-displayName: اطلاعات فروشگاه
     description: |
       اطلاعات کلی فروشگاه و اعضای آن را مشاهده کنید.
 
-  - name: موجودی
+  - name: balance
+    x-displayName: موجودی
     description: |
       موجودی لحظه‌ای حساب خود را به تفکیک هر توکن مشاهده کنید.
 
-  - name: برداشت ریالی
+  - name: settlement
+    x-displayName: برداشت ریالی
     description: |
       عملیات تسویه و برداشت ریالی فروشگاه را انجام دهید.
 
-  - name: آمار فروش
-    description: |
-      آمار فروش و درآمد فروشگاه را در بازه‌های زمانی مختلف مشاهده کنید.
-
-  - name: تراکنش‌ها
+  - name: transactions
+    x-displayName: تراکنش‌ها
     description: |
       با استفاده از این APIها می‌توانید اطلاعات تراکنش‌های حساب فروشگاه خود را دریافت کنید.
 
@@ -92,36 +92,38 @@ tags:
 
       کاربر پس از دریافت لینک پرداخت، مبلغ را مستقیماً به کیف پول اختصاص‌یافته واریز می‌کند. پس از تأیید تراکنش روی شبکه، وب‌هوک شما فراخوانی می‌شود.
 
-  - name: فاکتور ریالی
+  - name: irt-invoice
+    x-displayName: فاکتور ریالی
     description: |
       دریافت پرداخت ریالی با مبلغ ثابت به تومان.
 
-  - name: وب‌هوک
+  - name: webhook
+    x-displayName: وب‌هوک
     description: |
       مدیریت و پیگیری وضعیت وب‌هوک‌های فاکتور.
 
 x-tagGroups:
   - name: عمومی
     tags:
-      - اطلاعات فروشگاه
+      - shop-info
   - name: درگاه پرداخت
     tags:
       - invoice
   - name: کیف پول
     tags:
-      - موجودی
-      - تراکنش‌ها
-      - برداشت ریالی
+      - balance
+      - transactions
+      - settlement
   - name: دیگر
     tags:
-      - فاکتور ریالی
-      - وب‌هوک
+      - irt-invoice
+      - webhook
 
 paths:
   /v1/merchants/info:
     get:
       tags:
-        - اطلاعات فروشگاه
+        - shop-info
       summary: اطلاعات فروشگاه
       description: |
         با استفاده از این API می‌توانید اطلاعات کلی فروشگاه خود را مشاهده نمایید.
@@ -163,7 +165,7 @@ paths:
   /v1/merchants/balance:
     get:
       tags:
-        - موجودی
+        - balance
       summary: موجودی همه‌ی توکن‌ها
       description: |
         لیست موجودی حساب به تفکیک تمام توکن‌های پشتیبانی‌شده را برمی‌گرداند.
@@ -183,7 +185,7 @@ paths:
   /v1/merchants/transactions:
     get:
       tags:
-        - تراکنش‌ها
+        - transactions
       summary: دریافت لیست تراکنش‌ها
       description: |
         لیست تراکنش‌های فروشگاه را برمی‌گرداند.
@@ -320,7 +322,7 @@ paths:
   /v1/merchants/transactions/{transactionId}:
     get:
       tags:
-        - تراکنش‌ها
+        - transactions
       summary: دریافت تراکنش با شناسه
       description: |
         اطلاعات کامل یک تراکنش را بر اساس شناسه‌ی عددی آن برمی‌گرداند.
@@ -897,7 +899,7 @@ paths:
   /v1/merchants/resid:
     post:
       tags:
-        - فاکتور ریالی
+        - irt-invoice
       summary: ایجاد رسید ریالی
       description: |
         یک رسید ریالی جدید ایجاد می‌کند.
@@ -959,7 +961,7 @@ paths:
   /v1/merchants/members:
     get:
       tags:
-        - اطلاعات فروشگاه
+        - shop-info
       summary: دریافت اعضای فروشگاه
       description: |
         لیست اعضای فروشگاه را به همراه نقش‌های آن‌ها برمی‌گرداند.
@@ -1003,7 +1005,7 @@ paths:
   /v1/merchants/invoices/{invoiceId}/webhook:
     get:
       tags:
-        - وب‌هوک
+        - webhook
       summary: دریافت اطلاعات وب‌هوک فاکتور
       description: |
         اطلاعات وب‌هوک مربوط به یک فاکتور را بر اساس شناسه آن برمی‌گرداند.
@@ -1058,7 +1060,7 @@ paths:
   /v1/merchants/invoices/{invoiceId}/webhook/retry:
     post:
       tags:
-        - وب‌هوک
+        - webhook
       summary: تلاش مجدد برای ارسال وب‌هوک فاکتور
       description: |
         ارسال وب‌هوک مربوط به فاکتور را مجدداً تلاش می‌کند.
