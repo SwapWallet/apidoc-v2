@@ -85,7 +85,8 @@ tags:
       | `EXTERNAL_PAYMENT` | پرداخت خارجی | `externalPaymentTransactionDto` |
       | `SETTLEMENT` | تسویه | `settlementTransactionDto` |
 
-  - name: فاکتور
+  - name: invoice
+    x-displayName: فاکتور
     description: |
       با استفاده از این APIها می‌توانید فاکتورهای پرداخت کریپتویی برای فروشگاه خود ایجاد و مدیریت کنید.
 
@@ -105,7 +106,7 @@ x-tagGroups:
       - اطلاعات فروشگاه
   - name: درگاه پرداخت
     tags:
-      - فاکتور
+      - invoice
   - name: کیف پول
     tags:
       - موجودی
@@ -473,7 +474,7 @@ paths:
   /v1/merchants/invoices/temporary-wallet:
     post:
       tags:
-        - فاکتور
+        - invoice
       summary: ایجاد فاکتور
       description: |
         یک آدرس کیف پول موقت اختصاصی برای دریافت پرداخت کریپتو ایجاد می‌کند.
@@ -593,7 +594,7 @@ paths:
   /v1/merchants/invoices/full-data:
     get:
       tags:
-        - فاکتور
+        - invoice
       summary: دریافت لیست کامل فاکتورها
       description: |
         لیست کامل فاکتورهای فروشگاه را به همراه اطلاعات کامل‌تر هر فاکتور برمی‌گرداند.
@@ -757,7 +758,7 @@ paths:
   /v1/merchants/invoices/by-order-id/{orderId}:
     get:
       tags:
-        - فاکتور
+        - invoice
       summary: دریافت فاکتور با شناسه‌ی خارجی
       description: |
         اگر هنگام ساخت فاکتور فیلد `orderId` را ارسال کرده باشید، می‌توانید با همان شناسه‌ای که در سیستم خودتان دارید، فاکتور را بازیابی کنید — بدون نیاز به نگهداری شناسه‌ی سواپ‌ولت.
@@ -826,7 +827,7 @@ paths:
   /v1/merchants/invoices/{invoiceId}:
     get:
       tags:
-        - فاکتور
+        - invoice
       summary: دریافت فاکتور با شناسه‌ی سواپ‌ولت
       description: |
         اطلاعات کامل یک فاکتور را بر اساس شناسه‌ی یکتای آن برمی‌گرداند.
@@ -1092,7 +1093,7 @@ webhooks:
   invoice-paid:
     post:
       tags:
-        - فاکتور
+        - invoice
       summary: وب‌هوک پرداخت فاکتور
       description: |
         پس از پرداخت موفق فاکتور، سواپ‌ولت یک درخواست `POST` به آدرس `webhookUrl` شما ارسال می‌کند.
