@@ -11,18 +11,7 @@ info:
     - مشاهده وضعیت تراکنش‌ها
     - ساخت رسید
 
-    ---
-
-    ## پیش‌نیازها و قوانین
-
-    پیش از استفاده از APIها، لطفاً [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید.
-    همچنین برای دریافت اطلاعیه‌های رسمی و تغییرات نسخه‌ها، در [گروه اطلاع‌رسانی سواپ‌ولت](https://t.me/SwapWalletGroup) عضو شوید.
-
-    ---
-
-    ## راهنمای شروع
-
-    اگر برای اولین بار از API استفاده می‌کنید، پیشنهاد می‌شود ابتدا بخش **راهنمای شروع به کار با API** را مطالعه کنید تا با نحوه‌ی احراز هویت و ساخت درخواست‌ها آشنا شوید.
+    پیش از استفاده از APIها، لطفاً [قوانین استفاده از سواپ‌ولت](https://swapwallet.app/tos) را مطالعه کرده و بپذیرید. همچنین برای دریافت اطلاعیه‌های رسمی و تغییرات نسخه‌ها، در [گروه اطلاع‌رسانی سواپ‌ولت](https://t.me/SwapWalletGroup) عضو شوید.
 
     ---
 
@@ -32,15 +21,18 @@ info:
 
     مراحل دریافت:
     1. ورود به [پنل مدیریت فروشگاه](https://business.swapwallet.app)
-    2. ورود به فروشگاه مورد نظر
-    3. رفتن به بخش **تنظیمات ← کلید دسترسی (API Key)**
-    4. کلیک روی گزینه‌ی **دریافت کلید**
+    2. ایجاد یک کسب‌وکار جدید
+    3. ورود به فروشگاه مورد نظر
+    4. دریافت کلید از بخش **تنظیمات** ← کلید دسترسی (API Key)
 
     سپس کلید خود را در هدر درخواست‌ها به‌صورت زیر ارسال کنید:
 
     ```http
     Authorization: Bearer business-xxx
     ```
+    
+    > [!note]
+    > تمام مبالغ دریافتی مستقیماً به کیف پول شخصی صاحب فروشگاه تسویه می‌شوند. برای ورود به پنل می‌توانید از شماره موبایل یا حساب تلگرام خود استفاده کنید.
 
     > [!note]
     > هر فروشگاه کلید اختصاصی خود را دارد و برای فروشگاه‌های دیگر باید همین روند را برای فروشگاه مدنظر طی کنید.
@@ -48,30 +40,15 @@ info:
     > [!note]
     > کلیدهای API برای استفاده‌ی برنامه‌نویسی بهینه‌سازی شده‌اند؛ هنگام استفاده از این کلیدها، محدودیت‌های دومرحله‌ای نظیر ایمیل، پیامک و Google Authenticator اعمال نمی‌شوند.
 
-    > [!note]
-    > اگر به کلیدی با دسترسی‌های خاص (مانند محدودیت روی IP مشخص یا سطح دسترسی سفارشی) نیاز دارید، با پشتیبانی ما تماس بگیرید.
-
-    ---
-
-    ## جایگزینی کلید فروشگاه
-
-    برای غیرفعال‌سازی کلید فعلی و صدور کلید جدید:
-
-    **تنظیمات ← کلید دسترسی (API Key) ← بازنشانی کلید**
-
-    پس از تأیید، کلید قبلی بلافاصله از کار می‌افتد و یک کلید جدید برای شما صادر می‌شود.
-
     ---
 
     ## نکات امنیتی
 
-    > [!caution] **هشدار امنیتی**
+    > [!caution]
     > توکن خود را تحت هیچ شرایطی با دیگران به اشتراک نگذارید.
     > در صورت لو رفتن یا شک به دسترسی غیرمجاز، فوراً از طریق پنل فروشگاه مورد نظر، توکن خود را منقضی کرده و توکن جدید دریافت کنید.
 
-    در صورت نیاز به استفاده از توکن در کد، مطمئن شوید که با روش‌های امن نگهداری داده‌های حساس آشنا هستید (مانند متغیرهای محیطی و رمزنگاری فایل‌های پیکربندی).
-
-    ---
+    در صورت نیاز به استفاده از توکن در کد، مطمئن شوید که با روش‌های امن نگهداری داده‌های حساس آشنا هستید.
 
     ✨ با رعایت این نکات، می‌توانید به‌صورت ایمن و مؤثر از API سواپ‌ولت در پروژه‌های خود استفاده کنید.
 
@@ -114,17 +91,30 @@ tags:
 
       کاربر پس از دریافت لینک پرداخت، مبلغ را مستقیماً به کیف پول اختصاص‌یافته واریز می‌کند. پس از تأیید تراکنش روی شبکه، وب‌هوک شما فراخوانی می‌شود.
 
+  - name: فاکتور ریالی
+    description: |
+      دریافت پرداخت ریالی با مبلغ ثابت به تومان.
+
+  - name: وب‌هوک
+    description: |
+      مدیریت و پیگیری وضعیت وب‌هوک‌های فاکتور.
+
 x-tagGroups:
   - name: عمومی
     tags:
       - اطلاعات فروشگاه
-      - آمار فروش
   - name: کیف پول
     tags:
       - موجودی
       - تراکنش‌ها
-      - فاکتور
       - برداشت ریالی
+  - name: درگاه پرداخت
+    tags:
+      - فاکتور
+  - name: دیگر
+    tags:
+      - فاکتور ریالی
+      - وب‌هوک
 
 paths:
   /v1/merchants/info:
@@ -169,123 +159,6 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /v1/merchants/invitation-token:
-    post:
-      tags:
-        - اطلاعات فروشگاه
-      summary: ایجاد توکن دعوت عضو
-      description: |
-        یک توکن دعوت جدید برای افزودن عضو به فروشگاه ایجاد می‌کند.
-
-        در این درخواست باید نام و نقش‌های عضو جدید مشخص شوند.
-      operationId: createInvitationToken
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApplicationMemberInvitationRequest'
-            examples:
-              default:
-                summary: نمونه درخواست ایجاد دعوت‌نامه
-                value:
-                  name: "Ali Ahmadi"
-                  roles:
-                    - SUPPORT
-                    - SALES
-      responses:
-        '200':
-          description: توکن دعوت با موفقیت ایجاد شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvitationTokenResponse'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-                    result: "f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1"
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
-    get:
-      tags:
-        - اطلاعات فروشگاه
-      summary: دریافت همه دعوت‌نامه‌ها
-      description: |
-        لیست تمام دعوت‌نامه‌های ایجادشده برای فروشگاه را برمی‌گرداند.
-      operationId: getAllInvitationTokens
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: لیست دعوت‌نامه‌ها با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationMemberInvitationsResponse'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-                    result:
-                      - id: 1
-                        applicationUsername: "my-shop"
-                        name: "Ali Ahmadi"
-                        roles:
-                          - SUPPORT
-                          - SALES
-                        token: "f6f56d2a-2f5d-4ed8-9103-6f8b0f91a8d1"
-                        status: PENDING
-                      - id: 2
-                        applicationUsername: "my-shop"
-                        name: "Sara Karimi"
-                        roles:
-                          - DEVELOPER
-                        token: "d41b1f76-bfd4-47a4-9e14-1ce4fb9b7440"
-                        status: ACCEPTED
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
-  /v1/merchants/invitation-token/{invitationId}:
-    delete:
-      tags:
-        - اطلاعات فروشگاه
-      summary: لغو دعوت‌نامه
-      description: |
-        یک دعوت‌نامه فعال را بر اساس شناسه آن لغو می‌کند.
-      operationId: cancelInvitationToken
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-        - name: invitationId
-          in: path
-          required: true
-          description: شناسه دعوت‌نامه
-          schema:
-            type: integer
-            format: int64
-            example: 1
-      responses:
-        '200':
-          description: دعوت‌نامه با موفقیت لغو شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptySuccessResponse'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '404':
-          description: دعوت‌نامه یافت نشد
-
   /v1/merchants/balance:
     get:
       tags:
@@ -305,34 +178,6 @@ paths:
                 $ref: '#/components/schemas/TotalBalanceResponse'
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
-
-  /v1/merchants/balance/{token}:
-    get:
-      tags:
-        - موجودی
-      summary: موجودی یک توکن
-      description: |
-        موجودی حساب برای یک توکن مشخص را برمی‌گرداند.
-      operationId: getTokenBalance
-      parameters:
-        - name: token
-          in: path
-          required: true
-          description: نماد توکن (مثلاً USDT، TON)
-          schema:
-            $ref: '#/components/schemas/TokenEnum'
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: موجودی با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenBalanceResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '404':
-          description: توکن یافت نشد
 
   /v1/merchants/transactions:
     get:
@@ -625,117 +470,59 @@ paths:
         '404':
           description: تراکنش یافت نشد
 
-  /v1/merchants/invoices:
-    get:
-      tags:
-        - فاکتور
-      summary: دریافت لیست فاکتورهای فروشگاه
-      description: |
-        لیست فاکتورهای ایجاد شده برای فروشگاه را برمی‌گرداند.
-
-        این endpoint از **pagination**، **sorting** و **filtering** پشتیبانی می‌کند.
-
-        می‌توانید نتایج را بر اساس:
-        - نوع فاکتور (`invoiceTypes`)
-        - وضعیت فاکتور (`invoiceStatuses`)
-        - جستجو (`search`)
-        فیلتر کنید.
-      operationId: getRecentApplicationInvoices
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-        - $ref: '#/components/parameters/LimitParam'
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/InvoicesSortedByParam'
-        - $ref: '#/components/parameters/DirectionParam'
-        - name: search
-          in: query
-          required: false
-          description: جستجو در فیلدهای فاکتور مانند `supportCode` یا `orderId`
-          schema:
-            type: string
-            example: AI-8LEYRQH-G8HM
-        - name: invoiceTypes
-          in: query
-          required: false
-          description: |
-            فیلتر بر اساس نوع فاکتور.
-
-            مثال:
-            `invoiceTypes=INTERNAL_CRYPTO&invoiceTypes=EXTERNAL_BLOCKCHAIN`
-          style: form
-          explode: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/MerchantApplicationInvoiceTypeEnum'
-          example:
-            - INTERNAL_CRYPTO
-            - EXTERNAL_BLOCKCHAIN
-        - name: invoiceStatuses
-          in: query
-          required: false
-          description: |
-            فیلتر بر اساس وضعیت فاکتور.
-
-            مثال:
-            `invoiceStatuses=ACTIVE&invoiceStatuses=PAID`
-          style: form
-          explode: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApplicationInvoiceStatusEnum'
-          example:
-            - ACTIVE
-            - PAID
-      responses:
-        '200':
-          description: لیست فاکتورها با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MerchantInvoicesListResponse'
-              examples:
-                invoicesExample:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-                    result:
-                      page: 0
-                      perPage: 10
-                      totalItems: 2
-                      totalPages: 1
-                      data:
-                        - type: INTERNAL_CRYPTO
-                          amount:
-                            number: "100.50"
-                            unit: "USDT"
-                          supportCode: "AI-8LEYRQH-G8HM"
-                          orderId: "ORDER-1001"
-                          description: "پرداخت اشتراک"
-                          createdAt: "2026-03-15T12:10:00Z"
-                          status: PAID
-                          extraStatus: null
-                        - type: EXTERNAL_BLOCKCHAIN
-                          amount:
-                            number: "500000"
-                            unit: "IRT"
-                          supportCode: "AI-2ZMN4TR-K1PL"
-                          orderId: "ORDER-1002"
-                          description: "پرداخت از طریق شبکه"
-                          createdAt: "2026-03-16T10:05:00Z"
-                          status: ACTIVE
-                          extraStatus: null
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
+  /v1/merchants/invoices/temporary-wallet:
     post:
       tags:
         - فاکتور
       summary: ایجاد فاکتور
       description: |
-        یک فاکتور پرداخت جدید ایجاد می‌کند و لینک‌های پرداخت مربوط به آن را برمی‌گرداند.
-      operationId: createApplicationInvoice
+        یک آدرس کیف پول موقت اختصاصی برای دریافت پرداخت کریپتو ایجاد می‌کند.
+
+        ---
+
+        ## توکن و شبکه
+
+        می‌توانید فاکتور را برای دریافت **USDT، TRX، TON** و سایر توکن‌های پشتیبانی‌شده ایجاد کنید.
+        شبکه‌های در دسترس شامل **BSC، TRON، TON** و غیره هستند.
+
+        مبلغ درخواستی (`amount`) می‌تواند به هر واحدی باشد — مثلاً `USD`، `IRT` یا مستقیماً به توکن مورد نظر.
+        سواپ‌ولت مبلغ معادل را به‌صورت خودکار محاسبه کرده و در پاسخ (`amount.amount`) برمی‌گرداند.
+
+        > [!note]
+        > مبلغی که در `amount.amount` پاسخ دریافت می‌کنید را **دقیقاً** به کاربر نمایش دهید. کاربر باید همین مقدار را به آدرس `walletAddress` واریز کند.
+
+        ---
+
+        ## مدیریت فاکتور
+
+        **`orderId`** — شناسه‌ی فاکتور در سیستم شما. ارسال این فیلد باعث می‌شود فاکتورهای تکراری ایجاد نشوند و بتوانید بعداً با همین شناسه فاکتور را جستجو کنید.
+
+        **`ttl`** — مدت اعتبار فاکتور به ثانیه. پیشنهاد می‌شود مقدار `86400` (۲۴ ساعت) استفاده کنید.
+
+        **`webhookUrl`** — پس از پرداخت موفق، یک درخواست `POST` به این آدرس ارسال می‌شود. برای پیگیری وضعیت پرداخت به‌صورت real-time استفاده کنید.
+
+        **`underPaidCoveragePercent`** — اگر کاربر مبلغی کمتر از مقدار درخواستی واریز کند، فاکتور همچنان تأیید می‌شود. این گزینه برای مواردی مفید است که صرافی‌ها کارمزد را از مبلغ ورودی کاربر کسر می‌کنند.
+
+        ---
+
+        ## اطلاعات کاربر
+
+        > [!note]
+        > **توصیه اکید:** فیلدهای `userId`، `userEmail`، `userPhoneNumber` و `userTelegramId` را ارسال کنید. این اطلاعات برای ردیابی تراکنش‌ها، رفع مشکلات احتمالی و پشتیبانی از کاربران بسیار کمک‌کننده است.
+
+        ---
+
+        ## پاسخ و نمایش به کاربر
+
+        پس از ایجاد موفق فاکتور:
+
+        - **`id`** — شناسه‌ی یکتای فاکتور در سواپ‌ولت. برای بررسی وضعیت فاکتور از این شناسه استفاده کنید.
+        - **`walletAddress`** — آدرس کیف پول موقت که باید به کاربر نمایش دهید.
+        - **`amount.amount`** — مبلغ دقیقی که کاربر باید واریز کند. این مقدار را عیناً به کاربر نشان دهید.
+
+        > [!note]
+        > اگر کاربر مبلغ را به چند قسمت واریز کند، سواپ‌ولت مجموع واریزی‌ها را محاسبه می‌کند. فاکتور تا زمانی که مجموع پرداخت‌ها به حد نصاب نرسد یا منقضی نشود، باز می‌ماند.
+      operationId: createApplicationInvoiceWithTemporaryWallet
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
       requestBody:
@@ -743,54 +530,65 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateApplicationInvoiceRequestV2'
+              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
             examples:
               default:
-                summary: نمونه درخواست ایجاد فاکتور
+                summary: نمونه درخواست ایجاد فاکتور با کیف پول موقت
                 value:
                   amount:
                     number: "100.00"
                     unit: "USDT"
-                  allowedTokens:
-                    - token: USDT
-                      network: TRON
-                    - token: TON
-                      network: TON
-                  feePayer: APPLICATION
-                  userLanguage: FA
+                  allowedToken: USDT
+                  network: BSC
+                  webhookUrl: "https://example.com/webhook"
+                  returnUrl: "https://example.com/return"
                   ttl: 1800
                   underPaidCoveragePercent: 0
-                  returnUrl: "https://example.com/return"
-                  webhookUrl: "https://example.com/webhook"
-                  orderId: "ORDER-2001"
-                  description: "پرداخت سفارش"
-                  customData: "{\"productId\":\"p-100\"}"
-                  userId: "user-321"
-                  userEmail: "buyer@example.com"
-                  userPhoneNumber: "+989121112233"
+                  orderId: "your-internal-unique-invoice-id"
+                  customData: "any text / {\"campaign\":\"spring-sale\"}"
+                  description: "پرداخت با کیف پول موقت"
+                  userId: "your-internal-id-for-user"
+                  userEmail: "wallet@example.com"
+                  userPhoneNumber: "+989123334455 or 09123334455"
+                  userLanguage: FA
+                  userTelegramId: 974181500
       responses:
         '200':
-          description: فاکتور با موفقیت ایجاد شد
+          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationInvoiceWithPaymentLinksResponseWrapper'
+                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
               examples:
                 success:
                   summary: نمونه پاسخ
                   value:
                     status: OK
                     result:
-                      id: "6c9e0d6f-b934-4b20-b7a1-9151320886d5"
-                      paymentLinks:
-                        - type: WEBSITE
-                          url: "https://business.swapwallet.app/pay/invoice-example"
-                        - type: TELEGRAM_WEBAPP
-                          url: "https://t.me/example_bot/app?startapp=invoice_123"
-                      expiredAt: "2026-03-30T13:30:00Z"
-                      createdAt: "2026-03-30T13:00:00Z"
+                      id: "11811edb-e36b-4bf7-b7f8-1c7eb11b457b"
+                      walletAddress: "TExampleWalletAddress123"
+                      links:
+                        - name: TRUST_WALLET
+                          logo: "https://example.com/trust-wallet.png"
+                          url: "trust://pay/example"
+                        - name: METAMASK
+                          logo: "https://example.com/metamask.png"
+                          url: "metamask://pay/example"
+                      amount:
+                        amount:
+                          number: "100.00"
+                          unit: "USDT"
+                        usdValue:
+                          number: "100.00"
+                          unit: "USD"
+                        userCurrencyValue:
+                          number: "8400000"
+                          unit: "IRT"
+                      expiredAt: "2026-03-30T14:30:00Z"
+                      createdAt: "2026-03-30T14:00:00Z"
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
+
 
   /v1/merchants/invoices/full-data:
     get:
@@ -960,9 +758,9 @@ paths:
     get:
       tags:
         - فاکتور
-      summary: دریافت فاکتور با شناسه سفارش
+      summary: دریافت فاکتور با شناسه‌ی خارجی
       description: |
-        اطلاعات کامل یک فاکتور را بر اساس `orderId` برمی‌گرداند.
+        اگر هنگام ساخت فاکتور فیلد `orderId` را ارسال کرده باشید، می‌توانید با همان شناسه‌ای که در سیستم خودتان دارید، فاکتور را بازیابی کنید — بدون نیاز به نگهداری شناسه‌ی سواپ‌ولت.
       operationId: getApplicationInvoiceByExternalId
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
@@ -1029,7 +827,7 @@ paths:
     get:
       tags:
         - فاکتور
-      summary: دریافت اطلاعات فاکتور با شناسه
+      summary: دریافت فاکتور با شناسه‌ی سواپ‌ولت
       description: |
         اطلاعات کامل یک فاکتور را بر اساس شناسه‌ی یکتای آن برمی‌گرداند.
       operationId: getApplicationInvoiceInformation
@@ -1098,12 +896,15 @@ paths:
   /v1/merchants/resid:
     post:
       tags:
-        - فاکتور
+        - فاکتور ریالی
       summary: ایجاد رسید ریالی
       description: |
         یک رسید ریالی جدید ایجاد می‌کند.
 
         این endpoint برای دریافت پرداخت با مبلغ ثابت به تومان (IRT) استفاده می‌شود.
+
+        > [!caution]
+        > این سرویس به‌صورت پیش‌فرض برای همه‌ی فروشگاه‌ها غیرفعال است و تنها برای کسب‌وکارهای مجاز فعال‌سازی می‌شود. برای درخواست دسترسی با پشتیبانی تماس بگیرید.
       operationId: createNewResid
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
@@ -1154,178 +955,6 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /v1/merchants/invoices/temporary-wallet:
-    post:
-      tags:
-        - فاکتور
-      summary: ایجاد فاکتور با کیف پول موقت
-      description: |
-        یک فاکتور جدید با کیف پول موقت ایجاد می‌کند.
-
-        در این روش، فقط یک توکن و یک شبکه مشخص برای پرداخت مجاز هستند و اطلاعات کیف پول موقت نیز در پاسخ برگردانده می‌شود.
-      operationId: createApplicationInvoiceWithTemporaryWallet
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletRequest'
-            examples:
-              default:
-                summary: نمونه درخواست ایجاد فاکتور با کیف پول موقت
-                value:
-                  amount:
-                    number: "100.00"
-                    unit: "USDT"
-                  allowedToken: USDT
-                  network: TRON
-                  webhookUrl: "https://example.com/webhook"
-                  returnUrl: "https://example.com/return"
-                  ttl: 1800
-                  underPaidCoveragePercent: 0
-                  orderId: "ORDER-3001"
-                  customData: "{\"campaign\":\"spring-sale\"}"
-                  description: "پرداخت با کیف پول موقت"
-                  userId: "user-999"
-                  userEmail: "wallet@example.com"
-                  userPhoneNumber: "+989123334455"
-                  userLanguage: FA
-      responses:
-        '200':
-          description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateApplicationInvoiceWithTemporaryWalletResponseWrapper'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-                    result:
-                      id: "11811edb-e36b-4bf7-b7f8-1c7eb11b457b"
-                      walletAddress: "TExampleWalletAddress123"
-                      links:
-                        - name: TRUST_WALLET
-                          logo: "https://example.com/trust-wallet.png"
-                          url: "trust://pay/example"
-                        - name: METAMASK
-                          logo: "https://example.com/metamask.png"
-                          url: "metamask://pay/example"
-                      amount:
-                        amount:
-                          number: "100.00"
-                          unit: "USDT"
-                        usdValue:
-                          number: "100.00"
-                          unit: "USD"
-                        userCurrencyValue:
-                          number: "8400000"
-                          unit: "IRT"
-                      expiredAt: "2026-03-30T14:30:00Z"
-                      createdAt: "2026-03-30T14:00:00Z"
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
-  /v1/merchants/income/total:
-    get:
-      tags:
-        - آمار فروش
-      summary: مجموع درآمد فروشگاه
-      description: |
-        مجموع درآمد فروشگاه را در بازه زمانی مشخص برمی‌گرداند.
-
-        این endpoint اطلاعات زیر را ارائه می‌دهد:
-
-        - مجموع فروش موفق
-        - مبلغ در انتظار تسویه (`onHoldAmount`)
-        - تعداد فروش‌های موفق
-        - تعداد نقاط نمودار
-        - داده‌های نمودار در فیلد `chartBreakdown`
-
-      operationId: getTotalIncome
-
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-
-        - name: rangeType
-          in: query
-          required: true
-          description: بازه زمانی مورد نظر برای محاسبه درآمد
-          schema:
-            $ref: '#/components/schemas/BasicTimeRangeEnum'
-          example: WEEK
-
-        - name: baseToken
-          in: query
-          required: false
-          description: |
-            توکن پایه برای محاسبه مقادیر.
-
-            پیش‌فرض: `USD`
-          schema:
-            $ref: '#/components/schemas/TokenEnum'
-            default: USD
-          example: USD
-
-        - name: useJalaliCalendar
-          in: query
-          required: false
-          description: استفاده از تقویم جلالی برای محاسبه بازه زمانی
-          schema:
-            type: boolean
-            default: true
-          example: true
-
-        - name: timezone
-          in: header
-          required: false
-          description: منطقه زمانی برای محاسبه بازه زمانی
-          schema:
-            type: string
-            default: Asia/Tehran
-          example: Asia/Tehran
-
-      responses:
-        '200':
-          description: اطلاعات درآمد با موفقیت دریافت شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MerchantTotalIncomeResponse'
-              examples:
-                totalIncomeExample:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-                    result:
-                      amount:
-                        number: "1250.75"
-                        unit: "USD"
-                      onHoldAmount:
-                        number: "150.00"
-                        unit: "USD"
-                      numberOfSuccessfulSales: 42
-                      totalNumberOfChartIndexes: 30
-                      chartBreakdown:
-                        "0":
-                          number: "50.00"
-                          unit: "USD"
-                        "1":
-                          number: "75.25"
-                          unit: "USD"
-                        "2":
-                          number: "30.50"
-                          unit: "USD"
-                        "3":
-                          number: "110.00"
-                          unit: "USD"
-
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
   /v1/merchants/members:
     get:
       tags:
@@ -1370,76 +999,14 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /v1/merchants/settle-all:
-    post:
-      tags:
-        - برداشت ریالی
-      summary: تسویه همه موجودی‌ها
-      description: |
-        تمام موجودی‌های قابل تسویه فروشگاه را به‌صورت یکجا تسویه می‌کند.
-      operationId: settleAllBalances
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      responses:
-        '200':
-          description: تسویه با موفقیت انجام شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptySuccessResponse'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
-  /v1/merchants/settle:
-    post:
-      tags:
-        - برداشت ریالی
-      summary: تسویه یک موجودی مشخص
-      description: |
-        یک مبلغ مشخص از موجودی فروشگاه را تسویه می‌کند.
-      operationId: settleSpecificBalance
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationHeader'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SettlementRequest'
-            examples:
-              default:
-                summary: نمونه درخواست تسویه
-                value:
-                  amount:
-                    number: "500000"
-                    unit: "IRT"
-      responses:
-        '200':
-          description: تسویه با موفقیت انجام شد
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptySuccessResponse'
-              examples:
-                success:
-                  summary: نمونه پاسخ
-                  value:
-                    status: OK
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
   /v1/merchants/invoices/{invoiceId}/webhook:
     get:
       tags:
-        - فاکتور
+        - وب‌هوک
       summary: دریافت اطلاعات وب‌هوک فاکتور
       description: |
         اطلاعات وب‌هوک مربوط به یک فاکتور را بر اساس شناسه آن برمی‌گرداند.
+
 
         پاسخ شامل وضعیت کلی وب‌هوک و تاریخچه‌ی درخواست‌های ارسال‌شده است.
       operationId: getInvoiceWebhook
@@ -1490,7 +1057,7 @@ paths:
   /v1/merchants/invoices/{invoiceId}/webhook/retry:
     post:
       tags:
-        - فاکتور
+        - وب‌هوک
       summary: تلاش مجدد برای ارسال وب‌هوک فاکتور
       description: |
         ارسال وب‌هوک مربوط به فاکتور را مجدداً تلاش می‌کند.
@@ -1521,6 +1088,71 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
         '404':
           description: فاکتور یا وب‌هوک یافت نشد
+webhooks:
+  invoice-paid:
+    post:
+      tags:
+        - فاکتور
+      summary: وب‌هوک پرداخت فاکتور
+      description: |
+        پس از پرداخت موفق فاکتور، سواپ‌ولت یک درخواست `POST` به آدرس `webhookUrl` شما ارسال می‌کند.
+
+        برای اطمینان از صحت درخواست، فیلد `hmac` را با کلید API خود بررسی کنید.
+
+        > [!note]
+        > درخواست‌های وب‌هوک هم از سرورهای داخل ایران و هم از سرورهای خارج از ایران ارسال می‌شوند تا از دریافت موفق آن‌ها اطمینان حاصل شود. لطفاً مطمئن شوید سرویس شما هر دو را می‌پذیرد.
+
+        > [!note]
+        > در صورتی که وب‌هوک پاسخ موفق `200` دریافت نکند، سواپ‌ولت در بازه‌های زمانی مختلف درخواست را تکرار می‌کند تا از دریافت آپدیت توسط سرویس شما اطمینان حاصل شود. تاریخچه‌ی کامل درخواست‌های وب‌هوک را می‌توانید از پنل فروشندگان مشاهده کنید.
+
+        > [!note]
+        > سرویس شما باید به صورت **idempotent** طراحی شده باشد. سواپ‌ولت تضمینی برای ارسال تنها یک‌بار وب‌هوک نمی‌دهد و ممکن است یک رویداد چندین بار ارسال شود.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              invoice-paid:
+                summary: پرداخت موفق فاکتور
+                value:
+                  requestId: "560fc0fe-773f-46e4-8446-259ed7a9f6d0"
+                  hmac: "3664744a8cc0afb4359e7c8b20cf953b5047bbfe24604d7af4c151e54881c229"
+                  event:
+                    time: "2025-12-13T12:31:00.652591210Z"
+                    type: "INVOICE"
+                    invoice:
+                      id: "6adb1e35-9595-4f35-9228-38733a34f17c"
+                      supportCode: "AI-GZFXG1E-TN0O"
+                      status: "PAID"
+                      description: null
+                      customData: null
+                      wallet: null
+                      ownerId: 1
+                      telegramInlineMessageId: null
+                      userLanguage: null
+                      returnUrl: null
+                      webhookUrl: "https://webhook.site/20fab530-713b-467b-9796-3a8f278e173a"
+                      orderId: "0ee5471c-8023-467d-a0b5-4de5a5d5a06b"
+                      amount:
+                        number: "0.02"
+                        unit: "USDT"
+                      value:
+                        number: "0.02"
+                        unit: "USD"
+                      feePayer: "APPLICATION"
+                      feeAmount:
+                        number: "0"
+                        unit: "USDT"
+                      paymentLinks: []
+                      paidAt: "2025-12-13T12:31:00.526613919Z"
+                      expiredAt: "2025-12-13T13:30:01.510631Z"
+                      createdAt: "2025-12-13T12:30:01.522760Z"
+      responses:
+        '200':
+          description: وب‌هوک با موفقیت دریافت شد
+
 components:
   parameters:
     AuthorizationHeader:
@@ -1529,7 +1161,7 @@ components:
       required: true
       schema:
         type: string
-        example: Bearer business-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+        example: Bearer business-yourTokenHere
       description: هدر احراز هویت پنل فروشگاه
 
     PageParam:
@@ -2743,6 +2375,11 @@ components:
         userLanguage:
           anyOf:
             - $ref: '#/components/schemas/LanguageEnum'
+            - type: 'null'
+        userTelegramId:
+          anyOf:
+            - type: integer
+              format: int64
             - type: 'null'
 
     CreateApplicationInvoiceWithTemporaryWalletResponse:
