@@ -2274,7 +2274,7 @@ components:
             network: "TON"
         feePayer: "APPLICATION"
         userLanguage: "FA"
-        ttl: 1800
+        ttl: 86400
         underPaidCoveragePercent: "0.5"
         returnUrl: "https://webhook.site/return/demo-invoice"
         webhookUrl: "https://webhook.site/payment-callback-demo"

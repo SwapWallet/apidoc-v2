@@ -542,7 +542,7 @@ paths:
                   network: BSC
                   webhookUrl: "https://example.com/webhook"
                   returnUrl: "https://example.com/return"
-                  ttl: 1800
+                  ttl: 86400
                   underPaidCoveragePercent: 0
                   orderId: "your-internal-unique-invoice-id"
                   customData: "any text / {\"campaign\":\"spring-sale\"}"
@@ -922,7 +922,7 @@ paths:
                     number: "500000"
                     unit: "IRT"
                   userLanguage: FA
-                  ttl: 1800
+                  ttl: 86400
                   webhookUrl: "https://example.com/webhook"
                   returnUrl: "https://example.com/return"
                   orderId: "ORDER-1001"
