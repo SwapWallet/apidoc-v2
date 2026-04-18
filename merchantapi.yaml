@@ -511,7 +511,7 @@ paths:
         ## اطلاعات کاربر
 
         > [!note]
-        > **توصیه اکید:** فیلدهای `userId`، `userEmail`، `userPhoneNumber` و `userTelegramId` را ارسال کنید. این اطلاعات برای ردیابی تراکنش‌ها، رفع مشکلات احتمالی و پشتیبانی از کاربران بسیار کمک‌کننده است.
+        > **توصیه اکید:** فیلدهای `userId`، `userEmail`، `userPhoneNumber`، `userTelegramId` و `userDisplayName` را ارسال کنید. با ارسال این اطلاعات، فاکتورها در پنل فروشندگان با مشخصات کاربر نمایش داده می‌شوند و می‌توانید فاکتورها را بر اساس این اطلاعات جستجو کنید. همچنین در صورت بروز مشکل، ردیابی و پشتیبانی تراکنش‌ها بسیار ساده‌تر خواهد بود.
 
         ---
 
@@ -545,16 +545,17 @@ paths:
                   network: BSC
                   webhookUrl: "https://example.com/webhook"
                   returnUrl: "https://example.com/return"
-                  ttl: 86400
+                  ttl: 21600
                   underPaidCoveragePercent: 0
                   orderId: "your-internal-unique-invoice-id"
                   customData: "any text / {\"campaign\":\"spring-sale\"}"
                   description: "پرداخت با کیف پول موقت"
                   userId: "your-internal-id-for-user"
                   userEmail: "wallet@example.com"
-                  userPhoneNumber: "+989123334455 or 09123334455"
+                  userPhoneNumber: "+989123334455"
                   userLanguage: FA
                   userTelegramId: 974181500
+                  userDisplayName: "Parsa"
       responses:
         '200':
           description: فاکتور با کیف پول موقت با موفقیت ایجاد شد
@@ -568,27 +569,27 @@ paths:
                   value:
                     status: OK
                     result:
-                      id: "11811edb-e36b-4bf7-b7f8-1c7eb11b457b"
-                      walletAddress: "TExampleWalletAddress123"
-                      links:
-                        - name: TRUST_WALLET
-                          logo: "https://example.com/trust-wallet.png"
-                          url: "trust://pay/example"
-                        - name: METAMASK
-                          logo: "https://example.com/metamask.png"
-                          url: "metamask://pay/example"
+                      id: "bcbb332e-0bf8-4da2-a42f-a75a0be6c36f"
+                      walletAddress: "0xD54960E24Ff910731C04798937a60551879e8726"
                       amount:
                         amount:
-                          number: "100.00"
+                          number: "6.62"
                           unit: "USDT"
                         usdValue:
-                          number: "100.00"
+                          number: "6.62"
                           unit: "USD"
                         userCurrencyValue:
-                          number: "8400000"
+                          number: "1000282"
                           unit: "IRT"
-                      expiredAt: "2026-03-30T14:30:00Z"
-                      createdAt: "2026-03-30T14:00:00Z"
+                      links:
+                        - name: SWAP_WALLET
+                          logo: "https://swapwallet.app/media/public/assets/wallets/swapwallet.png"
+                          url: "https://t.me/swapwalletbot/app?startapp=app-invoice-bcbb332e-0bf8-4da2-a42f-a75a0be6c36f"
+                        - name: TRUST_WALLET
+                          logo: "https://swapwallet.app/media/public/assets/wallets/trust-wallet.png"
+                          url: "https://link.trustwallet.com/send?asset=c20000714_t0x55d398326f99059fF775485246999027B3197955&address=0xD54960E24Ff910731C04798937a60551879e8726&amount=6.620000"
+                      expiredAt: "2026-04-18T10:00:58.068857215Z"
+                      createdAt: "2026-04-18T04:00:58.069046957Z"
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
@@ -1100,10 +1101,21 @@ webhooks:
       description: |
         پس از پرداخت موفق فاکتور، سواپ‌ولت یک درخواست `POST` به آدرس `webhookUrl` شما ارسال می‌کند.
 
-        برای اطمینان از صحت درخواست، فیلد `hmac` را با کلید API خود بررسی کنید.
+        ## اعتبارسنجی درخواست
+
+        برای اطمینان از اینکه درخواست واقعاً از سواپ‌ولت ارسال شده، سه روش پیش رو دارید:
+
+        **روش اول — بررسی HMAC (توصیه‌شده)**
+        فیلد `hmac` با استفاده از الگوریتم `HmacSHA256` روی محتوای فیلد `event` (به‌صورت JSON string) و کلید API فروشگاه شما تولید شده است. کافی است همین عملیات را در سرویس خود انجام دهید و نتیجه را با مقدار `hmac` مقایسه کنید.
+
+        **روش دوم — دریافت وضعیت فاکتور**
+        اگر نمی‌خواهید HMAC را پیاده‌سازی کنید، پس از دریافت وب‌هوک، با استفاده از `id` فاکتور موجود در `event.invoice.id`، یک بار وضعیت فاکتور را از API دریافت کنید و آن را به‌عنوان منبع اطلاعات معتبر استفاده کنید.
+
+        **روش سوم — مسیر مخفی (پیشنهاد نمی‌شود)**
+        می‌توانید یک مسیر تصادفی و غیرقابل حدس به‌عنوان `webhookUrl` تنظیم کنید که دیگران از آن اطلاع نداشته باشند. این روش ساده است اما امنیت کافی ندارد و در صورت لو رفتن مسیر، هیچ محافظتی وجود نخواهد داشت.
 
         > [!note]
-        > درخواست‌های وب‌هوک هم از سرورهای داخل ایران و هم از سرورهای خارج از ایران ارسال می‌شوند تا از دریافت موفق آن‌ها اطمینان حاصل شود. لطفاً مطمئن شوید سرویس شما هر دو را می‌پذیرد.
+        > درخواست‌های وب‌هوک هم از سرورهای داخل ایران و هم از سرورهای خارج از ایران ارسال می‌شوند. تفاوتی نمی‌کند سرور شما داخل ایران باشد یا خارج، در هر صورت ما اطمینان حاصل می‌کنیم که وب‌هوک به سرویس شما برسد.
 
         > [!note]
         > در صورتی که وب‌هوک پاسخ موفق `200` دریافت نکند، سواپ‌ولت در بازه‌های زمانی مختلف درخواست را تکرار می‌کند تا از دریافت آپدیت توسط سرویس شما اطمینان حاصل شود. تاریخچه‌ی کامل درخواست‌های وب‌هوک را می‌توانید از پنل فروشندگان مشاهده کنید.
@@ -2383,6 +2395,11 @@ components:
           anyOf:
             - type: integer
               format: int64
+            - type: 'null'
+        userDisplayName:
+          anyOf:
+            - type: string
+              maxLength: 255
             - type: 'null'
 
     CreateApplicationInvoiceWithTemporaryWalletResponse:
