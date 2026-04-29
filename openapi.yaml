@@ -514,6 +514,268 @@ paths:
         '404':
           description: تراکنش یافت نشد
 
+  /v2/transaction:
+    get:
+      tags:
+        - تراکنش‌ها
+      summary: فیلتر تراکنش‌ها
+      description: |
+        لیست تراکنش‌های حساب را با امکانات فیلتر پیشرفته و cursor-based pagination برمی‌گرداند.
+
+        برای دریافت صفحات بعدی، مقدار `id` آخرین آیتم دریافتی را به عنوان `afterId` ارسال کنید. اگر `result.hasNext` برابر `true` بود، صفحه‌ی بعدی وجود دارد.
+
+        > [!note]
+        > بسته به مقدار فیلد `type`، فقط یکی از فیلدهای جزئیات مقدار خواهد داشت و بقیه `null` خواهند بود:
+        >
+        > | نوع (`type`) | فیلد جزئیات |
+        > |---:|---:|
+        > | `TRANSFER` | `transfer` |
+        > | `TRADE` | `trade` |
+        > | `CRYPTO_DEPOSIT` | `cryptoDeposit` |
+        > | `CRYPTO_WITHDRAW` | `cryptoWithdraw` |
+        > | `FIAT_DEPOSIT` | `fiatDeposit` |
+        > | `FIAT_WITHDRAW` | `fiatWithdraw` |
+        > | `PAYMENT` | `payment` |
+        > | `CREDIT` | `credit` |
+      operationId: getTransactionsV2
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: types
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس نوع تراکنش. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `types=PAYMENT&types=TRADE`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransactionTypeEnum'
+        - name: tokens
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس توکن. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `tokens=USDT&tokens=TON`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenEnum'
+        - name: networks
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس شبکه. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `networks=BSC&networks=TRON`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NetworkEnum'
+        - name: startDate
+          in: query
+          required: false
+          description: دریافت تراکنش‌ها از این تاریخ به بعد (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+            example: "2026-01-01T00:00:00Z"
+        - name: endDate
+          in: query
+          required: false
+          description: دریافت تراکنش‌ها تا این تاریخ (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+            example: "2026-04-30T23:59:59Z"
+        - name: query
+          in: query
+          required: false
+          description: جستجوی آزاد — بر اساس آدرس کیف پول، هش تراکنش یا کد پشتیبانی
+          schema:
+            type: string
+            example: "TX-9F3K2M1"
+        - name: supportCodes
+          in: query
+          required: false
+          description: فیلتر بر اساس کد پشتیبانی. می‌توان چند مقدار ارسال کرد.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - TX-9F3K2M1
+        - name: ids
+          in: query
+          required: false
+          description: فیلتر بر اساس شناسه‌ی عددی تراکنش. می‌توان چند مقدار ارسال کرد.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: afterId
+          in: query
+          required: false
+          description: |
+            **cursor برای صفحه‌ی بعد** — تراکنش‌هایی که `id` آن‌ها از این مقدار بزرگ‌تر است.
+
+            برای دریافت صفحه‌ی بعدی، مقدار `id` آخرین آیتم دریافتی را ارسال کنید.
+          schema:
+            type: integer
+            format: int64
+            example: 170776
+        - name: beforeId
+          in: query
+          required: false
+          description: |
+            **cursor برای صفحه‌ی قبل** — تراکنش‌هایی که `id` آن‌ها از این مقدار کوچک‌تر است.
+
+            برای دریافت صفحه‌ی قبلی، مقدار `id` اولین آیتم دریافتی را ارسال کنید.
+          schema:
+            type: integer
+            format: int64
+            example: 170800
+        - name: sortBy
+          in: query
+          required: false
+          description: فیلد مرتب‌سازی (پیش‌فرض `id`)
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - id
+                - timestamp
+            default:
+              - id
+        - name: sortDir
+          in: query
+          required: false
+          description: جهت مرتب‌سازی (پیش‌فرض `DESC`)
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SortDirEnum'
+            default:
+              - DESC
+        - name: limit
+          in: query
+          required: false
+          description: تعداد نتایج در هر صفحه (۱ تا ۱۰۰، پیش‌فرض ۲۰)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: لیست تراکنش‌ها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionV2ListResponse'
+              examples:
+                tradeExample:
+                  summary: تراکنش سواپ (TRADE)
+                  value:
+                    status: OK
+                    result:
+                      hasNext: true
+                      data:
+                        - id: 170776
+                          supportCode: "SW-PGE4VWR-YJAX"
+                          timestamp: 1742114712000
+                          type: TRADE
+                          status: SUCCEED
+                          network: INTERNAL
+                          exchangeFee:
+                            number: "0"
+                            unit: "TRX"
+                          trade:
+                            market: "TRX/USDT"
+                            side: "BUY"
+                            type: "OTC"
+                            sourceAmount:
+                              number: "10"
+                              unit: "USDT"
+                            sourceValue:
+                              number: "10"
+                              unit: "USD"
+                            sourceUserCurrencyValue:
+                              number: "1655000"
+                              unit: "IRT"
+                            destinationAmount:
+                              number: "35.21"
+                              unit: "TRX"
+                            destinationValue:
+                              number: "9.86"
+                              unit: "USD"
+                            destinationUserCurrencyValue:
+                              number: "1631830"
+                              unit: "IRT"
+                            marketRate: "0.28400"
+                          transfer: null
+                          cryptoDeposit: null
+                          cryptoWithdraw: null
+                          fiatDeposit: null
+                          fiatWithdraw: null
+                          payment: null
+                          credit: null
+                withdrawExample:
+                  summary: تراکنش برداشت کریپتو (CRYPTO_WITHDRAW)
+                  value:
+                    status: OK
+                    result:
+                      hasNext: false
+                      data:
+                        - id: 170800
+                          supportCode: "SW-9MZT3HL-IB1N"
+                          timestamp: 1742135433000
+                          type: CRYPTO_WITHDRAW
+                          status: PENDING
+                          network: TRON
+                          exchangeFee:
+                            number: "1"
+                            unit: "USDT"
+                          trade: null
+                          transfer: null
+                          cryptoDeposit: null
+                          cryptoWithdraw:
+                            amount:
+                              number: "100"
+                              unit: "USDT"
+                            value:
+                              number: "100"
+                              unit: "USD"
+                            userCurrencyValue:
+                              number: "16550000"
+                              unit: "IRT"
+                            destinationAddress: "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA"
+                            hash: null
+                          fiatDeposit: null
+                          fiatWithdraw: null
+                          payment: null
+                          credit: null
+        '401':
+          description: عدم احراز هویت
+
   /v1/wallet/crypto-withdraw/config/{token}:
     get:
       tags:
@@ -1318,6 +1580,7 @@ components:
         - FIAT_DEPOSIT
         - FIAT_WITHDRAW
         - PAYMENT
+        - CREDIT
 
     TransactionStatusEnum:
       type: string
@@ -2592,3 +2855,92 @@ components:
             url: "https://swapwallet.app/express-resid/invoice?id=d4e5f6a7-8b9c-4d0e-9f1a-2b3c4d5e6f78"
         expiredAt: "2025-12-15T10:45:00Z"
         createdAt: "2025-12-15T09:45:00Z"
+
+    SortDirEnum:
+      type: string
+      enum:
+        - ASC
+        - DESC
+
+    TransactionV2Dto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: شناسه‌ی عددی تراکنش
+          example: 170776
+        supportCode:
+          type: string
+          description: کد پشتیبانی تراکنش
+          example: SW-PGE4VWR-YJAX
+        timestamp:
+          type: integer
+          format: int64
+          description: زمان ثبت تراکنش — Unix timestamp به میلی‌ثانیه
+          example: 1742114712000
+        type:
+          $ref: '#/components/schemas/TransactionTypeEnum'
+        status:
+          $ref: '#/components/schemas/TransactionStatusEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        exchangeFee:
+          $ref: '#/components/schemas/Money'
+        trade:
+          anyOf:
+            - $ref: '#/components/schemas/TradeDetailDto'
+            - type: 'null'
+          description: جزئیات سواپ — فقط برای نوع `TRADE`
+        transfer:
+          anyOf:
+            - $ref: '#/components/schemas/TransferDetailDto'
+            - type: 'null'
+          description: جزئیات انتقال — فقط برای نوع `TRANSFER`
+        cryptoDeposit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات واریز کریپتو — فقط برای نوع `CRYPTO_DEPOSIT`
+        cryptoWithdraw:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات برداشت کریپتو — فقط برای نوع `CRYPTO_WITHDRAW`
+        fiatDeposit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات واریز ریالی — فقط برای نوع `FIAT_DEPOSIT`
+        fiatWithdraw:
+          anyOf:
+            - $ref: '#/components/schemas/FiatWithdrawDetailDto'
+            - type: 'null'
+          description: جزئیات برداشت ریالی — فقط برای نوع `FIAT_WITHDRAW`
+        payment:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات پرداخت فاکتور — فقط برای نوع `PAYMENT`
+        credit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات اعتبار — فقط برای نوع `CREDIT`
+
+    TransactionV2ListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: object
+          properties:
+            hasNext:
+              type: boolean
+              description: آیا صفحه‌ی بعدی وجود دارد
+              example: true
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionV2Dto'
