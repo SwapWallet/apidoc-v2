@@ -1096,7 +1096,7 @@ components:
       required: true
       schema:
         type: string
-        example: Bearer apikey-fLzqwAAvChZUtMcpNc77gRnDZg52daMmVxns5VXyVLbCT2OI1lSHdMNrF49vv50p
+        example: Bearer apikey-yourApikeyHere
       description: >
         هدر احراز هویت
 
