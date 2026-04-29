@@ -764,94 +764,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/TransactionV2ListResponse'
               examples:
-                tradeExample:
-                  summary: تراکنش سواپ (TRADE)
+                detectDeposits:
+                  summary: آخرین واریزها (TRANSFER + CRYPTO_DEPOSIT)
                   value:
                     status: OK
                     result:
-                      hasNext: true
+                      hasNext: false
                       data:
-                        - id: 170776
-                          supportCode: "SW-PGE4VWR-YJAX"
-                          timestamp: 1742114712000
-                          type: TRADE
+                        - id: 170811
+                          supportCode: "SW-M3NP8QR-TXVW"
+                          timestamp: 1742198500000
+                          type: TRANSFER
                           status: SUCCEED
                           network: INTERNAL
                           exchangeFee:
                             number: "0"
-                            unit: "TRX"
-                          trade:
-                            market: "TRX/USDT"
-                            side: "BUY"
-                            type: "OTC"
-                            sourceAmount:
-                              number: "10"
-                              unit: "USDT"
-                            sourceValue:
-                              number: "10"
-                              unit: "USD"
-                            sourceUserCurrencyValue:
-                              number: "1655000"
-                              unit: "IRT"
-                            destinationAmount:
-                              number: "35.21"
-                              unit: "TRX"
-                            destinationValue:
-                              number: "9.86"
-                              unit: "USD"
-                            destinationUserCurrencyValue:
-                              number: "1631830"
-                              unit: "IRT"
-                            marketRate: "0.28400"
-                          transfer: null
-                          cryptoDeposit: null
-                          cryptoWithdraw: null
-                          fiatDeposit: null
-                          fiatWithdraw: null
-                          payment: null
-                          credit: null
-                withdrawExample:
-                  summary: تراکنش برداشت کریپتو (CRYPTO_WITHDRAW)
-                  value:
-                    status: OK
-                    result:
-                      hasNext: false
-                      data:
-                        - id: 170800
-                          supportCode: "SW-9MZT3HL-IB1N"
-                          timestamp: 1742135433000
-                          type: CRYPTO_WITHDRAW
-                          status: PENDING
-                          network: TRON
-                          exchangeFee:
-                            number: "1"
-                            unit: "USDT"
-                          trade: null
-                          transfer: null
-                          cryptoDeposit: null
-                          cryptoWithdraw:
+                            unit: "TON"
+                          transfer:
                             amount:
-                              number: "100"
-                              unit: "USDT"
+                              number: "5"
+                              unit: "TON"
                             value:
-                              number: "100"
+                              number: "15.30"
                               unit: "USD"
                             userCurrencyValue:
-                              number: "16550000"
+                              number: "2532000"
                               unit: "IRT"
-                            destinationAddress: "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA"
-                            hash: null
-                          fiatDeposit: null
-                          fiatWithdraw: null
-                          payment: null
-                          credit: null
-                depositDetectionExample:
-                  summary: تشخیص واریز و انتقال به حساب
-                  value:
-                    status: OK
-                    result:
-                      hasNext: false
-                      data:
+                            fromUser:
+                              id: 4821
+                              isYou: false
+                              name: "علی رضایی"
+                            toUser:
+                              id: 1
+                              isYou: true
+                              name: "شما"
                         - id: 170810
                           supportCode: "SW-K7NP2QR-MXVT"
                           timestamp: 1742198400000
@@ -861,8 +807,6 @@ paths:
                           exchangeFee:
                             number: "0"
                             unit: "USDT"
-                          trade: null
-                          transfer: null
                           cryptoDeposit:
                             amount:
                               number: "50"
@@ -875,11 +819,6 @@ paths:
                               unit: "IRT"
                             sourceAddress: "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA"
                             hash: "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
-                          cryptoWithdraw: null
-                          fiatDeposit: null
-                          fiatWithdraw: null
-                          payment: null
-                          credit: null
         '401':
           description: عدم احراز هویت
 
