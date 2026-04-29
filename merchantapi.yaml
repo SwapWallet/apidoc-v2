@@ -473,6 +473,273 @@ paths:
         '404':
           description: تراکنش یافت نشد
 
+  /v2/transaction:
+    get:
+      tags:
+        - transactions
+      summary: فیلتر تراکنش‌ها
+      description: |
+        لیست تراکنش‌های حساب فروشگاه را با امکانات فیلتر و مرتب‌سازی پیشرفته برمی‌گرداند.
+
+        این endpoint از **cursor-based pagination** استفاده می‌کند:
+        - برای دریافت صفحه‌ی بعد، مقدار `id` آخرین آیتم دریافتی را به عنوان `afterId` ارسال کنید.
+        - برای دریافت صفحه‌ی قبل، مقدار `id` اولین آیتم دریافتی را به عنوان `beforeId` ارسال کنید.
+        - اگر `result.hasNext` برابر `true` بود، صفحه‌ی بعدی وجود دارد.
+
+        > [!note]
+        > بسته به مقدار فیلد `type`، فقط یکی از فیلدهای جزئیات مقدار خواهد داشت و بقیه `null` خواهند بود:
+        >
+        > | نوع تراکنش | فیلد جزئیات |
+        > |---|---|
+        > | `PAYMENT` | `payment` |
+        > | `APPLICATION_SETTLEMENT` | `applicationSettlement` |
+        > | `CRYPTO_DEPOSIT` | `cryptoDeposit` |
+        > | `CRYPTO_WITHDRAW` | `cryptoWithdraw` |
+        > | `FIAT_DEPOSIT` | `fiatDeposit` |
+        > | `FIAT_WITHDRAW` | `fiatWithdraw` |
+        > | `TRADE` | `trade` |
+        > | `TRANSFER` | `transfer` |
+        > | `CREDIT` | `credit` |
+      operationId: getTransactionsV2
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - name: types
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس نوع تراکنش. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `types=PAYMENT&types=APPLICATION_SETTLEMENT`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransactionTypeEnum'
+        - name: tokens
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس توکن. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `tokens=USDT&tokens=TON`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenEnum'
+        - name: networks
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس شبکه. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `networks=BSC&networks=TRON`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NetworkEnum'
+        - name: startDate
+          in: query
+          required: false
+          description: دریافت تراکنش‌ها از این تاریخ به بعد (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+            example: "2026-01-01T00:00:00Z"
+        - name: endDate
+          in: query
+          required: false
+          description: دریافت تراکنش‌ها تا این تاریخ (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+            example: "2026-04-30T23:59:59Z"
+        - name: query
+          in: query
+          required: false
+          description: جستجوی آزاد — می‌توان بر اساس `orderId`، آدرس کیف پول یا هش تراکنش جستجو کرد
+          schema:
+            type: string
+            example: "your-internal-unique-invoice-id"
+        - name: supportCodes
+          in: query
+          required: false
+          description: |
+            فیلتر بر اساس کد پشتیبانی. می‌توان چند مقدار ارسال کرد.
+
+            مثال: `supportCodes=TX-9F3K2M1&supportCodes=TX-7H5D9N2`
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - TX-9F3K2M1
+        - name: ids
+          in: query
+          required: false
+          description: فیلتر بر اساس شناسه‌ی عددی تراکنش. می‌توان چند مقدار ارسال کرد.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: recipients
+          in: query
+          required: false
+          description: فیلتر بر اساس شناسه‌ی کاربر گیرنده. می‌توان چند مقدار ارسال کرد.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: afterId
+          in: query
+          required: false
+          description: |
+            **cursor برای صفحه‌ی بعد** — تراکنش‌هایی که `id` آن‌ها از این مقدار بزرگ‌تر است را برمی‌گرداند.
+
+            برای دریافت صفحه‌ی بعدی، مقدار `id` آخرین آیتم دریافتی را ارسال کنید.
+          schema:
+            type: integer
+            format: int64
+            example: 170776
+        - name: beforeId
+          in: query
+          required: false
+          description: |
+            **cursor برای صفحه‌ی قبل** — تراکنش‌هایی که `id` آن‌ها از این مقدار کوچک‌تر است را برمی‌گرداند.
+
+            برای دریافت صفحه‌ی قبلی، مقدار `id` اولین آیتم دریافتی را ارسال کنید.
+          schema:
+            type: integer
+            format: int64
+            example: 170800
+        - name: sortBy
+          in: query
+          required: false
+          description: فیلد مرتب‌سازی (پیش‌فرض `id`)
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - id
+                - timestamp
+            default:
+              - id
+        - name: sortDir
+          in: query
+          required: false
+          description: جهت مرتب‌سازی (پیش‌فرض `DESC`)
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SortDirEnum'
+            default:
+              - DESC
+        - name: limit
+          in: query
+          required: false
+          description: تعداد نتایج در هر صفحه (۱ تا ۱۰۰، پیش‌فرض ۲۰)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: لیست تراکنش‌ها با موفقیت دریافت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionV2ListResponse'
+              examples:
+                paymentExample:
+                  summary: تراکنش پرداخت فاکتور (PAYMENT)
+                  value:
+                    status: OK
+                    result:
+                      hasNext: true
+                      data:
+                        - id: 170776
+                          supportCode: "TX-9F3K2M1"
+                          timestamp: 1742114712000
+                          type: PAYMENT
+                          status: SUCCEED
+                          network: BSC
+                          exchangeFee:
+                            number: "0"
+                            unit: "USDT"
+                          payment:
+                            invoice:
+                              id: 42001
+                              supportCode: "INV-ABC123XYZ"
+                            amount:
+                              number: "6.62"
+                              unit: "USDT"
+                            value:
+                              number: "6.62"
+                              unit: "USD"
+                            userCurrencyValue:
+                              number: "1000282"
+                              unit: "IRT"
+                          applicationSettlement: null
+                          cryptoDeposit: null
+                          cryptoWithdraw: null
+                          fiatDeposit: null
+                          fiatWithdraw: null
+                settlementExample:
+                  summary: تراکنش تسویه (APPLICATION_SETTLEMENT)
+                  value:
+                    status: OK
+                    result:
+                      hasNext: false
+                      data:
+                        - id: 170800
+                          supportCode: "TX-7H5D9N2"
+                          timestamp: 1742135433000
+                          type: APPLICATION_SETTLEMENT
+                          status: SUCCEED
+                          network: BSC
+                          exchangeFee:
+                            number: "0"
+                            unit: "USDT"
+                          payment: null
+                          applicationSettlement:
+                            amount:
+                              number: "100"
+                              unit: "USDT"
+                            value:
+                              number: "100"
+                              unit: "USD"
+                            userCurrencyValue:
+                              number: "15100000"
+                              unit: "IRT"
+                            application:
+                              id: 12
+                              name: "فروشگاه من"
+                          cryptoDeposit: null
+                          cryptoWithdraw: null
+                          fiatDeposit: null
+                          fiatWithdraw: null
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /v1/merchants/invoices/temporary-wallet:
     post:
       tags:
@@ -2885,3 +3152,175 @@ components:
               status: 400
               succeed: false
               createdAt: "2026-03-30T12:00:00Z"
+
+    TransactionTypeEnum:
+      type: string
+      description: |
+        نوع تراکنش:
+        - `PAYMENT` — پرداخت از طریق فاکتور
+        - `APPLICATION_SETTLEMENT` — تسویه از پلتفرم
+        - `CRYPTO_DEPOSIT` — واریز کریپتو
+        - `CRYPTO_WITHDRAW` — برداشت کریپتو
+        - `FIAT_DEPOSIT` — واریز ریالی
+        - `FIAT_WITHDRAW` — برداشت ریالی
+        - `TRADE` — تبدیل ارز
+        - `TRANSFER` — انتقال داخلی
+        - `CREDIT` — اعتبار
+      enum:
+        - CRYPTO_WITHDRAW
+        - CRYPTO_DEPOSIT
+        - FIAT_WITHDRAW
+        - FIAT_DEPOSIT
+        - TRANSFER
+        - TRADE
+        - PAYMENT
+        - CREDIT
+        - APPLICATION_SETTLEMENT
+        - REVERT
+        - INTERNAL_MOVE_BALANCE
+
+    ApiTransactionStatusEnum:
+      type: string
+      enum:
+        - PENDING
+        - SUCCEED
+
+    SortDirEnum:
+      type: string
+      enum:
+        - ASC
+        - DESC
+
+    PaymentTransactionV2Dto:
+      type: object
+      properties:
+        invoice:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: شناسه‌ی عددی فاکتور
+            supportCode:
+              type: string
+              description: کد پشتیبانی فاکتور
+        amount:
+          allOf:
+            - $ref: '#/components/schemas/Money'
+            - description: مبلغ پرداخت‌شده به واحد کریپتو
+        value:
+          allOf:
+            - $ref: '#/components/schemas/Money'
+            - description: ارزش به دلار
+        userCurrencyValue:
+          allOf:
+            - $ref: '#/components/schemas/Money'
+            - description: ارزش به ارز کاربر (معمولاً IRT)
+
+    ApplicationSettlementTransactionV2Dto:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        value:
+          $ref: '#/components/schemas/Money'
+        userCurrencyValue:
+          $ref: '#/components/schemas/Money'
+        application:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: شناسه‌ی فروشگاه
+            name:
+              type: string
+              description: نام فروشگاه
+
+    TransactionV2Dto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: شناسه‌ی عددی تراکنش
+          example: 170776
+        supportCode:
+          type: string
+          description: کد پشتیبانی تراکنش
+          example: TX-9F3K2M1
+        timestamp:
+          type: integer
+          format: int64
+          description: زمان ثبت تراکنش — Unix timestamp به میلی‌ثانیه
+          example: 1742114712000
+        type:
+          $ref: '#/components/schemas/TransactionTypeEnum'
+        status:
+          $ref: '#/components/schemas/ApiTransactionStatusEnum'
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        exchangeFee:
+          $ref: '#/components/schemas/Money'
+        payment:
+          anyOf:
+            - $ref: '#/components/schemas/PaymentTransactionV2Dto'
+            - type: 'null'
+          description: جزئیات پرداخت — فقط برای نوع `PAYMENT`
+        applicationSettlement:
+          anyOf:
+            - $ref: '#/components/schemas/ApplicationSettlementTransactionV2Dto'
+            - type: 'null'
+          description: جزئیات تسویه — فقط برای نوع `APPLICATION_SETTLEMENT`
+        cryptoDeposit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات واریز کریپتو — فقط برای نوع `CRYPTO_DEPOSIT`
+        cryptoWithdraw:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات برداشت کریپتو — فقط برای نوع `CRYPTO_WITHDRAW`
+        fiatDeposit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات واریز ریالی — فقط برای نوع `FIAT_DEPOSIT`
+        fiatWithdraw:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات برداشت ریالی — فقط برای نوع `FIAT_WITHDRAW`
+        trade:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات تبدیل ارز — فقط برای نوع `TRADE`
+        transfer:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات انتقال داخلی — فقط برای نوع `TRANSFER`
+        credit:
+          anyOf:
+            - type: object
+            - type: 'null'
+          description: جزئیات اعتبار — فقط برای نوع `CREDIT`
+
+    TransactionV2ListResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatusEnum'
+        result:
+          type: object
+          properties:
+            hasNext:
+              type: boolean
+              description: آیا صفحه‌ی بعدی وجود دارد
+              example: true
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionV2Dto'
