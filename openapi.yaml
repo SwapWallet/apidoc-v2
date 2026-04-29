@@ -231,6 +231,70 @@ tags:
 
       اشتراک تلگرام پریمیوم برای کاربر مشخص‌شده فعال می‌شود. مدت‌های مجاز: **۳ ماه، ۶ ماه، ۱۲ ماه**.
 
+  - name: examples
+    x-displayName: نمونه‌های رایج
+    description: |
+      مجموعه‌ای از سناریوهای عملی برای رایج‌ترین کاربردهای API.
+
+      ---
+
+      ## تشخیص واریز کریپتو به حساب
+
+      یکی از رایج‌ترین کاربردها: تشخیص واریز کریپتو و انتقال‌های دریافتی برای نمایش در کیف پول یا سیستم داخلی.
+
+      با فراخوانی دوره‌ای این endpoint (مثلاً هر ۵ دقیقه)، می‌توانید تراکنش‌های جدید واریزی به حساب خود را شناسایی کنید.
+
+      ### نحوه‌ی کار
+
+      1. اولین فراخوانی را بدون `afterId` ارسال کنید تا ۲۰ تراکنش اخیر دریافت شود.
+      2. `id` آخرین تراکنش دریافتی را ذخیره کنید.
+      3. در فراخوانی‌های بعدی، همان `id` را به عنوان `afterId` ارسال کنید تا فقط تراکنش‌های جدیدتر برگردانده شوند.
+      4. اگر `result.hasNext` برابر `true` بود، صفحه‌ی بعدی را با `afterId` برابر `id` آخرین آیتم دریافت کنید.
+
+      ### درخواست
+
+      ```http
+      GET /api/v2/transaction
+        ?types=CRYPTO_DEPOSIT&types=TRANSFER
+        &tokens=USDT&tokens=TON&tokens=TRX
+        &sortDir=DESC
+        &limit=20
+        &afterId={lastSeenId}
+      Authorization: Bearer apikey-yourApikeyHere
+      ```
+
+      ### نمونه پاسخ
+
+      ```json
+      {
+        "status": "OK",
+        "result": {
+          "hasNext": false,
+          "data": [
+            {
+              "id": 170810,
+              "supportCode": "SW-K7NP2QR-MXVT",
+              "timestamp": 1742198400000,
+              "type": "CRYPTO_DEPOSIT",
+              "status": "SUCCEED",
+              "network": "TRON",
+              "exchangeFee": { "number": "0", "unit": "USDT" },
+              "cryptoDeposit": {
+                "amount": { "number": "50", "unit": "USDT" },
+                "value": { "number": "50", "unit": "USD" },
+                "userCurrencyValue": { "number": "8275000", "unit": "IRT" },
+                "sourceAddress": "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA",
+                "hash": "a1b2c3d4e5f6...a1b2c3d4e5f6"
+              }
+            }
+          ]
+        }
+      }
+      ```
+
+      > [!note]
+      > فیلدهای `TRANSFER` همان ساختار `cryptoDeposit` را دارند اما از `transfer` استفاده می‌کنند. برای تشخیص انتقال از کاربر دیگر، `type === "TRANSFER"` را بررسی کنید.
+
 x-tagGroups:
   - name: عمومی
     tags:
@@ -251,6 +315,9 @@ x-tagGroups:
   - name: "رسید پرداخت"
     tags:
       - رسید
+  - name: نمونه‌ها
+    tags:
+      - examples
 
 paths:
   /v1/utils/authentication/check:
@@ -518,6 +585,7 @@ paths:
     get:
       tags:
         - تراکنش‌ها
+        - examples
       summary: فیلتر تراکنش‌ها
       description: |
         لیست تراکنش‌های حساب را با امکانات فیلتر پیشرفته و cursor-based pagination برمی‌گرداند.
@@ -537,24 +605,6 @@ paths:
         > | `FIAT_WITHDRAW` | `fiatWithdraw` |
         > | `PAYMENT` | `payment` |
         > | `CREDIT` | `credit` |
-
-        ## نمونه‌های رایج
-
-        ### تشخیص واریز و انتقال به حساب
-
-        برای تشخیص دریافتی‌های جدید، این endpoint را هر چند دقیقه یک‌بار صدا بزنید و تراکنش‌هایی که `id` آن‌ها از آخرین `id` پردازش‌شده بزرگ‌تر است را بررسی کنید:
-
-        ```
-        GET /api/v2/transaction
-          ?types=CRYPTO_DEPOSIT&types=TRANSFER
-          &tokens=USDT&tokens=TON&tokens=TRX
-          &sortDir=DESC
-          &limit=20
-          &afterId={lastSeenId}
-        ```
-
-        > [!note]
-        > مقدار `afterId` را برابر `id` آخرین تراکنشی که پردازش کرده‌اید قرار دهید. در اولین فراخوانی، این پارامتر را ارسال نکنید تا ۲۰ تراکنش اخیر دریافت شود.
       operationId: getTransactionsV2
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
