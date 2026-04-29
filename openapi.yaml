@@ -234,36 +234,18 @@ tags:
   - name: examples
     x-displayName: نمونه‌های رایج
     description: |
-      مجموعه‌ای از سناریوهای عملی برای رایج‌ترین کاربردهای API.
+      ## تشخیص واریز کریپتو
 
-      ---
+      اگر سرویسی دارید که باید دریافتی‌های کریپتو به حساب سواپ‌ولت شما را رصد کند — بدون اینکه مستقیم با بلاکچین درگیر شوید — این endpoint برای شماست.
 
-      ## تشخیص واریز کریپتو به حساب
-
-      یکی از رایج‌ترین کاربردها: تشخیص واریز کریپتو و انتقال‌های دریافتی برای نمایش در کیف پول یا سیستم داخلی.
-
-      با فراخوانی دوره‌ای این endpoint (مثلاً هر ۵ دقیقه)، می‌توانید تراکنش‌های جدید واریزی به حساب خود را شناسایی کنید.
-
-      ### نحوه‌ی کار
-
-      1. اولین فراخوانی را بدون `afterId` ارسال کنید تا ۲۰ تراکنش اخیر دریافت شود.
-      2. `id` آخرین تراکنش دریافتی را ذخیره کنید.
-      3. در فراخوانی‌های بعدی، همان `id` را به عنوان `afterId` ارسال کنید تا فقط تراکنش‌های جدیدتر برگردانده شوند.
-      4. اگر `result.hasNext` برابر `true` بود، صفحه‌ی بعدی را با `afterId` برابر `id` آخرین آیتم دریافت کنید.
-
-      ### درخواست
+      کافی است هر چند دقیقه یک‌بار با این پارامترها فراخوانی کنید:
 
       ```http
-      GET /api/v2/transaction
-        ?types=CRYPTO_DEPOSIT&types=TRANSFER
-        &tokens=USDT&tokens=TON&tokens=TRX
-        &sortDir=DESC
-        &limit=20
-        &afterId={lastSeenId}
+      GET /api/v2/transaction?types=CRYPTO_DEPOSIT&types=TRANSFER&tokens=USDT&tokens=TON&tokens=TRX&sortDir=DESC&limit=20
       Authorization: Bearer apikey-yourApikeyHere
       ```
 
-      ### نمونه پاسخ
+      پاسخ شامل تراکنش‌های واریزی اخیر است:
 
       ```json
       {
@@ -271,6 +253,22 @@ tags:
         "result": {
           "hasNext": false,
           "data": [
+            {
+              "id": 170811,
+              "supportCode": "SW-M3NP8QR-TXVW",
+              "timestamp": 1742198500000,
+              "type": "TRANSFER",
+              "status": "SUCCEED",
+              "network": "INTERNAL",
+              "exchangeFee": { "number": "0", "unit": "TON" },
+              "transfer": {
+                "amount": { "number": "5", "unit": "TON" },
+                "value": { "number": "15.30", "unit": "USD" },
+                "userCurrencyValue": { "number": "2532000", "unit": "IRT" },
+                "fromUser": { "id": 4821, "name": "علی رضایی" },
+                "toUser": { "id": 1, "isYou": true, "name": "شما" }
+              }
+            },
             {
               "id": 170810,
               "supportCode": "SW-K7NP2QR-MXVT",
@@ -284,7 +282,7 @@ tags:
                 "value": { "number": "50", "unit": "USD" },
                 "userCurrencyValue": { "number": "8275000", "unit": "IRT" },
                 "sourceAddress": "TQ9yLxm1yC6uX3YgYvG6S4w7HxQvQ1pNnA",
-                "hash": "a1b2c3d4e5f6...a1b2c3d4e5f6"
+                "hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
               }
             }
           ]
@@ -292,8 +290,7 @@ tags:
       }
       ```
 
-      > [!note]
-      > فیلدهای `TRANSFER` همان ساختار `cryptoDeposit` را دارند اما از `transfer` استفاده می‌کنند. برای تشخیص انتقال از کاربر دیگر، `type === "TRANSFER"` را بررسی کنید.
+      برای اینکه فقط تراکنش‌های جدیدتر از آخرین بررسی را دریافت کنید، `id` آخرین آیتم را نگه دارید و در فراخوانی بعدی به عنوان `afterId` ارسال کنید.
 
 x-tagGroups:
   - name: عمومی
@@ -585,7 +582,6 @@ paths:
     get:
       tags:
         - تراکنش‌ها
-        - examples
       summary: فیلتر تراکنش‌ها
       description: |
         لیست تراکنش‌های حساب را با امکانات فیلتر پیشرفته و cursor-based pagination برمی‌گرداند.
